@@ -100,11 +100,20 @@ export async function secureLogin(email, password) {
             return { success: false, error: 'البريد الإلكتروني أو كلمة المرور غير صحيحة' };
         }
 
+        // ✅ الإصلاح: دعم كلمات المرور المشفرة والنصية معاً
         let isValid = false;
+        
+        // 1. إذا كانت مشفرة (الطريقة الجديدة)
         if (user.password && user.password.startsWith('pbkdf2$')) {
             isValid = await verifyPassword(password, user.password);
-        } else {
-            isValid = password === user.password;
+        } 
+        // 2. إذا كانت نصية (الطريقة القديمة أو حساب تم إنشاؤه يدوياً)
+        else if (user.password) {
+            isValid = (password === user.password);
+        }
+        // 3. إذا لم تكن هناك كلمة مرور أصلاً (حساب قديم جداً)
+        else {
+            isValid = false;
         }
 
         if (!isValid) {
