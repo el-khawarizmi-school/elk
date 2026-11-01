@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="resourcesHeader">الموارد التعليمية - ثانوية الخوارزمي</title>
+    <meta name="description" content="الموارد التعليمية لثانوية الخوارزمي - دروس، ملخصات، امتحانات، وتمارين">
+    <meta name="theme-color" content="#667eea">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        /* الحفاظ على المظهر المختار (يتزامن مع الصفحة الرئيسية عبر المفتاح 'theme') */
+        (function(){
+            try{
+                var light=localStorage.getItem('theme')==='light', r=document.documentElement;
+                r.classList.toggle('light',light);
+                r.classList.toggle('dark-mode',!light);
+                document.addEventListener('DOMContentLoaded',function(){
+                    document.body.classList.toggle('dark-mode',!light);
+                    var m=document.querySelector('meta[name="theme-color"]');
+                    if(m)m.setAttribute('content',light?'#e4e8f2':'#0a0820');
+                });
+            }catch(e){}
+        })();
+    </script>
+
+    <style>
+        /* ═══════════════════════════════════════════ */
+        /* تحسينات الخطوط والتناسق                     */
+        /* ═══════════════════════════════════════════ */
+        body {
+            font-family: 'Cairo', 'Segoe UI', 'Tahoma', sans-serif !important;
+            font-weight: 500 !important;
+            line-height: 1.8 !important;
+            letter-spacing: 0.2px !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            text-rendering: optimizeLegibility !important;
+            background: var(--th-panel); /* لون احتياطي */
+        }
+
+        /* إضافة الخلفية المتحركة لتطابق باقي الصفحات */
+        .animated-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+            background: #1e1b4b;
+        }
+        .bg-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.35;
+            animation: orbFloat 25s ease-in-out infinite;
+        }
+        .bg-orb.orb-1 { width: 600px; height: 600px; background: radial-gradient(circle, #6366f1, transparent 70%); top: -200px; right: -200px; }
+        .bg-orb.orb-2 { width: 500px; height: 500px; background: radial-gradient(circle, #ec4899, transparent 70%); bottom: -150px; left: -150px; animation-delay: -8s; }
+        .bg-orb.orb-3 { width: 400px; height: 400px; background: radial-gradient(circle, #f5c842, transparent 70%); top: 40%; left: 50%; animation-delay: -16s; opacity: 0.15; }
+
+        @keyframes orbFloat {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(70px, -50px) scale(1.1); }
+            66% { transform: translate(-50px, 70px) scale(0.95); }
+        }
+
+        body.dark-mode { background: #0a0820; }
+
+        h1, h2, h3, h4 {
+            font-family: 'Cairo', sans-serif !important;
+            letter-spacing: -0.3px !important;
+        }
+
+        .resources-container {
+            min-height: 100vh;
+            padding: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* الهيدر والإحصائيات                         */
+        /* ═══════════════════════════════════════════ */
+        .resources-header {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 2rem 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .resources-header h1 {
+            color:var(--th-text);
+            font-size: clamp(1.8rem, 4vw, 2.2rem) !important;
+            font-weight: 800 !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .resources-header h1 i { color: var(--accent-gold); }
+        
+        .resources-header p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .stats-mini {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-mini-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .stat-mini-card:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-3px);
+            box-shadow: var(--glass-shadow-hover);
+        }
+
+        .stat-mini-card.active {
+            background: rgba(245, 200, 66, 0.15);
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 20px rgba(245, 200, 66, 0.2);
+        }
+
+        .stat-mini-card .number {
+            color: var(--accent-gold);
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            line-height: 1.2;
+        }
+
+        .stat-mini-card .label {
+            color: var(--text-secondary);
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* شريط البحث والفلاتر                        */
+        /* ═══════════════════════════════════════════ */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            padding: 0.6rem 1.2rem;
+            margin-bottom: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .search-bar:focus-within {
+            border-color: var(--accent-gold);
+            background: var(--glass-bg-hover);
+            box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.15);
+        }
+
+        .search-bar i { color: var(--text-muted); }
+
+        .search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .search-bar input::placeholder { color: var(--text-disabled); }
+
+        .search-clear {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .search-clear.visible { display: block; }
+        .search-clear:hover { color: var(--accent-red); transform: rotate(90deg); }
+
+        .filter-bar {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem;
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+        }
+
+        .filter-group label {
+            color: var(--text-secondary);
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .filter-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 0.4rem 1rem;
+            border-radius: var(--radius-full);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(245, 200, 66, 0.2);
+            border-color: var(--accent-gold);
+            color:var(--th-text);
+        }
+
+        .actions-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-right: auto;
+        }
+
+        .btn-action-custom {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: var(--radius-full);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-action-custom:hover { transform: translateY(-2px); }
+
+        .btn-add {
+            background: var(--gradient-gold);
+            color: #1a1a2e;
+            box-shadow: 0 4px 15px rgba(245, 200, 66, 0.3);
+        }
+
+        .btn-add:hover { box-shadow: 0 8px 25px rgba(245, 200, 66, 0.5); }
+
+        .btn-my-resources, .btn-favorites {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color:var(--th-text);
+        }
+
+        .btn-my-resources.active, .btn-favorites.active {
+            background:var(--th-surface-2);
+            border-color: var(--accent-gold);
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* شبكة الموارد                               */
+        /* ═══════════════════════════════════════════ */
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .resource-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            background: var(--glass-bg-hover);
+            border-color: rgba(245, 200, 66, 0.4);
+            box-shadow: var(--glass-shadow-hover);
+        }
+
+        .resource-card.pending { border-color: rgba(255,193,7,0.4); }
+        .resource-card.approved { border-color: rgba(81,207,102,0.3); }
+
+        .resource-card .pending-badge, .resource-card .approved-badge {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 0.2rem 0.7rem;
+            border-radius: 12px;
+            display: inline-block;
+            position: absolute;
+            top: 15px;
+            left: 15px;
+        }
+        .resource-card .pending-badge { background: rgba(255,193,7,0.2); color: #ffc107; }
+        .resource-card .approved-badge { background: rgba(81,207,102,0.2); color: #51cf66; }
+
+        .favorite-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--th-line);
+            color:var(--th-text-3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .favorite-btn:hover { background: rgba(255,107,107,0.3); color: #ff6b6b; transform: scale(1.1); }
+        .favorite-btn.active { background: rgba(255,107,107,0.4); color: #ff6b6b; border-color: #ff6b6b; }
+
+        .resource-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            color:var(--th-text);
+            margin-bottom: 1rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .resource-icon.درس { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+        .resource-icon.ملخص { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+        .resource-icon.امتحان { background: linear-gradient(135deg, #fa709a, #fee140); }
+        .resource-icon.تمارين { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+
+        .resource-title {
+            color:var(--th-text);
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+            line-height: 1.4;
+            /* إصلاح الخطوط الإنجليزية */
+            font-family: 'Cairo', sans-serif;
+            word-break: break-word;
+        }
+
+        .resource-meta {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+        }
+
+        .resource-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+        .resource-desc {
+            color:var(--th-text-2);
+            font-size: 0.82rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        .resource-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .resource-tag {
+            background:var(--th-surface-2);
+            border: 1px solid var(--th-line);
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.68rem;
+            color: var(--text-secondary);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .resource-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: auto;
+            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .btn-action-small {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 0.35rem 0.8rem;
+            border-radius: var(--radius-full);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-action-small:hover {
+            background: rgba(245, 200, 66, 0.15);
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+        }
+
+        .btn-action-small.liked { color: #ff6b6b; border-color: rgba(255,107,107,0.3); }
+
+        /* ═══════════════════════════════════════════ */
+        /* Modal                                       */
+        /* ═══════════════════════════════════════════ */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: linear-gradient(165deg, var(--th-panel) 0%, var(--th-panel-2) 100%);
+            border-radius: var(--radius-2xl);
+            width: 95%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            animation: modalFadeIn 0.3s ease;
+            padding: 1.5rem;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-box h3 {
+            color:var(--th-text);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-box h3 i { color: var(--accent-gold); }
+
+        .form-group { margin-bottom: 1.2rem; }
+
+        .form-group label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background:var(--th-surface-1);
+            border: 1px solid var(--th-line);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background:var(--th-surface-2);
+        }
+
+        .form-group select option { background: #1a1a2e; color: white; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .modal-actions button {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .modal-actions .btn-submit {
+            background: var(--gradient-gold);
+            color: #1a1a2e;
+        }
+
+        .modal-actions .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(245, 200, 66, 0.4); }
+        .modal-actions .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+        .modal-actions .btn-cancel {
+            background:var(--th-surface-2);
+            color:var(--th-text);
+            border: 1px solid var(--th-line);
+        }
+
+        .modal-actions .btn-cancel:hover { background:var(--th-surface-2); }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .resources-container { padding: 1rem 0.8rem; }
+            .resources-grid { grid-template-columns: 1fr; }
+            .filter-bar { flex-direction: column; align-items: stretch; }
+            .filter-group { justify-content: flex-start; }
+            .actions-bar { margin-right: 0; justify-content: flex-start; margin-top: 0.5rem; }
+            .stats-mini { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
+</head>
+<body>
+    <!-- الخلفية المتحركة -->
+    <div class="animated-bg">
+        <div class="bg-orb orb-1"></div>
+        <div class="bg-orb orb-2"></div>
+        <div class="bg-orb orb-3"></div>
+    </div>
+
+    <div class="offline-banner" id="offlineBanner">
+        <i class="fas fa-wifi"></i> أنت غير متصل بالإنترنت - بعض الميزات قد لا تعمل
+    </div>
+
+    <div class="resources-container">
+        <!-- الهيدر -->
+        <div class="resources-header">
+            <h1><i class="fas fa-book-open"></i> <span data-i18n="resourcesHeader">الموارد التعليمية</span></h1>
+            <p data-i18n="shareResources">شارك مع زملائك الدروس، الملخصات، والامتحانات</p>
+        </div>
+
+        <!-- الإحصائيات -->
+        <div class="stats-mini">
+            <div class="stat-mini-card active" onclick="window.filterByQuick('all')" id="statAll">
+                <div class="number" id="totalResources">0</div>
+                <div class="label" data-i18n="totalResources">📚 إجمالي الموارد</div>
+            </div>
+            <div class="stat-mini-card" onclick="window.filterByQuick('mine')" id="statMine">
+                <div class="number" id="myResources">0</div>
+                <div class="label" data-i18n="myContributions">👤 مساهماتي</div>
+            </div>
+            <div class="stat-mini-card" onclick="window.filterByQuick('pending')" id="statPending">
+                <div class="number" id="pendingResources">0</div>
+                <div class="label" data-i18n="pendingReview">⏳ قيد المراجعة</div>
+            </div>
+            <div class="stat-mini-card" onclick="window.filterByQuick('favorites')" id="statFavorites">
+                <div class="number" id="favoritesCount">0</div>
+                <div class="label">❤️ المفضلة</div>
+            </div>
+        </div>
+
+        <!-- شريط البحث -->
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="ابحث في الموارد..." oninput="window.handleSearch(this.value)">
+            <button class="search-clear" id="searchClear" onclick="window.clearSearch()" aria-label="مسح البحث">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- شريط الفلاتر -->
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label data-i18n="level">المستوى:</label>
+                <button class="filter-btn active" data-filter="all" data-type="level" data-i18n="all">الكل</button>
+                <button class="filter-btn" data-filter="1BAC" data-type="level">1BAC</button>
+                <button class="filter-btn" data-filter="2BAC" data-type="level">2BAC</button>
+            </div>
+            <div class="filter-group">
+                <label data-i18n="branch">الشعبة:</label>
+                <button class="filter-btn active" data-filter="all" data-type="branch" data-i18n="all">الكل</button>
+                <button class="filter-btn" data-filter="جميع" data-type="branch">🌐 جميع</button>
+                <button class="filter-btn" data-filter="علمية" data-type="branch">🔬 علمية</button>
+                <button class="filter-btn" data-filter="أدبية" data-type="branch">📚 أدبية</button>
+            </div>
+            <div class="filter-group">
+                <label data-i18n="type">النوع:</label>
+                <button class="filter-btn active" data-filter="all" data-type="category" data-i18n="all">الكل</button>
+                <button class="filter-btn" data-filter="درس" data-type="category">📖 دروس</button>
+                <button class="filter-btn" data-filter="ملخص" data-type="category">📝 ملخصات</button>
+                <button class="filter-btn" data-filter="امتحان" data-type="category">📄 امتحانات</button>
+                <button class="filter-btn" data-filter="تمارين" data-type="category">✏️ تمارين</button>
+            </div>
+            <div class="actions-bar">
+                <button class="btn-action-custom btn-my-resources" id="myResourcesBtn" onclick="window.toggleMyResources()">
+                    <i class="fas fa-user"></i> <span data-i18n="myResources">مساهماتي</span>
+                </button>
+                <button class="btn-action-custom btn-favorites" id="favoritesBtn" onclick="window.toggleFavorites()">
+                    <i class="fas fa-heart"></i> <span>المفضلة</span>
+                </button>
+                <button class="btn-action-custom btn-add" onclick="window.openModal()">
+                    <i class="fas fa-plus"></i> <span data-i18n="addResource">رفع مورد</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- شبكة الموارد -->
+        <div class="resources-grid" id="resourcesGrid">
+            <div class="skeleton-card">
+                <div class="skeleton-icon"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-icon"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-icon"></div>
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+            </div>
+        </div>
+
+        <!-- زر العودة -->
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="dashboard.html" class="btn-action-custom" style="display:inline-flex; background:var(--glass-bg); border:1px solid var(--glass-border); color:var(--th-text); padding:0.6rem 1.5rem;">
+                <i class="fas fa-arrow-right"></i> <span data-i18n="backToDashboard">العودة للوحة التحكم</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal رفع مورد -->
+    <div class="modal-overlay" id="addResourceModal">
+        <div class="modal-box">
+            <h3><i class="fas fa-upload"></i> <span data-i18n="addResource">رفع مورد جديد</span></h3>
+            <p style="color:var(--text-muted); font-size:0.8rem; margin-bottom:1.2rem;">
+                <span data-i18n="shareResources">شارك مع زملائك 📚 سيتم مراجعة المورد قبل النشر</span>
+            </p>
+            <form id="resourceForm">
+                <div class="form-group">
+                    <label data-i18n="resourceTitle">عنوان المورد *</label>
+                    <input type="text" id="resourceTitle" placeholder="مثال: ملخص شامل في الرياضيات" required maxlength="100">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="resourceDesc">الوصف</label>
+                    <textarea id="resourceDescription" placeholder="وصف مختصر للمورد" maxlength="500"></textarea>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="resourceType">النوع *</label>
+                    <select id="resourceCategory" required>
+                        <option value="درس">📖 درس</option>
+                        <option value="ملخص">📝 ملخص</option>
+                        <option value="امتحان">📄 امتحان</option>
+                        <option value="تمارين">✏️ تمارين</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="resourceLevel">المستوى *</label>
+                    <select id="resourceLevel" required>
+                        <option value="1BAC">الأولى باكالوريا (1BAC)</option>
+                        <option value="2BAC">الثانية باكالوريا (2BAC)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="resourceBranch">الشعبة *</label>
+                    <select id="resourceBranch" required>
+                        <option value="جميع">🌐 جميع الشعب</option>
+                        <option value="علمية">🔬 الشعب العلمية</option>
+                        <option value="أدبية">📚 الشعب الأدبية</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="pdfFile">ملف PDF *</label>
+                    <input type="file" id="resourceFile" accept=".pdf" required style="padding:0.6rem; background:var(--th-surface-2);">
+                    <p style="color:var(--text-muted); font-size:0.7rem; margin-top:4px;">
+                        الحد الأقصى للحجم: 10MB
+                    </p>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-submit" id="submitBtn"><i class="fas fa-check"></i> <span data-i18n="upload">رفع المورد</span></button>
+                    <button type="button" class="btn-cancel" onclick="window.closeModal()"><i class="fas fa-times"></i> <span data-i18n="cancel">إلغاء</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="darkmode.js"></script>
+    <script type="module">
+        import { supabase, showToast, escapeHtml, getCurrentUserSync } from './supabase.js';
+        import { checkRateLimit } from './security.js';
+        import { initLanguage, translate } from './language.js';
+
+        window.addEventListener('error', (e) => console.error('❌ Global error:', e.message));
+        window.addEventListener('unhandledrejection', (e) => console.error('❌ Unhandled promise:', e.reason));
+
+        function updateOnlineStatus() {
+            const banner = document.getElementById('offlineBanner');
+            if (!banner) return;
+            if (navigator.onLine) banner.classList.remove('active');
+            else banner.classList.add('active');
+        }
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        initLanguage();
+
+        // قراءة المستخدم المحفوظ بعد تسجيل الدخول، مع الرجوع إلى الدالة
+        // المركزية ثم جلسة Supabase عند الحاجة.
+        let currentUser = null;
+        try {
+            const cachedUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (cachedUser && cachedUser.id) currentUser = cachedUser;
+        } catch (error) {
+            console.warn('تعذر قراءة بيانات المستخدم المحفوظة:', error);
+        }
+        if (!currentUser) {
+            const syncUser = getCurrentUserSync();
+            if (syncUser && syncUser.id) currentUser = syncUser;
+        }
+
+        async function resolveCurrentUser() {
+            if (currentUser && currentUser.id) return currentUser;
+            try {
+                const { data: authData, error: authError } = await supabase.auth.getUser();
+                if (authError || !authData?.user) return null;
+
+                const authUser = authData.user;
+                const { data: profile, error: profileError } = await supabase
+                    .from('students')
+                    .select('*')
+                    .eq('email', authUser.email)
+                    .maybeSingle();
+
+                if (profileError) console.error('تعذر تحميل ملف المستخدم:', profileError);
+                currentUser = {
+                    ...authUser,
+                    ...(profile || {}),
+                    id: profile?.id || authUser.id,
+                    email: profile?.email || authUser.email,
+                    name: profile?.name || authUser.user_metadata?.name || authUser.email
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                return currentUser;
+            } catch (error) {
+                console.error('تعذر تحديد المستخدم الحالي:', error);
+                return null;
+            }
+        }
+
+        let resources = [];
+        let userLikes = new Set();
+        let userFavorites = new Set();
+        let filters = { level: 'all', branch: 'all', category: 'all' };
+        let showMyResources = false;
+        let showOnlyFavorites = false;
+        let searchQuery = '';
+        let quickFilter = 'all';
+
+        function getIconByCategory(category) {
+            const icons = {
+                'درس': 'fa-book',
+                'ملخص': 'fa-file-alt',
+                'امتحان': 'fa-file-pdf',
+                'تمارين': 'fa-pencil-alt'
+            };
+            return icons[category] || 'fa-file';
+        }
+
+        function loadFavorites() {
+            if (!currentUser) return;
+            try {
+                const saved = localStorage.getItem(`favorites_${currentUser.id}`);
+                userFavorites = new Set(saved ? JSON.parse(saved) : []);
+            } catch (e) {
+                userFavorites = new Set();
+            }
+        }
+
+        function saveFavorites() {
+            if (!currentUser) return;
+            try {
+                localStorage.setItem(`favorites_${currentUser.id}`, JSON.stringify([...userFavorites]));
+            } catch (e) {}
+        }
+
+        window.toggleFavorite = function(resourceId) {
+            if (!currentUser) { showToast('⚠️ سجل الدخول أولاً', 'error'); return; }
+
+            if (userFavorites.has(resourceId)) {
+                userFavorites.delete(resourceId);
+                showToast('💔 أُزيل من المفضلة', 'info');
+            } else {
+                userFavorites.add(resourceId);
+                showToast('❤️ أُضيف إلى المفضلة', 'success');
+            }
+
+            saveFavorites();
+            displayResources();
+            updateStats();
+        };
+
+        async function loadResources() {
+            try {
+                const { data, error } = await supabase
+                    .from('resources')
+                    .select('*')
+                    .order('uploaded_at', { ascending: false });
+
+                if (error) throw error;
+
+                resources = data || [];
+                await loadUserLikes();
+                displayResources();
+                updateStats();
+            } catch (error) {
+                console.error('خطأ في تحميل الموارد:', error);
+                document.getElementById('resourcesGrid').innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>خطأ في تحميل الموارد</p>
+                        <button onclick="window.loadResources()" class="btn-add" style="margin-top:10px; padding:0.5rem 1rem; border:none; border-radius:20px;">
+                            <i class="fas fa-sync"></i> إعادة المحاولة
+                        </button>
+                    </div>
+                `;
+                showToast('❌ فشل تحميل الموارد', 'error');
+            }
+        }
+
+        // ✅ تحديث الإحصائيات بدقة
+        function updateStats() {
+            const totalEl = document.getElementById('totalResources');
+            const mineEl = document.getElementById('myResources');
+            const pendingEl = document.getElementById('pendingResources');
+            const favEl = document.getElementById('favoritesCount');
+
+            if (totalEl) totalEl.textContent = resources.length;
+
+            if (currentUser) {
+                const myResources = resources.filter(r => r.uploaded_by === currentUser.id);
+                if (mineEl) mineEl.textContent = myResources.length;
+            } else {
+                if (mineEl) mineEl.textContent = 0;
+            }
+
+            const pending = resources.filter(r => r.status === 'pending');
+            if (pendingEl) pendingEl.textContent = pending.length;
+
+            if (favEl) favEl.textContent = userFavorites.size;
+        }
+
+        async function loadUserLikes() {
+            if (!currentUser) return;
+            try {
+                const { data, error } = await supabase
+                    .from('resource_likes')
+                    .select('resource_id')
+                    .eq('student_id', currentUser.id);
+
+                if (error) throw error;
+                userLikes = new Set((data || []).map(item => item.resource_id));
+            } catch (error) {
+                console.error('خطأ في تحميل الإعجابات:', error);
+            }
+        }
+
+        function displayResources() {
+            const grid = document.getElementById('resourcesGrid');
+            let filtered = resources;
+
+            if (quickFilter === 'mine' && currentUser) {
+                filtered = filtered.filter(r => r.uploaded_by === currentUser.id);
+            } else if (quickFilter === 'pending') {
+                filtered = filtered.filter(r => r.status === 'pending');
+            } else if (quickFilter === 'favorites') {
+                filtered = filtered.filter(r => userFavorites.has(r.id));
+            }
+
+            if (filters.level !== 'all') filtered = filtered.filter(r => r.level === filters.level);
+            if (filters.branch !== 'all') filtered = filtered.filter(r => r.branch === filters.branch);
+            if (filters.category !== 'all') filtered = filtered.filter(r => r.category === filters.category);
+
+            if (showMyResources && currentUser) filtered = filtered.filter(r => r.uploaded_by === currentUser.id);
+            if (showOnlyFavorites) filtered = filtered.filter(r => userFavorites.has(r.id));
+
+            if (searchQuery) {
+                const q = searchQuery.toLowerCase();
+                filtered = filtered.filter(r =>
+                    (r.title && r.title.toLowerCase().includes(q)) ||
+                    (r.description && r.description.toLowerCase().includes(q)) ||
+                    (r.uploaded_by_name && r.uploaded_by_name.toLowerCase().includes(q))
+                );
+            }
+
+            if (filtered.length === 0) {
+                let emptyMsg = 'لا توجد موارد';
+                if (searchQuery) emptyMsg = 'لا توجد نتائج للبحث';
+                else if (showMyResources || quickFilter === 'mine') emptyMsg = 'لم ترفع أي موارد بعد';
+                else if (showOnlyFavorites || quickFilter === 'favorites') emptyMsg = 'لا توجد موارد في المفضلة';
+
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column:1/-1;">
+                        <i class="fas fa-inbox"></i>
+                        <p>${emptyMsg}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(resource => {
+                const isLiked = userLikes.has(resource.id);
+                const isFavorite = userFavorites.has(resource.id);
+                const categoryClass = resource.category || 'درس';
+                const isPending = resource.status === 'pending';
+                const isAdmin = currentUser && currentUser.role === 'admin';
+                const isOwner = currentUser && resource.uploaded_by === currentUser.id;
+                const canDelete = isAdmin || isOwner;
+                const canApprove = isAdmin && isPending;
+
+                return `
+                <div class="resource-card ${isPending ? 'pending' : 'approved'}">
+                    ${isPending ? '<span class="pending-badge">⏳ قيد المراجعة</span>' : ''}
+                    ${!isPending ? '<span class="approved-badge">✓ منشور</span>' : ''}
+
+                    <button class="favorite-btn ${isFavorite ? 'active' : ''}"
+                            onclick="window.toggleFavorite('${resource.id}')"
+                            aria-label="المفضلة">
+                        <i class="fas fa-heart"></i>
+                    </button>
+
+                    <div class="resource-icon ${categoryClass}">
+                        <i class="fas ${getIconByCategory(categoryClass)}"></i>
+                    </div>
+                    <div class="resource-title">${escapeHtml(resource.title)}</div>
+                    <div class="resource-meta">
+                        <span><i class="fas fa-graduation-cap"></i> ${escapeHtml(resource.level)}</span>
+                        <span><i class="fas fa-users"></i> ${escapeHtml(resource.branch)}</span>
+                        <span><i class="fas fa-clock"></i> ${new Date(resource.uploaded_at).toLocaleDateString('ar-EG')}</span>
+                    </div>
+                    ${resource.description ? `<p class="resource-desc">${escapeHtml(resource.description)}</p>` : ''}
+                    <div class="resource-tags">
+                        <span class="resource-tag">${escapeHtml(resource.category)}</span>
+                        <span class="resource-tag"><i class="fas fa-user"></i> ${escapeHtml(resource.uploaded_by_name || 'مجهول')}</span>
+                    </div>
+                    <div class="resource-actions">
+                        <div style="display:flex;gap:0.4rem;">
+                            <button class="btn-action-small ${isLiked ? 'liked' : ''}" onclick="window.toggleLike('${resource.id}')">
+                                <i class="fas ${isLiked ? 'fa-heart' : 'fa-heart-o'}"></i>
+                                <span>${resource.likes || 0}</span>
+                            </button>
+                            ${resource.file_url ? `
+                                <button class="btn-action-small" onclick="window.downloadResource('${resource.id}')">
+                                    <i class="fas fa-download"></i>
+                                    <span>تحميل</span>
+                                </button>
+                            ` : ''}
+                        </div>
+                        <div style="display:flex;gap:0.4rem;align-items:center;">
+                            <span style="color:var(--th-text-3);font-size:0.7rem;font-weight:600;">
+                                <i class="fas fa-eye"></i> ${resource.views || 0}
+                            </span>
+                            ${canDelete ? `
+                                <button class="btn-action-small" onclick="window.deleteResource('${resource.id}')" style="color:#ff6b6b; border-color:rgba(255,107,107,0.3);">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : ''}
+                            ${canApprove ? `
+                                <button class="btn-action-small" onclick="window.approveResource('${resource.id}')" style="color:#51cf66; border-color:rgba(81,207,102,0.3);">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        window.filterByQuick = function(type) {
+            quickFilter = type;
+            document.querySelectorAll('.stat-mini-card').forEach(c => c.classList.remove('active'));
+            const map = { 'all': 'statAll', 'mine': 'statMine', 'pending': 'statPending', 'favorites': 'statFavorites' };
+            const el = document.getElementById(map[type]);
+            if (el) el.classList.add('active');
+
+            if (type !== 'mine') {
+                showMyResources = false;
+                document.getElementById('myResourcesBtn')?.classList.remove('active');
+            }
+            if (type !== 'favorites') {
+                showOnlyFavorites = false;
+                document.getElementById('favoritesBtn')?.classList.remove('active');
+            }
+            displayResources();
+        };
+
+        window.toggleMyResources = function() {
+            showMyResources = !showMyResources;
+            showOnlyFavorites = false;
+            quickFilter = showMyResources ? 'mine' : 'all';
+
+            const btn = document.getElementById('myResourcesBtn');
+            const favBtn = document.getElementById('favoritesBtn');
+
+            if (showMyResources) {
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-eye"></i> <span>عرض الكل</span>';
+                favBtn?.classList.remove('active');
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fas fa-user"></i> <span>مساهماتي</span>';
+            }
+
+            document.querySelectorAll('.stat-mini-card').forEach(c => c.classList.remove('active'));
+            if (showMyResources) document.getElementById('statMine')?.classList.add('active');
+            else document.getElementById('statAll')?.classList.add('active');
+
+            displayResources();
+        };
+
+        window.toggleFavorites = function() {
+            showOnlyFavorites = !showOnlyFavorites;
+            showMyResources = false;
+            quickFilter = showOnlyFavorites ? 'favorites' : 'all';
+
+            const btn = document.getElementById('favoritesBtn');
+            const myBtn = document.getElementById('myResourcesBtn');
+
+            if (showOnlyFavorites) {
+                btn.classList.add('active');
+                btn.innerHTML = '<i class="fas fa-eye"></i> <span>عرض الكل</span>';
+                myBtn?.classList.remove('active');
+            } else {
+                btn.classList.remove('active');
+                btn.innerHTML = '<i class="fas fa-heart"></i> <span>المفضلة</span>';
+            }
+
+            document.querySelectorAll('.stat-mini-card').forEach(c => c.classList.remove('active'));
+            if (showOnlyFavorites) document.getElementById('statFavorites')?.classList.add('active');
+            else document.getElementById('statAll')?.classList.add('active');
+
+            displayResources();
+        };
+
+        window.handleSearch = function(query) {
+            searchQuery = query;
+            const clearBtn = document.getElementById('searchClear');
+            if (clearBtn) clearBtn.classList.toggle('visible', query.length > 0);
+            displayResources();
+        };
+
+        window.clearSearch = function() {
+            document.getElementById('searchInput').value = '';
+            searchQuery = '';
+            document.getElementById('searchClear').classList.remove('visible');
+            displayResources();
+        };
+
+        window.toggleLike = async function(resourceId) {
+            if (!currentUser) { showToast('⚠️ الرجاء تسجيل الدخول أولاً', 'error'); return; }
+
+            try {
+                const isLiked = userLikes.has(resourceId);
+
+                if (isLiked) {
+                    await supabase.from('resource_likes').delete()
+                        .eq('resource_id', resourceId).eq('student_id', currentUser.id);
+                    userLikes.delete(resourceId);
+                } else {
+                    await supabase.from('resource_likes').insert({
+                        resource_id: resourceId, student_id: currentUser.id
+                    });
+                    userLikes.add(resourceId);
+                }
+
+                await loadResources();
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            }
+        };
+
+        window.downloadResource = async function(resourceId) {
+            try {
+                const resource = resources.find(r => r.id === resourceId);
+                if (!resource || !resource.file_url) {
+                    showToast('⚠️ لا يوجد ملف للتحميل', 'error');
+                    return;
+                }
+
+                try {
+                    await supabase.rpc('increment_resource_views', { resource_id_param: resourceId });
+                } catch (e) { console.warn('RPC views error:', e); }
+
+                window.open(resource.file_url, '_blank', 'noopener,noreferrer');
+                showToast('📥 جاري تحميل الملف...', 'info');
+                await loadResources();
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            }
+        };
+
+        window.approveResource = async function(resourceId) {
+            if (!currentUser || currentUser.role !== 'admin') {
+                showToast('⛔ ليس لديك صلاحية', 'error');
+                return;
+            }
+
+            try {
+                await supabase.from('resources').update({
+                    status: 'approved',
+                    approved_by: currentUser.id,
+                    approved_at: new Date().toISOString()
+                }).eq('id', resourceId);
+
+                showToast('✅ تمت الموافقة على المورد', 'success');
+                await loadResources();
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            }
+        };
+
+        window.deleteResource = async function(resourceId) {
+            if (!currentUser) { showToast('⚠️ الرجاء تسجيل الدخول أولاً', 'error'); return; }
+
+            const resource = resources.find(r => r.id === resourceId);
+            if (!resource) return;
+
+            const isOwner = resource.uploaded_by === currentUser.id;
+            if (currentUser.role !== 'admin' && !isOwner) {
+                showToast('⛔ ليس لديك صلاحية', 'error');
+                return;
+            }
+
+            if (!confirm('هل أنت متأكد من حذف هذا المورد نهائياً؟')) return;
+
+            try {
+                await supabase.from('resources').delete().eq('id', resourceId);
+                showToast('🗑️ تم حذف المورد بنجاح', 'success');
+                await loadResources();
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            }
+        };
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const type = this.dataset.type;
+                const value = this.dataset.filter;
+                document.querySelectorAll(`.filter-btn[data-type="${type}"]`).forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                filters[type] = value;
+                displayResources();
+            });
+        });
+
+        window.openModal = function() {
+            if (!currentUser) {
+                showToast('⚠️ الرجاء تسجيل الدخول أولاً', 'error');
+                window.location.href = 'login.html';
+                return;
+            }
+            document.getElementById('addResourceModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeModal = function() {
+            document.getElementById('addResourceModal').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('resourceForm').reset();
+        };
+
+        document.getElementById('addResourceModal').addEventListener('click', function(e) {
+            if (e.target === this) window.closeModal();
+        });
+
+        document.getElementById('resourceForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!currentUser) { showToast('⚠️ الرجاء تسجيل الدخول أولاً', 'error'); return; }
+
+            const rateCheck = checkRateLimit('resource', currentUser.id);
+            if (!rateCheck.allowed) { showToast(rateCheck.message, 'error'); return; }
+
+            const title = document.getElementById('resourceTitle').value.trim();
+            const description = document.getElementById('resourceDescription').value.trim();
+            const category = document.getElementById('resourceCategory').value;
+            const level = document.getElementById('resourceLevel').value;
+            const branch = document.getElementById('resourceBranch').value;
+            const fileInput = document.getElementById('resourceFile');
+
+            if (!title || !fileInput.files[0]) {
+                showToast('⚠️ الرجاء ملء جميع الحقول المطلوبة', 'error');
+                return;
+            }
+
+            const file = fileInput.files[0];
+
+            if (file.type !== 'application/pdf') {
+                showToast('⚠️ الرجاء اختيار ملف PDF فقط', 'error');
+                return;
+            }
+
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('⚠️ حجم الملف كبير جداً (الحد الأقصى 10MB)', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الرفع...';
+
+            try {
+                const cleanName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_').replace(/\s+/g, '_');
+                const fileName = `${Date.now()}_${cleanName}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('resources')
+                    .upload(fileName, file, {
+                        cacheControl: '3600',
+                        upsert: false,
+                        contentType: 'application/pdf'
+                    });
+
+                if (uploadError) throw new Error('فشل رفع الملف: ' + uploadError.message);
+
+                const { data: urlData } = supabase.storage.from('resources').getPublicUrl(fileName);
+                const fileUrl = urlData.publicUrl;
+
+                const { error: insertError } = await supabase.from('resources').insert({
+                    title, description: description || null, category, level, branch,
+                    file_url: fileUrl,
+                    file_name: file.name,
+                    file_size: file.size,
+                    uploaded_by_name: currentUser.name,
+                    uploaded_by: currentUser.id,
+                    status: 'pending'
+                });
+
+                if (insertError) throw new Error('فشل حفظ البيانات: ' + insertError.message);
+
+                showToast('✅ تم رفع المورد بنجاح! في انتظار موافقة المشرف', 'success');
+                window.closeModal();
+                await loadResources();
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> رفع المورد';
+            }
+        });
+
+        // لا تبدأ قراءة المفضلة أو الموارد قبل حسم هوية المستخدم.
+        window.loadResources = loadResources;
+        await resolveCurrentUser();
+        loadFavorites();
+        await loadResources();
+    </script>
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="enhancements.css">
+</body>
+</html>

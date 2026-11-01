@@ -1,0 +1,2702 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="adminTitle">لوحة المشرف - ثانوية الخوارزمي</title>
+    <meta name="description" content="لوحة تحكم مشرفي ثانوية الخوارزمي">
+    <meta name="theme-color" content="#1a1a2e">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        (function() {
+            try {
+                if (localStorage.getItem('darkMode') === 'true') {
+                    document.documentElement.classList.add('dark-mode');
+                }
+            } catch (e) {}
+        })();
+    </script>
+
+    <style>
+        .admin-container { min-height: 100vh; padding: 1.5rem; }
+
+        .admin-header {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .admin-title {
+            color: var(--accent-gold);
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-title i { font-size: 1.6rem; }
+
+        .admin-info-badge {
+            background: rgba(255,215,0,0.12);
+            color: var(--accent-gold);
+            padding: 4px 12px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+
+        .admin-logout {
+            background: rgba(255,107,107,0.2);
+            border: 1px solid rgba(255,107,107,0.3);
+            padding: 0.5rem 1.2rem;
+            border-radius: var(--radius-full);
+            color: white;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.85rem;
+        }
+
+        .admin-logout:hover {
+            background: rgba(255,107,107,0.4);
+            transform: translateY(-2px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            text-align: center;
+            transition: all var(--transition-base);
+            cursor: pointer;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .stat-card:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-3px);
+            border-color: rgba(255,215,0,0.3);
+            box-shadow: var(--glass-shadow-hover);
+        }
+
+        .stat-card .number { font-size: 2rem; font-weight: 800; color: var(--accent-gold); }
+        .stat-card .label { color: var(--text-secondary); font-size: 0.7rem; margin-top: 0.2rem; }
+        .stat-card .sub-label { color: var(--text-disabled); font-size: 0.6rem; }
+
+        .section-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 1.2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .section-title {
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+        }
+
+        .section-title i { color: var(--accent-gold); }
+
+        .table-wrap { overflow-x: auto; }
+
+        .table-wrap table { width: 100%; border-collapse: collapse; color: white; }
+
+        .table-wrap th {
+            background: var(--glass-bg);
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            color: var(--accent-gold);
+            white-space: nowrap;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .table-wrap td {
+            padding: 0.5rem;
+            text-align: center;
+            border-bottom: 1px solid var(--glass-border-light);
+            font-size: 0.75rem;
+            vertical-align: middle;
+        }
+
+        .table-wrap tr:hover td { background: var(--glass-bg); }
+
+        .btn-admin {
+            padding: 0.2rem 0.6rem;
+            border: none;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.65rem;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .btn-admin:hover { transform: translateY(-2px); }
+        .btn-admin:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .btn-admin.accept { background: rgba(81,207,102,0.2); color: #51cf66; border: 1px solid rgba(81,207,102,0.3); }
+        .btn-admin.accept:hover:not(:disabled) { background: #51cf66; color: white; }
+
+        .btn-admin.delete { background: rgba(255,107,107,0.2); color: var(--accent-red); border: 1px solid rgba(255,107,107,0.3); }
+        .btn-admin.delete:hover:not(:disabled) { background: var(--accent-red); color: white; }
+
+        .btn-admin.promote { background: rgba(255,215,0,0.2); color: var(--accent-gold); border: 1px solid rgba(255,215,0,0.3); }
+        .btn-admin.promote:hover:not(:disabled) { background: var(--accent-gold); color: #333; }
+
+        .btn-admin.demote { background: rgba(255,165,0,0.2); color: #ffa500; border: 1px solid rgba(255,165,0,0.3); }
+        .btn-admin.demote:hover:not(:disabled) { background: #ffa500; color: white; }
+
+        .status-badge {
+            padding: 0.15rem 0.5rem;
+            border-radius: var(--radius-full);
+            font-size: 0.6rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-badge.approved { background: rgba(81,207,102,0.15); color: #51cf66; }
+        .status-badge.pending { background: rgba(255,193,7,0.15); color: #ffc107; }
+        .status-badge.replied { background: rgba(81,207,102,0.15); color: #51cf66; }
+        .status-badge.waiting { background: rgba(255,193,7,0.15); color: #ffc107; }
+
+        .role-badge {
+            padding: 0.15rem 0.5rem;
+            border-radius: var(--radius-full);
+            font-size: 0.6rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .role-badge.admin { background: rgba(255,215,0,0.2); color: var(--accent-gold); }
+        .role-badge.developer { background: rgba(157,124,245,0.2); color: #9d7cf5; }
+        .role-badge.student { background: rgba(100,149,237,0.15); color: #6495ed; }
+
+        .empty-state { text-align: center; padding: 2rem; color: var(--text-muted); }
+        .empty-state i { font-size: 2.5rem; display: block; margin-bottom: 0.5rem; opacity: 0.5; }
+
+        .messenger-app {
+            display: grid;
+            grid-template-columns: 340px 1fr;
+            height: 650px;
+            background: rgba(20, 18, 45, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--glass-shadow-lg);
+            position: relative;
+        }
+
+        .messenger-sidebar {
+            background: rgba(28, 26, 65, 0.7);
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .messenger-sidebar-header {
+            padding: 1rem 1.1rem 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .messenger-sidebar-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+        }
+
+        .messenger-sidebar-title i { color: #f5c842; font-size: 1rem; }
+
+        .messenger-sidebar-count {
+            margin-right: auto;
+            background: rgba(245, 200, 66, 0.15);
+            color: #f5c842;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(245, 200, 66, 0.25);
+        }
+
+        .messenger-search {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 0.5rem 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .messenger-search:focus-within {
+            border-color: rgba(245, 200, 66, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .messenger-search i { color: rgba(255, 255, 255, 0.4); font-size: 0.8rem; }
+
+        .messenger-search input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem;
+            outline: none;
+        }
+
+        .messenger-search input::placeholder { color: rgba(255, 255, 255, 0.3); }
+
+        .messenger-conversations { flex: 1; overflow-y: auto; padding: 0.4rem; }
+
+        .messenger-conversations::-webkit-scrollbar { width: 5px; }
+        .messenger-conversations::-webkit-scrollbar-thumb {
+            background: rgba(245, 200, 66, 0.3);
+            border-radius: 10px;
+        }
+
+        .conversation-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 0.8rem;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-bottom: 0.2rem;
+            position: relative;
+            border: 1px solid transparent;
+        }
+
+        .conversation-item:hover { background: rgba(255, 255, 255, 0.05); }
+
+        .conversation-item.active {
+            background: rgba(245, 200, 66, 0.10);
+            border-color: rgba(245, 200, 66, 0.25);
+        }
+
+        .conversation-item.unread::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 6px;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: #f5c842;
+            box-shadow: 0 0 8px #f5c842;
+        }
+
+        .conversation-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5b5299, #7c6ec8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .conversation-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .conversation-avatar.admin {
+            background: linear-gradient(135deg, #e5b855, #d4a440);
+            color: #1a1a2e;
+        }
+
+        .conversation-avatar.developer {
+            background: linear-gradient(135deg, #9d7cf5, #8566e8);
+        }
+
+        .conversation-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .conversation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.4rem;
+        }
+
+        .conversation-name {
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 700;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .conversation-time {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.65rem;
+            flex-shrink: 0;
+        }
+
+        .conversation-preview {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.4rem;
+        }
+
+        .conversation-message {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.75rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .conversation-badge {
+            background: rgba(245, 200, 66, 0.9);
+            color: #1a1a2e;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 1px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .messenger-chat {
+            display: flex;
+            flex-direction: column;
+            background: rgba(22, 20, 52, 0.5);
+            position: relative;
+        }
+
+        .messenger-chat-header {
+            padding: 0.9rem 1.2rem;
+            background: rgba(28, 26, 65, 0.7);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            min-height: 70px;
+        }
+
+        .messenger-chat-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5b5299, #7c6ec8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .messenger-chat-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .messenger-chat-info { flex: 1; min-width: 0; }
+
+        .messenger-chat-name {
+            color: white;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .messenger-chat-status {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.72rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .status-dot-mini {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 6px #4ade80;
+        }
+
+        .messenger-chat-actions { display: flex; gap: 0.4rem; }
+
+        .messenger-action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            transition: all 0.25s ease;
+        }
+
+        .messenger-action-btn:hover {
+            background: rgba(245, 200, 66, 0.15);
+            border-color: rgba(245, 200, 66, 0.3);
+            color: #f5c842;
+            transform: translateY(-2px);
+        }
+
+        .messenger-action-btn.danger:hover {
+            background: rgba(248, 113, 113, 0.15);
+            border-color: rgba(248, 113, 113, 0.3);
+            color: #f87171;
+        }
+
+        .messenger-chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(91, 82, 153, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(245, 200, 66, 0.03) 0%, transparent 50%);
+        }
+
+        .messenger-chat-body::-webkit-scrollbar { width: 6px; }
+        .messenger-chat-body::-webkit-scrollbar-thumb {
+            background: rgba(245, 200, 66, 0.25);
+            border-radius: 10px;
+        }
+
+        .message-bubble {
+            display: flex;
+            gap: 0.6rem;
+            max-width: 75%;
+            animation: bubbleIn 0.35s ease;
+        }
+
+        @keyframes bubbleIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-bubble.student { align-self: flex-start; }
+
+        .message-bubble.admin {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+            font-weight: 700;
+            overflow: hidden;
+            border: 2px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .message-bubble-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+        .message-bubble.student .message-bubble-avatar {
+            background: linear-gradient(135deg, #5b5299, #7c6ec8);
+            color: white;
+        }
+
+        .message-bubble.admin .message-bubble-avatar {
+            background: linear-gradient(135deg, #e5b855, #d4a440);
+            color: #1a1a2e;
+        }
+
+        .message-bubble-content {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .message-bubble-name {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.55);
+            font-weight: 600;
+            padding: 0 8px;
+        }
+
+        .message-bubble.admin .message-bubble-name { text-align: left; }
+        .message-bubble.student .message-bubble-name { text-align: right; }
+
+        .message-bubble-text {
+            padding: 0.65rem 1rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .message-bubble.student .message-bubble-text {
+            background: rgba(91, 82, 153, 0.35);
+            border: 1px solid rgba(91, 82, 153, 0.5);
+            color: white;
+            border-top-right-radius: 4px;
+        }
+
+        .message-bubble.admin .message-bubble-text {
+            background: linear-gradient(135deg, #e5b855, #d4a440);
+            color: #1a1a2e;
+            border-top-left-radius: 4px;
+            font-weight: 600;
+        }
+
+        .message-bubble-time {
+            font-size: 0.62rem;
+            color: rgba(255, 255, 255, 0.35);
+            padding: 0 8px;
+        }
+
+        .message-bubble.admin .message-bubble-time { text-align: left; }
+        .message-bubble.student .message-bubble-time { text-align: right; }
+
+        .messenger-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .messenger-empty i {
+            font-size: 4rem;
+            color: rgba(245, 200, 66, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .messenger-empty h3 {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+            font-weight: 700;
+        }
+
+        .messenger-empty p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .messenger-reply-box {
+            padding: 0.9rem 1.2rem;
+            background: rgba(28, 26, 65, 0.7);
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            align-items: flex-end;
+            gap: 0.6rem;
+        }
+
+        .messenger-reply-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            resize: none;
+            outline: none;
+            transition: all 0.3s ease;
+            min-height: 44px;
+            max-height: 120px;
+            line-height: 1.5;
+        }
+
+        .messenger-reply-input:focus {
+            border-color: rgba(245, 200, 66, 0.4);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.08);
+        }
+
+        .messenger-reply-input::placeholder { color: rgba(255, 255, 255, 0.35); }
+
+        .messenger-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e5b855, #d4a440);
+            border: none;
+            color: #1a1a2e;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(229, 184, 85, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .messenger-send-btn:hover:not(:disabled) {
+            transform: scale(1.08) rotate(-8deg);
+            box-shadow: 0 6px 20px rgba(229, 184, 85, 0.5);
+        }
+
+        .messenger-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .points-controls {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .points-controls select,
+        .points-controls input {
+            padding: 0.4rem 0.6rem;
+            border-radius: var(--radius-md);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: white;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem;
+        }
+
+        .points-controls select option { background: #1a1a2e; color: white; }
+        .points-controls input { width: 100px; }
+        .points-controls select { flex: 1; min-width: 180px; }
+
+        .points-controls select:focus,
+        .points-controls input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: var(--glass-bg-hover);
+        }
+
+        .points-message {
+            color: var(--accent-gold);
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.5rem;
+            min-height: 1.2rem;
+        }
+
+        .announcement-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0.7rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            margin-bottom: 0.4rem;
+            gap: 0.5rem;
+            transition: all var(--transition-base);
+        }
+
+        .announcement-item:hover { background: var(--glass-bg-hover); }
+        .announcement-item .announcement-info { flex: 1; min-width: 0; }
+        .announcement-item .announcement-info .title { color: white; font-weight: 600; font-size: 0.85rem; }
+        .announcement-item .announcement-info .date { color: var(--text-disabled); font-size: 0.6rem; }
+
+        .announcement-item .announcement-info .content {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 400px;
+        }
+
+        .announcement-item .announcement-actions {
+            display: flex;
+            gap: 0.3rem;
+            flex-shrink: 0;
+        }
+
+        .btn-add-announcement {
+            background: var(--gradient-gold);
+            color: #1a1a2e;
+            padding: 0.4rem 1rem;
+            border: none;
+            border-radius: var(--radius-full);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-add-announcement:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255,215,0,0.3);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: var(--glass-bg-strong);
+            backdrop-filter: var(--glass-blur-strong);
+            border-radius: var(--radius-2xl);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            animation: modalFadeIn 0.3s ease;
+            padding: 1.5rem;
+            box-shadow: var(--glass-shadow-lg);
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-box h3 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-box h3 i { color: var(--accent-gold); }
+        .modal-box .form-group { margin-bottom: 1rem; }
+
+        .modal-box .form-group label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-box .form-group input,
+        .modal-box .form-group textarea {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+        }
+
+        .modal-box .form-group input:focus,
+        .modal-box .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: var(--glass-bg-hover);
+        }
+
+        .modal-box .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .modal-actions button {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .modal-actions .btn-submit {
+            background: var(--gradient-gold);
+            color: #1a1a2e;
+        }
+
+        .modal-actions .btn-submit:hover { transform: translateY(-2px); }
+        .modal-actions .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .modal-actions .btn-cancel {
+            background: var(--glass-bg);
+            color: white;
+            border: 1px solid var(--glass-border);
+        }
+
+        .modal-actions .btn-cancel:hover { background: var(--glass-bg-hover); }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            padding: 0.5rem 1rem;
+            margin-bottom: 1rem;
+            transition: all var(--transition-base);
+        }
+
+        .search-bar:focus-within {
+            border-color: var(--accent-gold);
+            background: var(--glass-bg-hover);
+            box-shadow: 0 0 0 3px rgba(255,215,0,0.1);
+        }
+
+        .search-bar i { color: var(--text-muted); }
+
+        .search-bar input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .search-bar input::placeholder { color: var(--text-disabled); }
+
+        .student-details-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(10px);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .student-details-modal.active { display: flex; }
+
+        .student-details-content {
+            background: var(--glass-bg-strong);
+            backdrop-filter: var(--glass-blur-strong);
+            border-radius: var(--radius-2xl);
+            width: 95%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--glass-shadow-lg);
+            animation: modalFadeIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .student-details-header {
+            background: var(--gradient-primary);
+            padding: 1.2rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+        }
+
+        .student-details-header h3 {
+            color: white;
+            font-size: 1.1rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .student-details-header h3 i { color: var(--accent-gold); }
+
+        .student-details-close {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            background: none;
+            border: none;
+            line-height: 1;
+            padding: 0 8px;
+        }
+
+        .student-details-close:hover { color: white; transform: rotate(90deg); }
+
+        .student-details-body { padding: 1.5rem; }
+
+        .student-avatar-section {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .student-avatar-large {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: var(--gradient-gold);
+            margin: 0 auto 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #1a1a2e;
+            overflow: hidden;
+            padding: 4px;
+            box-shadow: 0 8px 25px rgba(255,215,0,0.35), 0 0 0 4px rgba(255,255,255,0.05);
+        }
+
+        .student-avatar-large img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .student-name-large {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .student-role-large {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 4px 14px;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .student-role-large.admin { background: var(--gradient-gold); color: #1a1a2e; }
+        .student-role-large.developer { background: linear-gradient(135deg, #9d7cf5, #8566e8); color: white; }
+        .student-role-large.student { background: var(--gradient-primary); color: white; }
+
+        .student-info-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .student-info-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            transition: all var(--transition-base);
+        }
+
+        .student-info-item:hover {
+            background: var(--glass-bg-hover);
+            border-color: rgba(255,215,0,0.3);
+        }
+
+        .student-info-item i {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .student-info-item i.icon-blue { background: var(--gradient-info); }
+        .student-info-item i.icon-purple { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
+        .student-info-item i.icon-green { background: var(--gradient-success); }
+        .student-info-item i.icon-gold { background: var(--gradient-gold); color: #1a1a2e; }
+        .student-info-item i.icon-red { background: var(--gradient-danger); }
+
+        .student-info-item .info-text { flex: 1; min-width: 0; }
+
+        .student-info-item .info-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .student-info-item .info-value {
+            font-size: 0.85rem;
+            color: white;
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: block;
+        }
+
+        .student-actions-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            padding-top: 1.2rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .student-action-btn {
+            width: 100%;
+            padding: 0.85rem;
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .student-action-btn:hover { transform: translateY(-2px); }
+
+        .student-action-btn.btn-promote { background: var(--gradient-gold); color: #1a1a2e; }
+        .student-action-btn.btn-demote { background: linear-gradient(135deg, #ffa500, #ff8e53); }
+        .student-action-btn.btn-delete { background: var(--gradient-danger); }
+        .student-action-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+        .btn-view-student {
+            background: rgba(79,172,254,0.2);
+            color: #4facfe;
+            border: 1px solid rgba(79,172,254,0.3);
+            padding: 0.3rem 0.7rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.65rem;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-view-student:hover {
+            background: #4facfe;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .empty-actions { color: var(--text-disabled); font-size: 0.6rem; }
+
+        .student-stats-section { margin-bottom: 1.5rem; }
+
+        .student-stats-section h4 {
+            color: var(--accent-gold);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .student-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.6rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .student-stat-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 0.8rem 0.4rem;
+            text-align: center;
+            transition: all var(--transition-base);
+        }
+
+        .student-stat-card:hover {
+            background: var(--glass-bg-hover);
+            border-color: rgba(255,215,0,0.3);
+            transform: translateY(-2px);
+        }
+
+        .student-stat-card .stat-number {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--accent-gold);
+            line-height: 1;
+            margin-bottom: 0.3rem;
+        }
+
+        .student-stat-card .stat-label { font-size: 0.6rem; color: var(--text-muted); }
+
+        .mobile-back-btn {
+            display: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+        }
+
+        .mobile-back-btn:hover {
+            background: rgba(245, 200, 66, 0.15);
+            border-color: rgba(245, 200, 66, 0.3);
+            color: #f5c842;
+        }
+
+        @media (max-width: 900px) {
+            .messenger-app {
+                grid-template-columns: 280px 1fr;
+                height: 600px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-container { padding: 0.8rem; }
+            .admin-header { flex-direction: column; text-align: center; padding: 1rem; }
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+            .stat-card .number { font-size: 1.4rem; }
+
+            .messenger-app {
+                grid-template-columns: 1fr;
+                height: 550px;
+                position: relative;
+            }
+
+            .messenger-sidebar {
+                position: absolute;
+                inset: 0;
+                z-index: 10;
+                transform: translateX(0);
+                transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            }
+
+            .messenger-sidebar.hidden { transform: translateX(-100%); }
+
+            .messenger-chat {
+                position: absolute;
+                inset: 0;
+                z-index: 5;
+            }
+
+            .messenger-chat-header {
+                padding: 0.8rem 1rem;
+                min-height: 60px;
+            }
+
+            .mobile-back-btn { display: flex !important; }
+            .messenger-chat-body { padding: 0.9rem; }
+            .message-bubble { max-width: 88%; }
+            .messenger-reply-box { padding: 0.7rem 0.9rem; }
+            .messenger-reply-input { font-size: 0.82rem; padding: 0.65rem 0.9rem; }
+            .messenger-send-btn { width: 40px; height: 40px; }
+        }
+
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .admin-title { font-size: 1rem; }
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* ✅ وضع iframe: إخفاء Header عند التضمين    */
+        /* ═══════════════════════════════════════════ */
+        html.embedded-mode,
+        body.embedded-mode {
+            background: transparent !important;
+        }
+
+        body.embedded-mode .admin-header {
+            display: none !important;
+        }
+
+        body.embedded-mode .admin-container {
+            padding: 0.5rem !important;
+            min-height: auto !important;
+        }
+
+        body.embedded-mode .admin-logout {
+            display: none !important;
+        }
+
+        body.embedded-mode > .admin-container > div[style*="text-align: center"] {
+            display: none !important;
+        }
+
+        body.embedded-mode .stats-grid {
+            margin-bottom: 1rem !important;
+            gap: 0.7rem !important;
+        }
+
+        body.embedded-mode .stat-card {
+            padding: 0.8rem !important;
+        }
+
+        body.embedded-mode .stat-card .number {
+            font-size: 1.5rem !important;
+        }
+
+        body.embedded-mode .section-card {
+            margin-bottom: 1rem !important;
+            padding: 0.9rem !important;
+            border-radius: 16px !important;
+        }
+
+        body.embedded-mode .messenger-app {
+            height: 550px !important;
+        }
+
+        body.embedded-mode .section-title {
+            font-size: 0.9rem !important;
+            margin-bottom: 0.6rem !important;
+        }
+
+        body.embedded-mode::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        body.embedded-mode::-webkit-scrollbar-thumb {
+            background: rgba(245, 200, 66, 0.3);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            body.embedded-mode .admin-container {
+                padding: 0.3rem !important;
+            }
+
+            body.embedded-mode .messenger-app {
+                height: 450px !important;
+            }
+
+            body.embedded-mode .stats-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+
+            body.embedded-mode .stat-card .number {
+                font-size: 1.2rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- ✅ وضع iframe: إخفاء Header عند التضمين    -->
+    <!-- ═══════════════════════════════════════════ -->
+    <script>
+        (function() {
+            if (window.location.search.includes('embedded=true')) {
+                document.documentElement.classList.add('embedded-mode');
+                window.addEventListener('DOMContentLoaded', function() {
+                    document.body.classList.add('embedded-mode');
+                });
+            }
+        })();
+    </script>
+
+    <div class="offline-banner" id="offlineBanner">
+        <i class="fas fa-wifi"></i> أنت غير متصل بالإنترنت - بعض الميزات قد لا تعمل
+    </div>
+
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-header">
+            <div class="admin-title">
+                <i class="fas fa-user-shield"></i>
+                <span data-i18n="adminTitle">لوحة تحكم المشرف</span>
+                <span class="admin-info-badge">
+                    <i class="fas fa-user"></i> <span id="adminNameDisplay">المشرف</span>
+                </span>
+            </div>
+            <button class="admin-logout" onclick="window.logoutAdmin()">
+                <i class="fas fa-sign-out-alt"></i> <span data-i18n="logout">تسجيل خروج</span>
+            </button>
+        </div>
+
+        <!-- الإحصائيات -->
+        <div class="stats-grid" id="adminStats">
+            <div class="stat-card" onclick="window.scrollToSection('ideasSection')">
+                <div class="number" id="totalIdeas">0</div>
+                <div class="label" data-i18n="adminIdeas">💡 الاقتراحات</div>
+                <div class="sub-label" id="pendingIdeasLabel">⏳ 0 قيد المراجعة</div>
+            </div>
+            <div class="stat-card" onclick="window.scrollToSection('studentsSection')">
+                <div class="number" id="totalStudents">0</div>
+                <div class="label" data-i18n="adminStudents">👨‍🎓 التلاميذ</div>
+                <div class="sub-label" id="adminsLabel">👑 0 مشرف</div>
+            </div>
+            <div class="stat-card" onclick="window.scrollToSection('messagesSection')">
+                <div class="number" id="totalMessages">0</div>
+                <div class="label" data-i18n="adminMessages">📬 الرسائل</div>
+                <div class="sub-label" id="pendingMessagesLabel">⏳ 0 في انتظار الرد</div>
+            </div>
+            <div class="stat-card" onclick="window.scrollToSection('resourcesSection')">
+                <div class="number" id="totalResources">0</div>
+                <div class="label" data-i18n="resourcesLabel">📚 الموارد</div>
+                <div class="sub-label" id="pendingResourcesLabel">⏳ 0 قيد المراجعة</div>
+            </div>
+            <div class="stat-card" onclick="window.scrollToSection('announcementsSection')">
+                <div class="number" id="totalAnnouncements">0</div>
+                <div class="label" data-i18n="announcementsLabel">📢 الإعلانات</div>
+            </div>
+        </div>
+
+        <!-- MESSENGER -->
+        <div class="section-card" id="messagesSection" style="padding: 0.8rem;">
+            <div class="section-title" style="padding: 0.4rem 0.6rem 0.8rem;">
+                <i class="fas fa-comments"></i>
+                <span>إدارة الرسائل والردود</span>
+                <span class="status-badge pending" id="messagesCountBadge" style="margin-right:auto;">0 محادثة</span>
+            </div>
+
+            <div class="messenger-app">
+                <div class="messenger-sidebar" id="messengerSidebar">
+                    <div class="messenger-sidebar-header">
+                        <div class="messenger-sidebar-title">
+                            <i class="fas fa-inbox"></i>
+                            <span>صندوق الرسائل</span>
+                            <span class="messenger-sidebar-count" id="sidebarCount">0</span>
+                        </div>
+                        <div class="messenger-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="messengerSearchInput" placeholder="ابحث عن محادثة..." oninput="window.filterConversations(this.value)">
+                        </div>
+                    </div>
+
+                    <div class="messenger-conversations" id="messengerConversations">
+                        <div class="skeleton-card" style="margin: 0.5rem;">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line short"></div>
+                        </div>
+                        <div class="skeleton-card" style="margin: 0.5rem;">
+                            <div class="skeleton-line"></div>
+                            <div class="skeleton-line short"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="messenger-chat" id="messengerChat">
+                    <div class="messenger-empty" id="messengerEmpty">
+                        <i class="fas fa-comments"></i>
+                        <h3>اختر محادثة</h3>
+                        <p>اختر تلميذاً من القائمة لعرض الرسائل والرد عليها</p>
+                    </div>
+
+                    <div class="messenger-chat-header" id="messengerChatHeader" style="display:none;">
+                        <button class="mobile-back-btn" onclick="window.closeChatMobile()">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                        <div class="messenger-chat-avatar" id="chatHeaderAvatar">م</div>
+                        <div class="messenger-chat-info">
+                            <div class="messenger-chat-name" id="chatHeaderName">—</div>
+                            <div class="messenger-chat-status" id="chatHeaderStatus">
+                                <span class="status-dot-mini"></span>
+                                <span>قسم —</span>
+                            </div>
+                        </div>
+                        <div class="messenger-chat-actions">
+                            <button class="messenger-action-btn danger" onclick="window.deleteCurrentConversation()" title="حذف المحادثة">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="messenger-chat-body" id="messengerChatBody" style="display:none;">
+                    </div>
+
+                    <div class="messenger-reply-box" id="messengerReplyBox" style="display:none;">
+                        <textarea
+                            id="messengerReplyInput"
+                            class="messenger-reply-input"
+                            placeholder="اكتب ردك هنا..."
+                            rows="1"
+                            maxlength="1000"
+                            oninput="window.handleReplyInput(this)"
+                            onkeydown="window.handleReplyKeydown(event)"
+                        ></textarea>
+                        <button class="messenger-send-btn" id="messengerSendBtn" onclick="window.sendReply()" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- نقاط التميز -->
+        <div class="section-card">
+            <div class="section-title"><i class="fas fa-star"></i> ⭐ إدارة نقاط التميز</div>
+            <div class="points-controls">
+                <select id="pointsStudentSelect">
+                    <option value="">⏳ جارٍ التحميل...</option>
+                </select>
+                <input type="number" id="pointsAmount" placeholder="عدد النقاط" min="1" max="1000">
+                <select id="pointsAction">
+                    <option value="add">➕ إضافة نقاط</option>
+                    <option value="subtract">➖ خصم نقاط</option>
+                </select>
+                <button class="btn-admin promote" onclick="window.managePoints()" style="padding:0.4rem 1.2rem;">
+                    <i class="fas fa-check"></i> تنفيذ
+                </button>
+            </div>
+            <div id="pointsMessage" class="points-message"></div>
+            <div style="margin-top:1rem;">
+                <div class="section-title" style="font-size:0.8rem; color:var(--text-muted);">
+                    <i class="fas fa-trophy"></i> 🏆 ترتيب التلاميذ حسب النقاط
+                </div>
+                <div class="table-wrap" id="pointsRankingTable"></div>
+            </div>
+        </div>
+
+        <!-- الإعلانات -->
+        <div class="section-card" id="announcementsSection">
+            <div class="section-title">
+                <i class="fas fa-bullhorn"></i> 📢 إدارة الإعلانات
+                <div style="margin-right:auto;">
+                    <button class="btn-add-announcement" onclick="window.openAnnouncementModal()">
+                        <i class="fas fa-plus"></i> إضافة إعلان
+                    </button>
+                </div>
+            </div>
+            <div id="announcementsList"></div>
+        </div>
+
+        <!-- الاقتراحات -->
+        <div class="section-card" id="ideasSection">
+            <div class="section-title"><i class="fas fa-lightbulb"></i> إدارة الاقتراحات</div>
+            <div class="table-wrap" id="ideasTable"></div>
+        </div>
+
+        <!-- الموارد -->
+        <div class="section-card" id="resourcesSection">
+            <div class="section-title"><i class="fas fa-book-open"></i> إدارة الموارد التعليمية</div>
+            <div class="table-wrap" id="resourcesTable"></div>
+        </div>
+
+        <!-- التلاميذ -->
+        <div class="section-card" id="studentsSection">
+            <div class="section-title"><i class="fas fa-users"></i> قائمة التلاميذ وإدارة الصلاحيات</div>
+            <div class="search-bar">
+                <i class="fas fa-search"></i>
+                <input type="text" id="studentSearch" placeholder="ابحث عن تلميذ بالاسم أو البريد أو القسم..." oninput="window.filterStudents(this.value)">
+            </div>
+            <div class="table-wrap" id="studentsTable"></div>
+        </div>
+
+        <div style="text-align: center; margin-top: 1rem;">
+            <a href="dashboard.html" style="display:inline-block; padding:0.4rem 1.2rem; background:var(--glass-bg); border:1px solid var(--glass-border); border-radius:30px; color:white; text-decoration:none; font-size:0.85rem; transition:all 0.3s ease;">
+                <i class="fas fa-arrow-right"></i> العودة للوحة التحكم
+            </a>
+        </div>
+    </div>
+
+    <!-- Modal تفاصيل التلميذ -->
+    <div class="student-details-modal" id="studentDetailsModal">
+        <div class="student-details-content">
+            <div class="student-details-header">
+                <h3><i class="fas fa-user-circle"></i> معلومات التلميذ</h3>
+                <button class="student-details-close" onclick="window.closeStudentDetails()">&times;</button>
+            </div>
+            <div class="student-details-body" id="studentDetailsBody"></div>
+        </div>
+    </div>
+
+    <!-- Modal إضافة إعلان -->
+    <div class="modal-overlay" id="announcementModal">
+        <div class="modal-box">
+            <h3><i class="fas fa-plus"></i> إضافة إعلان جديد</h3>
+            <form id="announcementForm">
+                <div class="form-group">
+                    <label>عنوان الإعلان *</label>
+                    <input type="text" id="announcementTitle" placeholder="مثال: تنظيم امتحانات الفصل الأول" required maxlength="200">
+                </div>
+                <div class="form-group">
+                    <label>محتوى الإعلان *</label>
+                    <textarea id="announcementContent" placeholder="اكتب محتوى الإعلان..." required maxlength="2000"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-submit"><i class="fas fa-check"></i> نشر</button>
+                    <button type="button" class="btn-cancel" onclick="window.closeAnnouncementModal()"><i class="fas fa-times"></i> إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="darkmode.js"></script>
+    <script type="module">
+        import { supabase, showToast, escapeHtml, deleteFileFromStorage } from './supabase.js';
+        import { initLanguage } from './language.js';
+
+        window.addEventListener('error', (e) => console.error('❌ Global error:', e.message));
+        window.addEventListener('unhandledrejection', (e) => console.error('❌ Unhandled promise:', e.reason));
+
+        function updateOnlineStatus() {
+            const banner = document.getElementById('offlineBanner');
+            if (!banner) return;
+            if (navigator.onLine) banner.classList.remove('active');
+            else banner.classList.add('active');
+        }
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        initLanguage();
+
+        let currentUser = null;
+        let currentStudents = [];
+        let currentMessages = [];
+        let currentIdeas = [];
+        let currentResources = [];
+        let currentAnnouncements = [];
+        let activeConversation = null;
+        let realtimeChannel = null;
+        let refreshIntervalId = null;
+
+        const MAIN_ADMIN_EMAIL = 'adamhalym2017@gmail.com';
+
+        function isValidUUID(uuid) {
+            if (!uuid || typeof uuid !== 'string') return false;
+            return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(uuid);
+        }
+
+        async function verifyAdmin() {
+            try {
+                const savedUserStr = localStorage.getItem('currentUser');
+                if (!savedUserStr || savedUserStr === 'null') return { valid: false, reason: 'no_user' };
+
+                const savedUser = JSON.parse(savedUserStr);
+                if (!savedUser || !savedUser.id) return { valid: false, reason: 'invalid_user' };
+
+                const { data, error } = await supabase
+                    .from('students')
+                    .select('id, name, email, role, avatar_url')
+                    .eq('id', savedUser.id)
+                    .single();
+
+                if (error || !data) return { valid: false, reason: 'not_found' };
+                if (data.role !== 'admin' && data.role !== 'developer') return { valid: false, reason: 'not_admin' };
+
+                currentUser = {
+                    id: data.id,
+                    name: data.name,
+                    email: data.email,
+                    role: data.role,
+                    avatar_url: data.avatar_url || null
+                };
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                return { valid: true, user: currentUser };
+            } catch (e) {
+                return { valid: false, reason: 'error' };
+            }
+        }
+
+        window.scrollToSection = function(id) {
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        function getInitials(name) {
+            if (!name) return '؟';
+            const parts = name.trim().split(/\s+/);
+            if (parts.length >= 2) return parts[0][0] + parts[1][0];
+            return name.substring(0, 2).toUpperCase();
+        }
+
+        function formatTimeAgo(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+            if (diff < 60) return 'الآن';
+            if (diff < 3600) return `منذ ${Math.floor(diff / 60)} د`;
+            if (diff < 86400) return `منذ ${Math.floor(diff / 3600)} س`;
+            if (diff < 604800) return `منذ ${Math.floor(diff / 86400)} ي`;
+            return date.toLocaleDateString('ar-EG', { day: 'numeric', month: 'numeric' });
+        }
+
+        function formatTime(dateStr) {
+            if (!dateStr) return '';
+            return new Date(dateStr).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        async function loadStats() {
+            try {
+                const [ideasRes, studentsRes, messagesRes, resourcesRes, announcementsRes] = await Promise.all([
+                    supabase.from('ideas').select('id, status'),
+                    supabase.from('students').select('id, role'),
+                    supabase.from('messages').select('id, status'),
+                    supabase.from('resources').select('id, status'),
+                    supabase.from('announcements').select('id')
+                ]);
+
+                const ideas = ideasRes.data || [];
+                const students = studentsRes.data || [];
+                const messages = messagesRes.data || [];
+                const resources = resourcesRes.data || [];
+                const announcements = announcementsRes.data || [];
+
+                document.getElementById('totalIdeas').textContent = ideas.length;
+                document.getElementById('totalStudents').textContent = students.length;
+                document.getElementById('totalMessages').textContent = messages.length;
+                document.getElementById('totalResources').textContent = resources.length;
+                document.getElementById('totalAnnouncements').textContent = announcements.length;
+
+                document.getElementById('pendingIdeasLabel').textContent = `⏳ ${ideas.filter(i => i.status === 'pending').length} قيد المراجعة`;
+                document.getElementById('pendingMessagesLabel').textContent = `⏳ ${messages.filter(m => m.status === 'pending').length} في انتظار الرد`;
+                document.getElementById('pendingResourcesLabel').textContent = `⏳ ${resources.filter(r => r.status === 'pending').length} قيد المراجعة`;
+                document.getElementById('adminsLabel').textContent = `👑 ${students.filter(s => s.role === 'admin').length} مشرف`;
+            } catch (error) {
+                console.error('خطأ:', error);
+            }
+        }
+
+        function renderConversations(messages) {
+            const container = document.getElementById('messengerConversations');
+            const sidebarCount = document.getElementById('sidebarCount');
+            const messagesCountBadge = document.getElementById('messagesCountBadge');
+
+            if (!container) return;
+
+            if (sidebarCount) sidebarCount.textContent = messages.length;
+            if (messagesCountBadge) messagesCountBadge.textContent = `${messages.length} محادثة`;
+
+            if (messages.length === 0) {
+                container.innerHTML = `
+                    <div class="messenger-empty" style="padding: 3rem 1rem;">
+                        <i class="fas fa-inbox"></i>
+                        <h3 style="font-size: 0.9rem;">لا توجد رسائل</h3>
+                        <p style="font-size: 0.75rem;">لم يرسل أي تلميذ رسالة بعد</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = messages.map(msg => {
+                const isActive = activeConversation && activeConversation.id === msg.id;
+                const isUnread = msg.status === 'pending';
+                const initial = getInitials(msg.student_name);
+                const preview = msg.message ? msg.message.substring(0, 40) + (msg.message.length > 40 ? '...' : '') : '';
+
+                return `
+                    <div class="conversation-item ${isActive ? 'active' : ''} ${isUnread ? 'unread' : ''}"
+                         onclick="window.openConversation('${msg.id}')"
+                         data-name="${escapeHtml(msg.student_name || '')}"
+                         data-class="${escapeHtml(msg.student_class || '')}">
+                        <div class="conversation-avatar">${initial}</div>
+                        <div class="conversation-info">
+                            <div class="conversation-header">
+                                <span class="conversation-name">${escapeHtml(msg.student_name || 'مجهول')}</span>
+                                <span class="conversation-time">${formatTimeAgo(msg.created_at)}</span>
+                            </div>
+                            <div class="conversation-preview">
+                                <span class="conversation-message">${escapeHtml(preview)}</span>
+                                ${isUnread ? '<span class="conversation-badge">!</span>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.filterConversations = function(query) {
+            const items = document.querySelectorAll('.conversation-item');
+            const q = query.toLowerCase();
+            items.forEach(item => {
+                const name = (item.dataset.name || '').toLowerCase();
+                const cls = (item.dataset.class || '').toLowerCase();
+                const match = !q || name.includes(q) || cls.includes(q);
+                item.style.display = match ? 'flex' : 'none';
+            });
+        };
+
+        window.openConversation = function(messageId) {
+            if (!isValidUUID(messageId)) {
+                showToast('❌ معرّف الرسالة غير صالح', 'error');
+                return;
+            }
+            const msg = currentMessages.find(m => m.id === messageId);
+            if (!msg) return;
+
+            activeConversation = msg;
+
+            document.getElementById('messengerEmpty').style.display = 'none';
+            document.getElementById('messengerChatHeader').style.display = 'flex';
+            document.getElementById('messengerChatBody').style.display = 'flex';
+            document.getElementById('messengerReplyBox').style.display = 'flex';
+
+            const initial = getInitials(msg.student_name);
+            document.getElementById('chatHeaderAvatar').textContent = initial;
+            document.getElementById('chatHeaderName').textContent = msg.student_name || 'مجهول';
+            document.getElementById('chatHeaderStatus').innerHTML = `
+                <span class="status-dot-mini"></span>
+                <span>القسم: ${escapeHtml(msg.student_class || 'غير محدد')}</span>
+            `;
+
+            renderChatBody(msg);
+            renderConversations(currentMessages);
+
+            if (window.innerWidth <= 768) {
+                document.getElementById('messengerSidebar').classList.add('hidden');
+            }
+
+            updateReplyBox(msg);
+        };
+
+        function renderChatBody(msg) {
+            const body = document.getElementById('messengerChatBody');
+            if (!body) return;
+
+            let html = '';
+
+            html += `
+                <div class="message-bubble student">
+                    <div class="message-bubble-avatar">${getInitials(msg.student_name)}</div>
+                    <div class="message-bubble-content">
+                        <div class="message-bubble-name">${escapeHtml(msg.student_name || 'مجهول')}</div>
+                        <div class="message-bubble-text">${escapeHtml(msg.message).replace(/\n/g, '<br>')}</div>
+                        <div class="message-bubble-time">${formatTime(msg.created_at)}</div>
+                    </div>
+                </div>
+            `;
+
+            if (msg.reply) {
+                html += `
+                    <div class="message-bubble admin">
+                        <div class="message-bubble-avatar">إ</div>
+                        <div class="message-bubble-content">
+                            <div class="message-bubble-name">الإدارة</div>
+                            <div class="message-bubble-text">${escapeHtml(msg.reply).replace(/\n/g, '<br>')}</div>
+                            <div class="message-bubble-time">${formatTime(msg.reply_date || msg.created_at)}</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            body.innerHTML = html;
+            requestAnimationFrame(() => { body.scrollTop = body.scrollHeight; });
+        }
+
+        function updateReplyBox(msg) {
+            const input = document.getElementById('messengerReplyInput');
+            const sendBtn = document.getElementById('messengerSendBtn');
+            if (msg.status === 'replied') {
+                input.placeholder = 'تم الرد - يمكنك الرد مرة أخرى...';
+            } else {
+                input.placeholder = 'اكتب ردك هنا...';
+            }
+            input.value = '';
+            input.disabled = false;
+            sendBtn.disabled = true;
+        }
+
+        window.handleReplyInput = function(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+            const sendBtn = document.getElementById('messengerSendBtn');
+            if (sendBtn) sendBtn.disabled = !textarea.value.trim().length;
+        };
+
+        window.handleReplyKeydown = function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                window.sendReply();
+            }
+        };
+
+        window.sendReply = async function() {
+            if (!activeConversation) return;
+            const input = document.getElementById('messengerReplyInput');
+            const reply = input.value.trim();
+
+            if (!reply) { showToast('⚠️ اكتب الرد أولاً', 'error'); return; }
+            if (reply.length > 1000) { showToast('⚠️ الرد طويل جداً', 'error'); return; }
+            if (!isValidUUID(activeConversation.id)) { showToast('❌ معرّف غير صالح', 'error'); return; }
+
+            const sendBtn = document.getElementById('messengerSendBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const { error } = await supabase
+                    .from('messages')
+                    .update({
+                        reply: reply,
+                        status: 'replied',
+                        reply_date: new Date().toISOString()
+                    })
+                    .eq('id', activeConversation.id);
+
+                if (error) throw error;
+
+                input.value = '';
+                input.style.height = 'auto';
+                showToast('✅ تم إرسال الرد!', 'success');
+                await loadMessages();
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            } finally {
+                sendBtn.disabled = true;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            }
+        };
+
+        window.deleteCurrentConversation = async function() {
+            if (!activeConversation) return;
+            if (!confirm('⚠️ حذف هذه المحادثة نهائياً؟')) return;
+            if (!isValidUUID(activeConversation.id)) { showToast('❌ معرّف غير صالح', 'error'); return; }
+
+            try {
+                const { error } = await supabase.from('messages').delete().eq('id', activeConversation.id);
+                if (error) throw error;
+                showToast('🗑️ تم حذف المحادثة', 'success');
+
+                activeConversation = null;
+                document.getElementById('messengerEmpty').style.display = 'flex';
+                document.getElementById('messengerChatHeader').style.display = 'none';
+                document.getElementById('messengerChatBody').style.display = 'none';
+                document.getElementById('messengerReplyBox').style.display = 'none';
+
+                await Promise.all([loadMessages(), loadStats()]);
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            }
+        };
+
+        window.closeChatMobile = function() {
+            document.getElementById('messengerSidebar').classList.remove('hidden');
+        };
+
+        async function loadMessages() {
+            try {
+                const { data, error } = await supabase
+                    .from('messages')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                currentMessages = data || [];
+                renderConversations(currentMessages);
+
+                if (activeConversation) {
+                    const updated = currentMessages.find(m => m.id === activeConversation.id);
+                    if (updated) {
+                        activeConversation = updated;
+                        renderChatBody(updated);
+                        updateReplyBox(updated);
+                    } else {
+                        activeConversation = null;
+                        document.getElementById('messengerEmpty').style.display = 'flex';
+                        document.getElementById('messengerChatHeader').style.display = 'none';
+                        document.getElementById('messengerChatBody').style.display = 'none';
+                        document.getElementById('messengerReplyBox').style.display = 'none';
+                    }
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل الرسائل:', error);
+            }
+        }
+
+        async function loadStudentsForPoints() {
+            const select = document.getElementById('pointsStudentSelect');
+            if (!select) return;
+            select.innerHTML = '<option value="">⏳ جارٍ التحميل...</option>';
+            select.disabled = true;
+
+            try {
+                const { data, error } = await supabase
+                    .from('students')
+                    .select('id, name, class, points, email, role')
+                    .order('name', { ascending: true });
+
+                if (error) throw error;
+                currentStudents = data || [];
+
+                if (!data || data.length === 0) {
+                    select.innerHTML = '<option value="">📭 لا يوجد تلاميذ</option>';
+                    select.disabled = false;
+                    return;
+                }
+
+                let optionsHTML = '<option value="">📚 اختر التلميذ</option>';
+                data.forEach(student => {
+                    const pointsDisplay = student.points || 0;
+                    const roleEmoji = student.role === 'developer' ? '🛠️' : student.role === 'admin' ? '👑' : '👨‍🎓';
+                    optionsHTML += `<option value="${student.id}">${roleEmoji} ${escapeHtml(student.name)} (${escapeHtml(student.class || '')}) - ⭐ ${pointsDisplay}</option>`;
+                });
+
+                select.innerHTML = optionsHTML;
+                select.disabled = false;
+            } catch (error) {
+                select.innerHTML = '<option value="">⚠️ خطأ في التحميل</option>';
+                select.disabled = false;
+            }
+        }
+
+        window.managePoints = async function() {
+            const studentId = document.getElementById('pointsStudentSelect').value;
+            const amount = parseInt(document.getElementById('pointsAmount').value);
+            const action = document.getElementById('pointsAction').value;
+            const messageDiv = document.getElementById('pointsMessage');
+
+            if (!studentId) {
+                messageDiv.innerHTML = '⚠️ الرجاء اختيار تلميذ';
+                messageDiv.style.color = '#ff6b6b';
+                return;
+            }
+            if (!amount || amount <= 0 || amount > 1000) {
+                messageDiv.innerHTML = '⚠️ الرجاء إدخال عدد صحيح (1-1000)';
+                messageDiv.style.color = '#ff6b6b';
+                return;
+            }
+            if (!isValidUUID(studentId)) {
+                messageDiv.innerHTML = '❌ معرّف التلميذ غير صالح';
+                messageDiv.style.color = '#ff6b6b';
+                return;
+            }
+
+            const btn = document.querySelector('.points-controls .btn-admin');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+
+            try {
+                const { data: student, error: fetchError } = await supabase
+                    .from('students')
+                    .select('id, name, points, class')
+                    .eq('id', studentId)
+                    .single();
+
+                if (fetchError) throw fetchError;
+
+                const currentPoints = student.points || 0;
+                const newPoints = action === 'add' ? currentPoints + amount : currentPoints - amount;
+
+                if (newPoints < 0) {
+                    messageDiv.innerHTML = `❌ لا يمكن خصم ${amount} نقطة - لديه ${currentPoints} فقط`;
+                    messageDiv.style.color = '#ff6b6b';
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-check"></i> تنفيذ';
+                    return;
+                }
+
+                const { error: updateError } = await supabase
+                    .from('students')
+                    .update({ points: newPoints, points_last_updated: new Date().toISOString() })
+                    .eq('id', studentId);
+
+                if (updateError) throw updateError;
+
+                const actionText = action === 'add' ? 'إضافة' : 'خصم';
+                const color = action === 'add' ? '#51cf66' : '#ffa500';
+
+                messageDiv.innerHTML = `✅ تم ${actionText} ${amount} نقطة ${action === 'add' ? 'لـ' : 'من'} <strong>${escapeHtml(student.name)}</strong> (${currentPoints} → ${newPoints})`;
+                messageDiv.style.color = color;
+                document.getElementById('pointsAmount').value = '';
+
+                await Promise.all([loadStudentsForPoints(), loadPointsRanking(), loadStudents(), loadStats()]);
+                showToast(`⭐ تم ${actionText} ${amount} نقطة`, 'success');
+            } catch (error) {
+                messageDiv.innerHTML = `❌ حدث خطأ: ${escapeHtml(error.message)}`;
+                messageDiv.style.color = '#ff6b6b';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> تنفيذ';
+            }
+        };
+
+        async function loadPointsRanking() {
+            const container = document.getElementById('pointsRankingTable');
+            if (!container) return;
+            try {
+                const { data, error } = await supabase
+                    .from('students')
+                    .select('name, class, points, role')
+                    .order('points', { ascending: false })
+                    .limit(20);
+
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-trophy"></i><p>لا توجد بيانات</p></div>`;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table>
+                        <thead><tr><th>#</th><th>الاسم</th><th>القسم</th><th>⭐ النقاط</th><th>الدور</th></tr></thead>
+                        <tbody>
+                            ${data.map((s, i) => `
+                                <tr>
+                                    <td>${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`}</td>
+                                    <td>${escapeHtml(s.name)}</td>
+                                    <td>${escapeHtml(s.class || 'غير محدد')}</td>
+                                    <td style="color:var(--accent-gold);font-weight:700;">⭐ ${s.points || 0}</td>
+                                    <td><span class="role-badge ${s.role}">${s.role === 'developer' ? '🛠️ مطور' : s.role === 'admin' ? '👑 مشرف' : '👨‍🎓 تلميذ'}</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ</p></div>`;
+            }
+        }
+
+        async function loadAnnouncements() {
+            const container = document.getElementById('announcementsList');
+            if (!container) return;
+            try {
+                const { data, error } = await supabase
+                    .from('announcements')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                currentAnnouncements = data || [];
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>لا توجد إعلانات</p></div>`;
+                    return;
+                }
+
+                container.innerHTML = data.map(announcement => `
+                    <div class="announcement-item">
+                        <div class="announcement-info">
+                            <div class="title">${escapeHtml(announcement.title)}</div>
+                            <div class="date">
+                                <i class="fas fa-calendar"></i> ${new Date(announcement.created_at).toLocaleDateString('ar-EG')}
+                                ${announcement.created_by_name ? ` | <i class="fas fa-user"></i> ${escapeHtml(announcement.created_by_name)}` : ''}
+                            </div>
+                            <div class="content">${escapeHtml(announcement.content)}</div>
+                        </div>
+                        <div class="announcement-actions">
+                            <button class="btn-admin delete" onclick="window.deleteAnnouncement('${announcement.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ</p></div>`;
+            }
+        }
+
+        window.openAnnouncementModal = function() {
+            document.getElementById('announcementModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeAnnouncementModal = function() {
+            document.getElementById('announcementModal').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('announcementForm').reset();
+        };
+
+        document.getElementById('announcementForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const title = document.getElementById('announcementTitle').value.trim();
+            const content = document.getElementById('announcementContent').value.trim();
+
+            if (!title || !content) { showToast('⚠️ الرجاء ملء جميع الحقول', 'error'); return; }
+
+            const submitBtn = document.querySelector('#announcementForm .btn-submit');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري...';
+
+            try {
+                const { error } = await supabase.from('announcements').insert({
+                    title, content,
+                    created_by: currentUser.id,
+                    created_by_name: currentUser.name,
+                    created_at: new Date().toISOString()
+                });
+                if (error) throw error;
+                showToast('✅ تم نشر الإعلان بنجاح!', 'success');
+                window.closeAnnouncementModal();
+                await Promise.all([loadAnnouncements(), loadStats()]);
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> نشر';
+            }
+        });
+
+        window.deleteAnnouncement = async function(id) {
+            if (!isValidUUID(id)) return;
+            if (!confirm('⚠️ حذف هذا الإعلان نهائياً؟')) return;
+            try {
+                await supabase.from('announcements').delete().eq('id', id);
+                showToast('🗑️ تم الحذف', 'success');
+                await Promise.all([loadAnnouncements(), loadStats()]);
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            }
+        };
+
+        async function loadIdeas() {
+            const container = document.getElementById('ideasTable');
+            if (!container) return;
+            try {
+                const { data, error } = await supabase
+                    .from('ideas').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                currentIdeas = data || [];
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>لا توجد اقتراحات</p></div>`;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table>
+                        <thead><tr><th>العنوان</th><th>التلميذ</th><th>التصنيف</th><th>التاريخ</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+                        <tbody>
+                            ${data.map(idea => `
+                                <tr>
+                                    <td style="font-weight:600;text-align:right;">${escapeHtml(idea.title)}</td>
+                                    <td>${escapeHtml(idea.student_name)}</td>
+                                    <td><span class="resource-tag">${escapeHtml(idea.category)}</span></td>
+                                    <td style="font-size:0.65rem;">${new Date(idea.created_at).toLocaleDateString('ar-EG')}</td>
+                                    <td><span class="status-badge ${idea.status === 'approved' ? 'approved' : 'pending'}">${idea.status === 'approved' ? '✓ مقبول' : '⏳ قيد المراجعة'}</span></td>
+                                    <td>
+                                        ${idea.status !== 'approved' ? `<button class="btn-admin accept" onclick="window.approveIdea('${idea.id}')"><i class="fas fa-check"></i></button>` : ''}
+                                        <button class="btn-admin delete" onclick="window.deleteIdea('${idea.id}')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ</p></div>`;
+            }
+        }
+
+        window.approveIdea = async function(id) {
+            if (!isValidUUID(id)) return;
+            if (!confirm('قبول هذا الاقتراح؟')) return;
+            try {
+                await supabase.from('ideas').update({ status: 'approved' }).eq('id', id);
+                showToast('✅ تم القبول!', 'success');
+                await Promise.all([loadIdeas(), loadStats()]);
+            } catch (error) { showToast('❌ خطأ: ' + error.message, 'error'); }
+        };
+
+        window.deleteIdea = async function(id) {
+            if (!isValidUUID(id)) return;
+            if (!confirm('⚠️ حذف نهائياً؟')) return;
+            try {
+                await supabase.from('ideas').delete().eq('id', id);
+                showToast('🗑️ تم الحذف', 'success');
+                await Promise.all([loadIdeas(), loadStats()]);
+            } catch (error) { showToast('❌ خطأ: ' + error.message, 'error'); }
+        };
+
+        async function loadResources() {
+            const container = document.getElementById('resourcesTable');
+            if (!container) return;
+            try {
+                const { data, error } = await supabase
+                    .from('resources').select('*').order('uploaded_at', { ascending: false });
+                if (error) throw error;
+                currentResources = data || [];
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = `<div class="empty-state"><i class="fas fa-book-open"></i><p>لا توجد موارد</p></div>`;
+                    return;
+                }
+
+                container.innerHTML = `
+                    <table>
+                        <thead><tr><th>العنوان</th><th>النوع</th><th>المستوى</th><th>الرافع</th><th>التاريخ</th><th>الحالة</th><th>إجراءات</th></tr></thead>
+                        <tbody>
+                            ${data.map(res => `
+                                <tr>
+                                    <td style="font-weight:600;text-align:right;">${escapeHtml(res.title)}</td>
+                                    <td>${escapeHtml(res.category)}</td>
+                                    <td>${escapeHtml(res.level)}</td>
+                                    <td>${escapeHtml(res.uploaded_by_name || 'مجهول')}</td>
+                                    <td style="font-size:0.65rem;">${new Date(res.uploaded_at).toLocaleDateString('ar-EG')}</td>
+                                    <td><span class="status-badge ${res.status === 'approved' ? 'approved' : 'pending'}">${res.status === 'approved' ? '✓ منشور' : '⏳ قيد المراجعة'}</span></td>
+                                    <td>
+                                        ${res.status !== 'approved' ? `<button class="btn-admin accept" onclick="window.approveResource('${res.id}')"><i class="fas fa-check"></i></button>` : ''}
+                                        <button class="btn-admin delete" onclick="window.deleteResource('${res.id}')"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ</p></div>`;
+            }
+        }
+
+        window.approveResource = async function(id) {
+            if (!isValidUUID(id)) return;
+            try {
+                await supabase.from('resources').update({
+                    status: 'approved', approved_by: currentUser.id, approved_at: new Date().toISOString()
+                }).eq('id', id);
+                showToast('✅ تمت الموافقة', 'success');
+                await Promise.all([loadResources(), loadStats()]);
+            } catch (error) { showToast('❌ خطأ: ' + error.message, 'error'); }
+        };
+
+        window.deleteResource = async function(id) {
+            if (!isValidUUID(id)) return;
+            if (!confirm('⚠️ حذف هذا المورد نهائياً؟')) return;
+            try {
+                const { data: resource } = await supabase.from('resources').select('file_url').eq('id', id).single();
+                if (resource && resource.file_url) {
+                    await deleteFileFromStorage('resources', resource.file_url);
+                }
+                await supabase.from('resources').delete().eq('id', id);
+                showToast('🗑️ تم الحذف', 'success');
+                await Promise.all([loadResources(), loadStats()]);
+            } catch (error) { showToast('❌ خطأ: ' + error.message, 'error'); }
+        };
+
+        async function loadStudents() {
+            const container = document.getElementById('studentsTable');
+            if (!container) return;
+            try {
+                const { data, error } = await supabase
+                    .from('students').select('*').order('created_at', { ascending: false });
+                if (error) throw error;
+                currentStudents = data || [];
+                renderStudents(currentStudents);
+            } catch (error) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>خطأ</p></div>`;
+            }
+        }
+
+        function renderStudents(students) {
+            const container = document.getElementById('studentsTable');
+            if (!container) return;
+
+            if (!students || students.length === 0) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-users"></i><p>لا يوجد تلاميذ</p></div>`;
+                return;
+            }
+
+            container.innerHTML = `
+                <table>
+                    <thead>
+                        <tr><th>الاسم</th><th>القسم</th><th>البريد</th><th>⭐ النقاط</th><th>الدور</th><th>إجراءات</th></tr>
+                    </thead>
+                    <tbody>
+                        ${students.map(student => {
+                            const isMainAdmin = student.email === MAIN_ADMIN_EMAIL;
+                            return `
+                            <tr>
+                                <td style="font-weight:600;text-align:right;">${escapeHtml(student.name)}</td>
+                                <td>${escapeHtml(student.class || '—')}</td>
+                                <td style="font-size:0.7rem;">${escapeHtml(student.email)}</td>
+                                <td style="color:var(--accent-gold);font-weight:700;">⭐ ${student.points || 0}</td>
+                                <td>
+                                    <span class="role-badge ${student.role}">
+                                        ${student.role === 'developer' ? '🛠️ مطور' : student.role === 'admin' ? '👑 مشرف' : '👨‍🎓 تلميذ'}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div style="display:flex;gap:0.3rem;justify-content:center;flex-wrap:wrap;">
+                                        <button class="btn-view-student" onclick="window.viewStudentDetails('${student.id}')">
+                                            <i class="fas fa-eye"></i> عرض
+                                        </button>
+                                        ${!isMainAdmin ? `
+                                            <button class="btn-admin delete" onclick="window.deleteStudent('${student.id}', '${escapeHtml(student.name)}')">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        ` : `<span class="empty-actions">👑 محمي</span>`}
+                                    </div>
+                                </td>
+                            </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+
+        window.viewStudentDetails = async function(studentId) {
+            if (!isValidUUID(studentId)) { showToast('❌ معرّف غير صالح', 'error'); return; }
+            const modal = document.getElementById('studentDetailsModal');
+            const body = document.getElementById('studentDetailsBody');
+            if (!modal || !body) return;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            body.innerHTML = `
+                <div style="padding:3rem 2rem; text-align:center;">
+                    <i class="fas fa-spinner fa-spin" style="font-size:2.5rem; color:var(--accent-gold);"></i>
+                    <p style="color:var(--text-muted); margin-top:1rem;">جاري التحميل...</p>
+                </div>
+            `;
+
+            try {
+                const { data: student, error: studentError } = await supabase
+                    .from('students').select('*').eq('id', studentId).single();
+                if (studentError || !student) throw new Error('لم يتم العثور على التلميذ');
+
+                const [messagesRes, ideasRes, resourcesRes] = await Promise.all([
+                    supabase.from('messages').select('id').eq('student_id', studentId),
+                    supabase.from('ideas').select('id').eq('student_id', studentId),
+                    supabase.from('resources').select('id').eq('uploaded_by', studentId)
+                ]);
+
+                const messages = messagesRes.data || [];
+                const ideas = ideasRes.data || [];
+                const resources = resourcesRes.data || [];
+
+                const isMainAdmin = student.email === MAIN_ADMIN_EMAIL;
+                const role = student.role === 'developer' ? 'مطور' : student.role === 'admin' ? 'مشرف' : 'تلميذ';
+                const roleIcon = student.role === 'developer' ? '🛠️' : student.role === 'admin' ? '👑' : '👨‍🎓';
+
+                const joinedDate = student.created_at
+                    ? new Date(student.created_at).toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric' })
+                    : 'غير محدد';
+
+                const avatarUrl = student.avatar_url || '';
+                const avatarHTML = avatarUrl ? `<img src="${avatarUrl}" alt="${escapeHtml(student.name)}">` : roleIcon;
+
+                body.innerHTML = `
+                    <div class="student-avatar-section">
+                        <div class="student-avatar-large">${avatarHTML}</div>
+                        <h3 class="student-name-large">${escapeHtml(student.name)}</h3>
+                        <div class="student-role-large ${student.role}">
+                            ${roleIcon} ${role}
+                        </div>
+                    </div>
+
+                    <div class="student-info-grid">
+                        <div class="student-info-item">
+                            <i class="fas fa-envelope icon-blue"></i>
+                            <div class="info-text">
+                                <span class="info-label">البريد الإلكتروني</span>
+                                <span class="info-value" dir="ltr">${escapeHtml(student.email)}</span>
+                            </div>
+                        </div>
+                        <div class="student-info-item">
+                            <i class="fas fa-graduation-cap icon-purple"></i>
+                            <div class="info-text">
+                                <span class="info-label">القسم</span>
+                                <span class="info-value">${escapeHtml(student.class || 'غير محدد')}</span>
+                            </div>
+                        </div>
+                        <div class="student-info-item">
+                            <i class="fas fa-star icon-gold"></i>
+                            <div class="info-text">
+                                <span class="info-label">نقاط التميز</span>
+                                <span class="info-value">⭐ ${student.points || 0}</span>
+                            </div>
+                        </div>
+                        <div class="student-info-item">
+                            <i class="fas fa-calendar-alt icon-green"></i>
+                            <div class="info-text">
+                                <span class="info-label">تاريخ التسجيل</span>
+                                <span class="info-value">${joinedDate}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="student-stats-section">
+                        <h4><i class="fas fa-chart-simple"></i> النشاط على المنصة</h4>
+                        <div class="student-stats-grid">
+                            <div class="student-stat-card">
+                                <div class="stat-number">${messages.length}</div>
+                                <div class="stat-label">📬 رسائل</div>
+                            </div>
+                            <div class="student-stat-card">
+                                <div class="stat-number">${ideas.length}</div>
+                                <div class="stat-label">💡 اقتراحات</div>
+                            </div>
+                            <div class="student-stat-card">
+                                <div class="stat-number">${resources.length}</div>
+                                <div class="stat-label">📚 موارد</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="student-actions-section">
+                        ${!isMainAdmin ? `
+                            ${student.role !== 'admin' && student.role !== 'developer' ? `
+                                <button class="student-action-btn btn-promote" onclick="window.promoteFromDetails('${student.id}', '${escapeHtml(student.name)}')">
+                                    <i class="fas fa-crown"></i> ترقية إلى مشرف
+                                </button>
+                            ` : student.role === 'admin' ? `
+                                <button class="student-action-btn btn-demote" onclick="window.demoteFromDetails('${student.id}', '${escapeHtml(student.name)}')">
+                                    <i class="fas fa-user-graduate"></i> إزالة صلاحية المشرف
+                                </button>
+                            ` : ''}
+                            <button class="student-action-btn btn-delete" onclick="window.deleteFromDetails('${student.id}', '${escapeHtml(student.name)}')">
+                                <i class="fas fa-user-slash"></i> حذف الحساب
+                            </button>
+                        ` : `
+                            <div style="text-align:center; padding:1rem; background:rgba(255,215,0,0.08); border:1px solid rgba(255,215,0,0.2); border-radius:var(--radius-md);">
+                                <i class="fas fa-crown" style="color:var(--accent-gold); font-size:1.3rem;"></i>
+                                <p style="color:var(--accent-gold); font-size:0.8rem; margin-top:0.5rem; font-weight:600;">المشرف الرئيسي</p>
+                            </div>
+                        `}
+                    </div>
+                `;
+            } catch (error) {
+                body.innerHTML = `
+                    <div style="padding:3rem 2rem; text-align:center;">
+                        <i class="fas fa-exclamation-triangle" style="font-size:2.5rem; color:var(--accent-red);"></i>
+                        <p style="color:var(--text-secondary); margin-top:1rem;">${escapeHtml(error.message)}</p>
+                    </div>
+                `;
+            }
+        };
+
+        window.closeStudentDetails = function() {
+            const modal = document.getElementById('studentDetailsModal');
+            if (modal) modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        window.promoteFromDetails = async function(studentId, studentName) {
+            if (!isValidUUID(studentId)) return;
+            if (!confirm(`⚠️ منح "${studentName}" صلاحية المشرف؟`)) return;
+            try {
+                await supabase.from('students').update({ role: 'admin' }).eq('id', studentId);
+                showToast(`👑 تمت الترقية`, 'success');
+                window.closeStudentDetails();
+                await Promise.all([loadStudents(), loadStats(), loadStudentsForPoints()]);
+            } catch (error) { showToast('❌ خطأ: ' + error.message, 'error'); }
+        };
+
+        window.demoteFromDetails = async function(studentId, studentName) {
+            if (!isValidUUID(studentId)) return;
+            if (!confirm(`⚠️ إزالة صلاحية المشرف عن "${studentName}"؟`)) return;
+            try {
+                await supabase.from('students').update({ role: 'student' }).eq('id', studentId);
+                showToast(`📚 تمت الإزالة`, 'info');
+                window.closeStudentDetails();
+                await Promise.all([loadStudents(), loadStats(), loadStudentsForPoints()]);
+            } catch (error) { showToast('❌ خطأ: ' + error.message, 'error'); }
+        };
+
+        window.deleteFromDetails = async function(studentId, studentName) {
+            if (!isValidUUID(studentId)) return;
+            if (!confirm(`⚠️ حذف "${studentName}" نهائياً؟`)) return;
+            if (!confirm('⚠️ تحذير أخير: لا يمكن التراجع!')) return;
+            try {
+                await supabase.from('students').delete().eq('id', studentId);
+                showToast(`🗑️ تم الحذف`, 'success');
+                window.closeStudentDetails();
+                await Promise.all([loadStudents(), loadStats(), loadStudentsForPoints()]);
+            } catch (error) { showToast('❌ خطأ: ' + error.message, 'error'); }
+        };
+
+        window.filterStudents = function(query) {
+            if (!query) { renderStudents(currentStudents); return; }
+            const q = query.toLowerCase();
+            const filtered = currentStudents.filter(s =>
+                (s.name && s.name.toLowerCase().includes(q)) ||
+                (s.email && s.email.toLowerCase().includes(q)) ||
+                (s.class && s.class.toLowerCase().includes(q))
+            );
+            renderStudents(filtered);
+        };
+
+        window.deleteStudent = async function(studentId, studentName) {
+            if (!isValidUUID(studentId)) return;
+            if (!confirm(`⚠️ حذف "${studentName}" نهائياً؟`)) return;
+            if (!confirm('⚠️ تحذير أخير!')) return;
+            try {
+                const { data: student } = await supabase.from('students').select('email').eq('id', studentId).single();
+                if (student?.email === MAIN_ADMIN_EMAIL) {
+                    showToast('⚠️ لا يمكن حذف المشرف الرئيسي!', 'error');
+                    return;
+                }
+                await supabase.from('students').delete().eq('id', studentId);
+                showToast(`🗑️ تم الحذف`, 'success');
+                await Promise.all([loadStudents(), loadStats(), loadStudentsForPoints()]);
+            } catch (error) { showToast('❌ خطأ: ' + error.message, 'error'); }
+        };
+
+        window.logoutAdmin = function() {
+            if (confirm('تسجيل الخروج؟')) {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('session_token');
+                window.location.href = 'index.html';
+            }
+        };
+
+        function setupRealtime() {
+            if (!supabase) return;
+            try {
+                realtimeChannel = supabase
+                    .channel('admin_updates')
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'messages' }, () => { loadMessages(); loadStats(); })
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'ideas' }, () => { loadIdeas(); loadStats(); })
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'resources' }, () => { loadResources(); loadStats(); })
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'announcements' }, () => { loadAnnouncements(); loadStats(); })
+                    .subscribe();
+            } catch (e) {}
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (refreshIntervalId) clearInterval(refreshIntervalId);
+            if (realtimeChannel && supabase) supabase.removeChannel(realtimeChannel);
+        });
+
+        async function initAdmin() {
+            const verification = await verifyAdmin();
+
+            if (!verification.valid) {
+                const reasons = {
+                    'no_user': 'الرجاء تسجيل الدخول أولاً',
+                    'invalid_user': 'بيانات المستخدم غير صالحة',
+                    'not_found': 'المستخدم غير موجود',
+                    'not_admin': 'ليس لديك صلاحية المشرف',
+                    'error': 'حدث خطأ في التحقق'
+                };
+                showToast('⛔ ' + (reasons[verification.reason] || 'خطأ'), 'error');
+                setTimeout(() => {
+                    window.location.href = verification.reason === 'no_user' ? 'login.html' : 'dashboard.html';
+                }, 1500);
+                return;
+            }
+
+            document.getElementById('adminNameDisplay').textContent = currentUser.name;
+
+            await Promise.all([
+                loadStats(),
+                loadStudentsForPoints(),
+                loadPointsRanking(),
+                loadMessages(),
+                loadIdeas(),
+                loadResources(),
+                loadStudents(),
+                loadAnnouncements()
+            ]);
+
+            setupRealtime();
+
+            refreshIntervalId = setInterval(() => {
+                loadStats();
+                loadMessages();
+                loadIdeas();
+                loadResources();
+                loadAnnouncements();
+            }, 30000);
+        }
+
+        document.getElementById('announcementModal')?.addEventListener('click', function(e) {
+            if (e.target === this) window.closeAnnouncementModal();
+        });
+
+        document.getElementById('studentDetailsModal')?.addEventListener('click', function(e) {
+            if (e.target === this) window.closeStudentDetails();
+        });
+
+        initAdmin();
+    </script>
+        <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="enhancements.css">
+</body>
+</html>

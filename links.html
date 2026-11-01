@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مواقع مفيدة - ثانوية الخوارزمي</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        /* الحفاظ على المظهر المختار (يتزامن مع الصفحة الرئيسية عبر المفتاح 'theme') */
+        (function(){
+            try{
+                var light=localStorage.getItem('theme')==='light', r=document.documentElement;
+                r.classList.toggle('light',light);
+                r.classList.toggle('dark-mode',!light);
+                document.addEventListener('DOMContentLoaded',function(){
+                    document.body.classList.toggle('dark-mode',!light);
+                    var m=document.querySelector('meta[name="theme-color"]');
+                    if(m)m.setAttribute('content',light?'#e4e8f2':'#0a0820');
+                });
+            }catch(e){}
+        })();
+    </script>
+
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #5b9cf5;
+            --accent-gold: #f5c842;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-main);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(91, 156, 245, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(245, 200, 66, 0.05) 0%, transparent 40%);
+            background-attachment: fixed;
+        }
+
+        .links-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        .links-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            animation: slideDown 0.6s ease;
+        }
+        .links-header h1 {
+            font-size: clamp(1.8rem, 5vw, 2.8rem);
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #f5c842, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .links-header h1 i { color:var(--th-gold); -webkit-text-fill-color: initial; }
+        .links-header p { color: var(--text-muted); font-size: 1rem; }
+
+        /* Search Bar */
+        .search-wrapper {
+            max-width: 600px;
+            margin: 0 auto 3rem;
+            position: relative;
+            animation: slideUp 0.6s ease;
+        }
+        .search-wrapper input {
+            width: 100%;
+            padding: 1rem 3rem 1rem 1.5rem;
+            background:var(--th-surface-1);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            color:var(--th-text);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .search-wrapper input:focus {
+            background:var(--th-surface-2);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 0 4px rgba(91, 156, 245, 0.15);
+        }
+        .search-wrapper i {
+            position: absolute;
+            right: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+            pointer-events: none;
+        }
+
+        /* Categories */
+        .category-section { margin-bottom: 2.5rem; animation: fadeIn 0.8s ease; }
+        
+        .category-title {
+            color:var(--th-text);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .category-title i { color: var(--accent-gold); font-size: 1.3rem; }
+
+        /* Grid */
+        .sites-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .site-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.2rem;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .site-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(91, 156, 245, 0.4);
+            background: var(--th-panel);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* ✅ تصميم خاص لزر مسار */
+        .site-card.massar-card {
+            border: 2px solid #0d6efd;
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.1), var(--th-panel));
+            box-shadow: 0 0 20px rgba(13, 110, 253, 0.2);
+        }
+        .site-card.massar-card:hover {
+            border-color: #4dabf7;
+            box-shadow: 0 10px 40px rgba(13, 110, 253, 0.4);
+        }
+
+        .site-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            color:var(--th-text);
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+        .site-card:hover .site-icon { transform: scale(1.1) rotate(5deg); }
+
+        .site-info { flex: 1; min-width: 0; }
+        .site-name {
+            color:var(--th-text);
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 0.2rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .site-desc {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .site-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(135deg, #f87171, #fb923c);
+            color: white;
+            font-size: 0.55rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(248, 113, 113, 0.4);
+        }
+        .site-badge.blue { background: linear-gradient(135deg, #3b82f6, #2563eb); }
+        .site-badge.green { background: linear-gradient(135deg, #10b981, #059669); }
+
+        /* Back Button */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            padding: 0.6rem 1.2rem;
+            background:var(--th-surface-1);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+        .btn-back:hover {
+            color:var(--th-text);
+            background:var(--th-surface-2);
+            border-color: var(--accent-blue);
+            transform: translateX(5px);
+        }
+
+        /* Animations */
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .links-container { padding: 1.5rem 1rem; }
+            .sites-grid { grid-template-columns: repeat(2, 1fr); gap: 0.8rem; }
+            .site-card { padding: 0.9rem; flex-direction: column; text-align: center; gap: 0.6rem; }
+            .site-info { width: 100%; }
+            .site-name { font-size: 0.8rem; }
+            .site-desc { font-size: 0.65rem; }
+            .site-icon { width: 40px; height: 40px; font-size: 1.1rem; }
+        }
+        @media (max-width: 480px) {
+            .sites-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="links-container">
+        
+        <a href="dashboard.html" class="btn-back">
+            <i class="fas fa-arrow-right"></i> العودة للوحة التحكم
+        </a>
+
+        <div class="links-header">
+            <h1><i class="fas fa-link"></i> مواقع قد تحتاجها</h1>
+            <p>مواقع مجانية 100% للدراسة، التوجيه، والموارد بصيغة PDF</p>
+        </div>
+
+        <div class="search-wrapper">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchInput" placeholder="ابحث عن موقع... (مثال: مسار، دروس، PDF)" oninput="filterSites()">
+        </div>
+
+        <!-- 1. المواقع الرسمية -->
+        <div class="category-section">
+            <h2 class="category-title"><i class="fas fa-landmark"></i> المنصات الرسمية والمسارات</h2>
+            <div class="sites-grid">
+                
+                <!-- ✅ الزر الآمن المباشر لمسار -->
+                <a href="https://massarservice.men.gov.ma/moutamadris/Account" target="_blank" rel="noopener noreferrer" class="site-card massar-card">
+                    <div class="site-badge green">رسمي وآمن</div>
+                    <div class="site-icon" style="background: linear-gradient(135deg, #0d6efd, #0a58ca);"><i class="fas fa-shield-alt"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">مسار (Massar)</div>
+                        <div class="site-desc">الدخول المباشر الآمن (بدون روابط مزيفة)</div>
+                    </div>
+                </a>
+
+                <a href="https://e-tawjihi.ma/ar" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #3b82f6, #1d4ed8);"><i class="fas fa-compass"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">Tawjihi.ma</div>
+                        <div class="site-desc">التوجيه الدراسي والمهني</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 2. الدروس المغربية والملخصات (PDF) -->
+        <div class="category-section">
+            <h2 class="category-title"><i class="fas fa-file-pdf"></i> دروس وملخصات مغربية (PDF)</h2>
+            <div class="sites-grid">
+                <a href="https://www.alloschool.com" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #ec4899, #be185d);"><i class="fas fa-school"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">AlloSchool</div>
+                        <div class="site-desc">ملخصات، تمارين، وامتحانات (PDF)</div>
+                    </div>
+                </a>
+                <a href="https://9rayti.com" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #f97316, #c2410c);"><i class="fas fa-book"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">9rayti</div>
+                        <div class="site-desc">دروس وملخصات مغربية شاملة</div>
+                    </div>
+                </a>
+                <a href="https://www.talmidhub.net" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #14b8a6, #0f766e);"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">TalmidHub</div>
+                        <div class="site-desc">ملتقى الطالب المغربي (دروس وامتحانات)</div>
+                    </div>
+                </a>
+                <a href="https://www.udarsy.com" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);"><i class="fas fa-download"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">Udarsy</div>
+                        <div class="site-desc">دروس PDF وامتحانات (خطة مجانية)</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 3. الرياضيات والعلوم -->
+        <div class="category-section">
+            <h2 class="category-title"><i class="fas fa-calculator"></i> الرياضيات والعلوم</h2>
+            <div class="sites-grid">
+                <a href="https://photomath.com" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #f43f5e, #be123c);"><i class="fas fa-camera"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">Photomath</div>
+                        <div class="site-desc">حل مسائل الرياضيات بالكاميرا</div>
+                    </div>
+                </a>
+                <a href="https://www.desmos.com" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #10b981, #047857);"><i class="fas fa-chart-line"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">Desmos</div>
+                        <div class="site-desc">رسم بياني للدوال الرياضية</div>
+                    </div>
+                </a>
+                <a href="https://www.geogebra.org" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);"><i class="fas fa-shapes"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">GeoGebra</div>
+                        <div class="site-desc">أدوات هندسية ورياضية تفاعلية</div>
+                    </div>
+                </a>
+                <a href="https://ar.khanacademy.org" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #14b8a6, #0d9488);"><i class="fas fa-chalkboard-teacher"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">Khan Academy</div>
+                        <div class="site-desc">دروس رياضيات وعلوم مجانية</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 4. تعلم اللغات (مجاني 100%) -->
+        <div class="category-section">
+            <h2 class="category-title"><i class="fas fa-language"></i> تعلم اللغات</h2>
+            <div class="sites-grid">
+                <a href="https://www.duolingo.com" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #58cc02, #46a302);"><i class="fas fa-language"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">Duolingo</div>
+                        <div class="site-desc">تعلم اللغات بالألعاب (مجاني)</div>
+                    </div>
+                </a>
+                <a href="https://learnenglish.britishcouncil.org" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #003087, #001a4d);"><i class="fas fa-university"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">British Council</div>
+                        <div class="site-desc">دروس إنجليزية مجانية (A1-C1)</div>
+                    </div>
+                </a>
+                <a href="https://www.bbc.co.uk/learningenglish" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #bb1919, #8a1212);"><i class="fas fa-newspaper"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">BBC Learning English</div>
+                        <div class="site-desc">دروس إنجليزية من بي بي سي</div>
+                    </div>
+                </a>
+                <a href="https://quizlet.com" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #4255ff, #3342cc);"><i class="fas fa-layer-group"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">Quizlet</div>
+                        <div class="site-desc">بطاقات حفظ المفردات (مجاني)</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <!-- 5. البحث والموسوعات -->
+        <div class="category-section">
+            <h2 class="category-title"><i class="fas fa-search"></i> البحث والموسوعات</h2>
+            <div class="sites-grid">
+                <a href="https://ar.wikipedia.org" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #333333, #000000);"><i class="fab fa-wikipedia-w"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">ويكيبيديا</div>
+                        <div class="site-desc">الموسوعة الحرة للبحوث</div>
+                    </div>
+                </a>
+                <a href="https://scholar.google.com" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #4285f4, #3367d6);"><i class="fas fa-search"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">Google Scholar</div>
+                        <div class="site-desc">بحث أكاديمي وعلمي</div>
+                    </div>
+                </a>
+                <a href="https://www.youtube.com" target="_blank" rel="noopener" class="site-card">
+                    <div class="site-icon" style="background: linear-gradient(135deg, #ff0000, #cc0000);"><i class="fab fa-youtube"></i></div>
+                    <div class="site-info">
+                        <div class="site-name">YouTube</div>
+                        <div class="site-desc">شروحات ودروس فيديو</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function filterSites() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.site-card');
+            const sections = document.querySelectorAll('.category-section');
+
+            cards.forEach(card => {
+                const name = card.querySelector('.site-name').textContent.toLowerCase();
+                const desc = card.querySelector('.site-desc').textContent.toLowerCase();
+                if (name.includes(query) || desc.includes(query)) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            sections.forEach(section => {
+                const visibleCards = section.querySelectorAll('.site-card[style="display: flex;"]');
+                if (visibleCards.length === 0 && query !== '') {
+                    section.style.display = 'none';
+                } else {
+                    section.style.display = 'block';
+                }
+            });
+        }
+    </script>
+    
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="enhancements.css">
+</body>
+</html>

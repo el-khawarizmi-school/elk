@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="announcementsHeader">الإعلانات - ثانوية الخوارزمي</title>
+    <meta name="description" content="آخر الأخبار والإعلانات المدرسية لثانوية الخوارزمي">
+    <meta name="theme-color" content="#667eea">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        /* الحفاظ على المظهر المختار (يتزامن مع الصفحة الرئيسية عبر المفتاح 'theme') */
+        (function(){
+            try{
+                var light=localStorage.getItem('theme')==='light', r=document.documentElement;
+                r.classList.toggle('light',light);
+                r.classList.toggle('dark-mode',!light);
+                document.addEventListener('DOMContentLoaded',function(){
+                    document.body.classList.toggle('dark-mode',!light);
+                    var m=document.querySelector('meta[name="theme-color"]');
+                    if(m)m.setAttribute('content',light?'#e4e8f2':'#0a0820');
+                });
+            }catch(e){}
+        })();
+    </script>
+    
+    <style>
+        /* ===== أنماط خاصة بـ Announcements فقط ===== */
+        .announcements-container {
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        .announcements-header {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .announcements-header h1 {
+            color:var(--th-text);
+            font-size: 2rem;
+        }
+
+        .announcements-header p {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        /* ===== Actions Bar ===== */
+        .actions-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .stats-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .stats-info strong {
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        .add-announcement-btn {
+            background: var(--gradient-gold);
+            color: #1a1a2e;
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-full);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .add-announcement-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255,215,0,0.3);
+        }
+
+        /* ===== قائمة الإعلانات ===== */
+        .announcements-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .announcement-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.2rem 1.5rem;
+            transition: all var(--transition-base);
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+            /* منع أي تأثيرات تخفي البطاقة */
+            opacity: 1 !important;
+            transform: none !important;
+            animation: none !important;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .announcement-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-gold);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .announcement-card:hover {
+            transform: translateX(-5px) !important;
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: var(--glass-shadow-hover);
+        }
+
+        .announcement-title {
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .announcement-title i {
+            font-size: 0.9rem;
+        }
+
+        .announcement-date {
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .announcement-content {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .announcement-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px solid var(--glass-border);
+            justify-content: flex-end;
+        }
+
+        .btn-action-small {
+            background: rgba(255,107,107,0.15);
+            border: 1px solid rgba(255,107,107,0.2);
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-full);
+            color: var(--accent-red);
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.75rem;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-action-small:hover {
+            background: rgba(255,107,107,0.3);
+            transform: translateY(-2px);
+        }
+
+        /* ===== زر العودة ===== */
+        .btn-back {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            color:var(--th-text);
+            text-decoration: none;
+            margin-top: 1rem;
+            transition: all var(--transition-base);
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .btn-back:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-2px);
+        }
+
+        /* ===== Empty State ===== */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* ===== Modal ===== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: var(--glass-bg-strong);
+            backdrop-filter: var(--glass-blur-strong);
+            border-radius: var(--radius-2xl);
+            width: 90%;
+            max-width: 550px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 1.5rem;
+            border: 1px solid var(--glass-border);
+            animation: modalFadeIn 0.3s ease;
+            box-shadow: var(--glass-shadow-lg);
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-box h3 {
+            color:var(--th-text);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .modal-box h3 i { color: var(--accent-gold); }
+
+        .modal-box .form-group { margin-bottom: 1rem; }
+
+        .modal-box .form-group label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .modal-box .form-group input,
+        .modal-box .form-group textarea {
+            width: 100%;
+            padding: 0.6rem 0.8rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color:var(--th-text);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            transition: all var(--transition-base);
+        }
+
+        .modal-box .form-group input:focus,
+        .modal-box .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: var(--glass-bg-hover);
+            box-shadow: 0 0 0 3px rgba(255,215,0,0.1);
+        }
+
+        .modal-box .form-group input::placeholder,
+        .modal-box .form-group textarea::placeholder {
+            color: var(--text-disabled);
+        }
+
+        .modal-box .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .modal-actions button {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .modal-actions .btn-submit {
+            background: var(--gradient-gold);
+            color: #1a1a2e;
+        }
+
+        .modal-actions .btn-submit:hover { transform: translateY(-2px); }
+        .modal-actions .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .modal-actions .btn-cancel {
+            background: var(--glass-bg);
+            color:var(--th-text);
+            border: 1px solid var(--glass-border);
+        }
+
+        .modal-actions .btn-cancel:hover { background: var(--glass-bg-hover); }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .announcements-container { padding: 0.8rem; }
+            .announcements-header h1 { font-size: 1.5rem; }
+            .announcement-card { padding: 1rem 1.2rem; }
+            .announcement-title { font-size: 1rem; }
+            .announcement-content { font-size: 0.85rem; }
+        }
+
+        @media (max-width: 480px) {
+            .announcements-header h1 { font-size: 1.3rem; }
+            .actions-bar { flex-direction: column; align-items: stretch; }
+            .stats-info { justify-content: center; }
+            .add-announcement-btn { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-banner" id="offlineBanner">
+        <i class="fas fa-wifi"></i> أنت غير متصل بالإنترنت - بعض الميزات قد لا تعمل
+    </div>
+
+    <div class="announcements-container">
+        <!-- ===== Header ===== -->
+        <div class="announcements-header">
+            <h1><i class="fas fa-bullhorn"></i> <span data-i18n="announcementsHeader">الإعلانات</span></h1>
+            <p data-i18n="announcementsDesc">آخر الأخبار والإعلانات المدرسية</p>
+        </div>
+
+        <!-- ===== Actions Bar ===== -->
+        <div class="actions-bar">
+            <div class="stats-info">
+                <i class="fas fa-newspaper"></i>
+                <span data-i18n="totalAnnouncements">الإعلانات:</span>
+                <strong id="announcementsCount">0</strong>
+            </div>
+            <button class="add-announcement-btn" id="addAnnouncementBtn" style="display:none;">
+                <i class="fas fa-plus"></i> <span data-i18n="addAnnouncement">إضافة إعلان</span>
+            </button>
+        </div>
+
+        <!-- ===== قائمة الإعلانات ===== -->
+        <div class="announcements-list" id="announcementsList">
+            <div class="skeleton-card">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line tiny"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line tiny"></div>
+            </div>
+        </div>
+
+        <!-- ===== زر العودة ===== -->
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="dashboard.html" class="btn-back">
+                <i class="fas fa-arrow-right"></i> <span data-i18n="backToDashboard">العودة للوحة التحكم</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ===== Modal إضافة إعلان ===== -->
+    <div class="modal-overlay" id="addAnnouncementModal">
+        <div class="modal-box">
+            <h3><i class="fas fa-plus"></i> <span data-i18n="addAnnouncement">إضافة إعلان جديد</span></h3>
+            <form id="announcementForm">
+                <div class="form-group">
+                    <label data-i18n="announcementTitle">عنوان الإعلان *</label>
+                    <input type="text" id="announcementTitle" placeholder="مثال: تنظيم امتحانات الفصل الأول" required maxlength="200">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="announcementContent">محتوى الإعلان *</label>
+                    <textarea id="announcementContent" placeholder="اكتب محتوى الإعلان..." required maxlength="2000"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn-submit" id="submitBtn">
+                        <i class="fas fa-check"></i> <span data-i18n="publish">نشر</span>
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="window.closeModal()">
+                        <i class="fas fa-times"></i> <span data-i18n="cancel">إلغاء</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="darkmode.js"></script>
+    <script type="module">
+        import { supabase, showToast, escapeHtml } from './supabase.js';
+        import { initLanguage } from './language.js';
+
+        initLanguage();
+
+        function updateOnlineStatus() {
+            const banner = document.getElementById('offlineBanner');
+            if (!banner) return;
+            if (navigator.onLine) banner.classList.remove('active');
+            else banner.classList.add('active');
+        }
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        let currentUser = null;
+        let isAdmin = false;
+        let realtimeChannel = null;
+        let isLoading = false;
+
+        // 1. جلب المستخدم
+        async function loadCurrentUser() {
+            try {
+                const cached = localStorage.getItem('currentUser');
+                if (!cached || cached === 'null') return;
+
+                const parsed = JSON.parse(cached);
+                if (!parsed || !parsed.id) return;
+
+                const { data, error } = await supabase
+                    .from('students')
+                    .select('id, name, role')
+                    .eq('id', parsed.id)
+                    .single();
+
+                if (error || !data) return;
+
+                currentUser = data;
+                isAdmin = data.role === 'admin' || data.role === 'developer';
+
+                const addBtn = document.getElementById('addAnnouncementBtn');
+                if (addBtn) addBtn.style.display = isAdmin ? 'inline-flex' : 'none';
+            } catch (e) {
+                console.error('خطأ في تحميل المستخدم:', e);
+            }
+        }
+
+        // 2. جلب وعرض الإعلانات
+        async function loadAnnouncements() {
+            if (isLoading) return; // منع التحميل المتزامن
+            isLoading = true;
+
+            try {
+                const { data, error } = await supabase
+                    .from('announcements')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const container = document.getElementById('announcementsList');
+                const counter = document.getElementById('announcementsCount');
+
+                if (counter) counter.textContent = (data || []).length;
+
+                if (!data || data.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>لا توجد إعلانات حالياً</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // عرض الإعلانات
+                container.innerHTML = data.map(a => `
+                    <div class="announcement-card">
+                        <div class="announcement-title">
+                            <i class="fas fa-bullhorn"></i>
+                            ${escapeHtml(a.title)}
+                        </div>
+                        <div class="announcement-date">
+                            <i class="fas fa-calendar"></i> 
+                            ${new Date(a.created_at).toLocaleDateString('ar-EG', {
+                                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                            })}
+                            ${a.created_by_name ? ` | <i class="fas fa-user"></i> ${escapeHtml(a.created_by_name)}` : ''}
+                        </div>
+                        <div class="announcement-content">${escapeHtml(a.content)}</div>
+                        ${isAdmin ? `
+                            <div class="announcement-actions">
+                                <button class="btn-action-small" onclick="window.deleteAnnouncement('${a.id}')">
+                                    <i class="fas fa-trash"></i> حذف
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('خطأ:', error);
+                document.getElementById('announcementsList').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>خطأ في تحميل الإعلانات</p>
+                    </div>
+                `;
+            } finally {
+                isLoading = false;
+            }
+        }
+
+        // 3. إغلاق النافذة
+        window.closeModal = function() {
+            document.getElementById('addAnnouncementModal').classList.remove('active');
+            document.body.style.overflow = '';
+            document.getElementById('announcementForm').reset();
+        };
+
+        // 4. نشر إعلان جديد
+        document.getElementById('announcementForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!isAdmin || !currentUser) {
+                showToast('⛔ فقط المشرفون يمكنهم إضافة إعلانات', 'error');
+                return;
+            }
+
+            const title = document.getElementById('announcementTitle').value.trim();
+            const content = document.getElementById('announcementContent').value.trim();
+
+            if (!title || !content) {
+                showToast('⚠️ الرجاء ملء جميع الحقول', 'error');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري النشر...';
+
+            try {
+                const { error } = await supabase.from('announcements').insert({
+                    title,
+                    content,
+                    created_by: currentUser.id,
+                    created_by_name: currentUser.name,
+                    created_at: new Date().toISOString()
+                });
+
+                if (error) throw error;
+
+                showToast('✅ تم نشر الإعلان بنجاح!', 'success');
+                window.closeModal();
+                
+                // إعادة تحميل الإعلانات فوراً
+                await loadAnnouncements();
+                
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-check"></i> نشر';
+            }
+        });
+
+        // 5. حذف إعلان
+        window.deleteAnnouncement = async function(id) {
+            if (!isAdmin) {
+                showToast('⛔ ليس لديك صلاحية', 'error');
+                return;
+            }
+            if (!confirm('⚠️ حذف هذا الإعلان نهائياً؟')) return;
+
+            try {
+                const { error } = await supabase.from('announcements').delete().eq('id', id);
+                if (error) throw error;
+                showToast('🗑️ تم الحذف', 'success');
+                await loadAnnouncements();
+            } catch (error) {
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            }
+        };
+
+        // 6. إغلاق النافذة عند النقر خارجها
+        document.getElementById('addAnnouncementModal').addEventListener('click', function(e) {
+            if (e.target === this) window.closeModal();
+        });
+
+        // 7. فتح النافذة
+        document.getElementById('addAnnouncementBtn').addEventListener('click', () => {
+            document.getElementById('addAnnouncementModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // 8. Realtime (تحديث تلقائي عند إضافة إعلان)
+        function setupRealtime() {
+            if (!supabase) return;
+            try {
+                realtimeChannel = supabase
+                    .channel('announcements_realtime')
+                    .on('postgres_changes', { event: '*', schema: 'public', table: 'announcements' }, () => {
+                        loadAnnouncements();
+                    })
+                    .subscribe();
+            } catch (e) {
+                console.warn('Realtime غير متاح');
+            }
+        }
+
+        window.addEventListener('beforeunload', () => {
+            if (realtimeChannel) supabase.removeChannel(realtimeChannel);
+        });
+
+        // 9. بدء التشغيل
+        (async function init() {
+            await loadCurrentUser();
+            await loadAnnouncements();
+            setupRealtime();
+        })();
+    </script>
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="enhancements.css">
+</body>
+</html>

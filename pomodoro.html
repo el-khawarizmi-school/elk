@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مؤقت التركيز - ثانوية الخوارزمي</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        (function(){
+            try{
+                var light=localStorage.getItem('theme')==='light', r=document.documentElement;
+                r.classList.toggle('light',light);
+                r.classList.toggle('dark-mode',!light);
+                document.addEventListener('DOMContentLoaded',function(){
+                    document.body.classList.toggle('dark-mode',!light);
+                });
+            }catch(e){}
+        })();
+    </script>
+
+    <style>
+        .pomodoro-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            transition: all 1s ease;
+        }
+        .glow-orb.study {
+            width: 300px;
+            height: 300px;
+            background: rgba(245, 200, 66, 0.15);
+            top: 20%;
+            right: 20%;
+        }
+        .glow-orb.break {
+            width: 300px;
+            height: 300px;
+            background: rgba(74, 222, 128, 0.15);
+            bottom: 20%;
+            left: 20%;
+        }
+
+        .pomodoro-card {
+            background: rgba(20, 18, 45, 0.6);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 32px;
+            padding: 3rem 2.5rem;
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+            transition: all 0.5s ease;
+        }
+
+        .pomodoro-header h1 {
+            color: #ffffff;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .pomodoro-header h1 i { color: var(--accent-gold); }
+
+        .pomodoro-header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2.5rem;
+        }
+
+        .timer-circle-wrapper {
+            position: relative;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer-circle-wrapper::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(245, 200, 66, 0.1);
+            animation: pulseRing 3s infinite cubic-bezier(0.4, 0, 0.6, 1);
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+        .timer-circle-wrapper.running::before { opacity: 1; }
+        .timer-circle-wrapper.break-mode::before { background: rgba(74, 222, 128, 0.1); }
+
+        @keyframes pulseRing {
+            0% { transform: scale(0.9); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 0.2; }
+            100% { transform: scale(1.1); opacity: 0; }
+        }
+
+        .timer-svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+            position: relative;
+            z-index: 2;
+        }
+
+        .timer-circle-bg {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.05);
+            stroke-width: 10;
+        }
+
+        .timer-circle-progress {
+            fill: none;
+            stroke: url(#studyGradient);
+            stroke-width: 10;
+            stroke-linecap: round;
+            stroke-dasharray: 816;
+            stroke-dashoffset: 0;
+            transition: stroke-dashoffset 1s linear, stroke 0.5s ease;
+            filter: drop-shadow(0 0 10px rgba(245, 200, 66, 0.5));
+        }
+
+        .pomodoro-card.break-mode .timer-circle-progress {
+            stroke: url(#breakGradient);
+            filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.5));
+        }
+
+        .timer-text-wrapper {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 3;
+        }
+
+        .timer-time {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            font-variant-numeric: tabular-nums;
+            line-height: 1;
+            text-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            letter-spacing: 2px;
+        }
+
+        .timer-status {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-top: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px 14px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* ========================================= */
+        /* تصميم الأزرار الاحترافية الجديدة          */
+        /* ========================================= */
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn-pro {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.6rem;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 800;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* زر البدء (اللون الذهبي) */
+        .btn-pro.start {
+            background: linear-gradient(135deg, #f5c842, #fb923c);
+            color: #1a1a2e;
+            box-shadow: 0 8px 25px rgba(245, 200, 66, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.4);
+            min-width: 160px;
+        }
+
+        /* تأثير اللمعة على زر البدء */
+        .btn-pro.start::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0) 100%);
+            transform: rotate(45deg) translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .btn-pro.start:hover::after {
+            transform: rotate(45deg) translateX(100%);
+        }
+
+        .btn-pro.start:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 35px rgba(245, 200, 66, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .btn-pro.start:active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: 0 4px 15px rgba(245, 200, 66, 0.3);
+        }
+
+        /* زر البدء في وضع الراحة (اللون الأخضر) */
+        .pomodoro-card.break-mode .btn-pro.start {
+            background: linear-gradient(135deg, #4ade80, #2dd4bf);
+            box-shadow: 0 8px 25px rgba(74, 222, 128, 0.3), inset 0 2px 0 rgba(255, 255, 255, 0.4);
+        }
+        .pomodoro-card.break-mode .btn-pro.start:hover {
+            box-shadow: 0 12px 35px rgba(74, 222, 128, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        /* زر إعادة الضبط (الزجاجي) */
+        .btn-pro.reset {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .btn-pro.reset:hover {
+            background: rgba(255, 107, 107, 0.15);
+            border-color: rgba(255, 107, 107, 0.4);
+            color: #ff6b6b;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.2);
+        }
+
+        .btn-pro.reset:active {
+            transform: translateY(1px);
+        }
+
+        .btn-pro i {
+            font-size: 1.1rem;
+        }
+
+        /* ========================================= */
+
+        .pomodoro-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 1.2rem;
+        }
+
+        .stat-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem;
+            position: relative;
+        }
+        
+        .stat-box:first-child::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 20%;
+            height: 60%;
+            width: 1px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-value {
+            color: var(--accent-gold);
+            font-size: 1.8rem;
+            font-weight: 900;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.2rem;
+        }
+
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50px;
+            color: #ffffff;
+            text-decoration: none;
+            margin-top: 2.5rem;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            z-index: 1;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+            border-color: rgba(245, 200, 66, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .pomodoro-card { padding: 2rem 1.5rem; border-radius: 24px; }
+            .timer-circle-wrapper { width: 240px; height: 240px; }
+            .timer-time { font-size: 3.8rem; }
+            .btn-pro.start { padding: 0.9rem 1.5rem; font-size: 1rem; min-width: 140px; }
+            .btn-pro.reset { padding: 0.9rem 1.2rem; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pomodoro-page">
+        <div class="glow-orb study" id="glowOrb"></div>
+
+        <div class="pomodoro-card" id="pomodoroCard">
+            <div class="pomodoro-header">
+                <h1><i class="fas fa-clock"></i> مؤقت التركيز</h1>
+                <p>نظام بومودورو: 25 دقيقة تركيز، 5 دقائق راحة</p>
+            </div>
+
+            <div class="timer-circle-wrapper" id="timerWrapper">
+                <svg class="timer-svg" viewBox="0 0 280 280">
+                    <defs>
+                        <linearGradient id="studyGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#f5c842" />
+                            <stop offset="100%" stop-color="#fb923c" />
+                        </linearGradient>
+                        <linearGradient id="breakGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4ade80" />
+                            <stop offset="100%" stop-color="#2dd4bf" />
+                        </linearGradient>
+                    </defs>
+                    <circle class="timer-circle-bg" cx="140" cy="140" r="130"></circle>
+                    <circle class="timer-circle-progress" id="progressCircle" cx="140" cy="140" r="130"></circle>
+                </svg>
+                <div class="timer-text-wrapper">
+                    <div class="timer-time" id="timeDisplay">25:00</div>
+                    <div class="timer-status" id="statusDisplay">
+                        <i class="fas fa-book-open"></i> وقت الدراسة
+                    </div>
+                </div>
+            </div>
+
+            <!-- الأزرار الاحترافية الجديدة -->
+            <div class="timer-controls">
+                <button class="btn-pro start" id="startBtn" onclick="toggleTimer()">
+                    <i class="fas fa-play" id="startIcon"></i>
+                    <span id="startText">بدء التركيز</span>
+                </button>
+                <button class="btn-pro reset" onclick="resetTimer()" title="إعادة ضبط">
+                    <i class="fas fa-rotate-left"></i>
+                    <span>إعادة</span>
+                </button>
+            </div>
+
+            <div class="pomodoro-stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="sessionsCompleted">0</div>
+                    <div class="stat-label">جلسات اليوم</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="pointsEarned">0</div>
+                    <div class="stat-label">نقاط مكتسبة</div>
+                </div>
+            </div>
+        </div>
+
+        <a href="dashboard.html" class="btn-back">
+            <i class="fas fa-arrow-right"></i> العودة للوحة التحكم
+        </a>
+    </div>
+
+    <script type="module">
+        import { supabase, showToast } from './supabase.js';
+
+        let currentUser = null;
+        
+        const STUDY_TIME = 25 * 60; 
+        const BREAK_TIME = 5 * 60;  
+        
+        let timeLeft = STUDY_TIME;
+        let timerInterval = null;
+        let isRunning = false;
+        let isStudyMode = true;
+        
+        let sessionsCompleted = 0;
+        let pointsEarned = 0;
+
+        const timeDisplay = document.getElementById('timeDisplay');
+        const statusDisplay = document.getElementById('statusDisplay');
+        const startIcon = document.getElementById('startIcon');
+        const startText = document.getElementById('startText');
+        const progressCircle = document.getElementById('progressCircle');
+        const pomodoroCard = document.getElementById('pomodoroCard');
+        const timerWrapper = document.getElementById('timerWrapper');
+        const glowOrb = document.getElementById('glowOrb');
+
+        async function loadUser() {
+            try {
+                const cached = localStorage.getItem('currentUser');
+                if (!cached || cached === 'null') {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                currentUser = JSON.parse(cached);
+                
+                const today = new Date().toDateString();
+                const savedData = JSON.parse(localStorage.getItem(`pomodoro_${currentUser.id}`) || '{}');
+                
+                if (savedData.date === today) {
+                    sessionsCompleted = savedData.sessions || 0;
+                    pointsEarned = savedData.points || 0;
+                } else {
+                    localStorage.setItem(`pomodoro_${currentUser.id}`, JSON.stringify({ date: today, sessions: 0, points: 0 }));
+                }
+                
+                updateStatsUI();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function updateStatsUI() {
+            document.getElementById('sessionsCompleted').textContent = sessionsCompleted;
+            document.getElementById('pointsEarned').textContent = pointsEarned;
+        }
+
+        function updateDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timeDisplay.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            
+            const totalTime = isStudyMode ? STUDY_TIME : BREAK_TIME;
+            const progress = (totalTime - timeLeft) / totalTime;
+            const dashoffset = 816 - (816 * progress);
+            progressCircle.style.strokeDashoffset = dashoffset;
+
+            document.title = `${timeDisplay.textContent} - ${isStudyMode ? 'تركيز' : 'راحة'}`;
+        }
+
+        window.toggleTimer = function() {
+            if (isRunning) {
+                // إيقاف مؤقت
+                clearInterval(timerInterval);
+                startIcon.className = 'fas fa-play';
+                startText.textContent = 'استئناف';
+                isRunning = false;
+                timerWrapper.classList.remove('running');
+            } else {
+                // بدء
+                startIcon.className = 'fas fa-pause';
+                startText.textContent = 'إيقاف مؤقت';
+                isRunning = true;
+                timerWrapper.classList.add('running');
+                timerInterval = setInterval(tick, 1000);
+            }
+        };
+
+        function tick() {
+            if (timeLeft > 0) {
+                timeLeft--;
+                updateDisplay();
+            } else {
+                clearInterval(timerInterval);
+                isRunning = false;
+                startIcon.className = 'fas fa-play';
+                startText.textContent = isStudyMode ? 'بدء التركيز' : 'بدء الراحة';
+                timerWrapper.classList.remove('running');
+                playSound();
+                
+                if (isStudyMode) {
+                    completeStudySession();
+                } else {
+                    showToast('⏰ انتهى وقت الراحة! حان وقت العودة للدراسة.', 'info');
+                    switchToMode(true);
+                }
+            }
+        }
+
+        async function completeStudySession() {
+            sessionsCompleted++;
+            pointsEarned += 10;
+            
+            const today = new Date().toDateString();
+            localStorage.setItem(`pomodoro_${currentUser.id}`, JSON.stringify({ 
+                date: today, 
+                sessions: sessionsCompleted, 
+                points: pointsEarned 
+            }));
+            
+            updateStatsUI();
+            showToast('🎉 أحسنت! أكملت جلسة تركيز وحصلت على 10 نقاط.', 'success');
+
+            try {
+                const { data: student } = await supabase.from('students').select('points').eq('id', currentUser.id).single();
+                if (student) {
+                    const newTotalPoints = (student.points || 0) + 10;
+                    await supabase.from('students').update({ points: newTotalPoints }).eq('id', currentUser.id);
+                    
+                    currentUser.points = newTotalPoints;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                }
+            } catch (e) {
+                console.error('خطأ في حفظ النقاط:', e);
+            }
+
+            switchToMode(false);
+        }
+
+        function switchToMode(studyMode) {
+            isStudyMode = studyMode;
+            if (isStudyMode) {
+                timeLeft = STUDY_TIME;
+                statusDisplay.innerHTML = '<i class="fas fa-book-open"></i> وقت الدراسة';
+                pomodoroCard.classList.remove('break-mode');
+                timerWrapper.classList.remove('break-mode');
+                glowOrb.className = 'glow-orb study';
+                startText.textContent = 'بدء التركيز';
+            } else {
+                timeLeft = BREAK_TIME;
+                statusDisplay.innerHTML = '<i class="fas fa-mug-hot"></i> وقت الراحة';
+                pomodoroCard.classList.add('break-mode');
+                timerWrapper.classList.add('break-mode');
+                glowOrb.className = 'glow-orb break';
+                startText.textContent = 'بدء الراحة';
+            }
+            updateDisplay();
+        }
+
+        window.resetTimer = function() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            startIcon.className = 'fas fa-play';
+            timerWrapper.classList.remove('running');
+            switchToMode(true);
+            document.title = 'مؤقت التركيز - ثانوية الخوارزمي';
+        };
+
+        function playSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, ctx.currentTime); 
+                osc.frequency.setValueAtTime(1108.73, ctx.currentTime + 0.2); 
+                gain.gain.setValueAtTime(0.5, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.6);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.6);
+            } catch (e) {}
+        }
+
+        loadUser().then(() => {
+            updateDisplay();
+        });
+    </script>
+</body>
+</html>

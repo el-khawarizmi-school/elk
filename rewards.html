@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متجر المكافآت - ثانوية الخوارزمي</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        (function(){
+            try{
+                var light=localStorage.getItem('theme')==='light', r=document.documentElement;
+                r.classList.toggle('light',light);
+                r.classList.toggle('dark-mode',!light);
+                document.addEventListener('DOMContentLoaded',function(){
+                    document.body.classList.toggle('dark-mode',!light);
+                    var m=document.querySelector('meta[name="theme-color"]');
+                    if(m)m.setAttribute('content',light?'#e4e8f2':'#0a0820');
+                });
+            }catch(e){}
+        })();
+    </script>
+
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            color: white; min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .rewards-container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        
+        .rewards-header {
+            background:var(--th-surface-1); border: 1px solid var(--th-line);
+            border-radius: 24px; padding: 2rem; text-align: center; margin-bottom: 2rem;
+            position: relative; overflow: hidden; backdrop-filter: blur(10px);
+        }
+        .rewards-header::before {
+            content: ''; position: absolute; top: -50%; right: -20%; width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(245, 200, 66, 0.15), transparent 70%);
+            border-radius: 50%; z-index: 0;
+        }
+        .rewards-header h1 { color:var(--th-text); font-size: 2.2rem; margin-bottom: 0.5rem; position: relative; z-index: 1; }
+        .rewards-header p { color:var(--th-text-2); font-size: 1rem; position: relative; z-index: 1; }
+        
+        .points-display {
+            display: inline-flex; align-items: center; gap: 0.6rem; background: linear-gradient(135deg, #f5c842, #fb923c);
+            color: #1a1a2e; padding: 0.8rem 2rem; border-radius: 50px; font-weight: 800;
+            font-size: 1.3rem; margin-top: 1.5rem; box-shadow: 0 10px 30px rgba(245, 200, 66, 0.4);
+            position: relative; z-index: 1;
+        }
+
+        .rewards-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;
+        }
+        
+        .reward-card {
+            background:var(--th-surface-1); border: 1px solid var(--th-line);
+            border-radius: 20px; padding: 1.5rem; text-align: center; transition: all 0.3s ease;
+            display: flex; flex-direction: column; position: relative; overflow: hidden;
+        }
+        .reward-card:hover {
+            transform: translateY(-8px); border-color: rgba(245, 200, 66, 0.4);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3), 0 0 30px rgba(245, 200, 66, 0.1);
+            background:var(--th-surface-2);
+        }
+        
+        /* تحسين الأيقونات */
+        .reward-icon {
+            width: 85px; height: 85px; border-radius: 24px; margin: 0 auto 1.2rem;
+            display: flex; align-items: center; justify-content: center; font-size: 2.5rem; color:#fff;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.2);
+            position: relative;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .reward-card:hover .reward-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+        
+        .reward-title { color:var(--th-text); font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .reward-desc { color:var(--th-text-2); font-size: 0.85rem; margin-bottom: 1.5rem; flex: 1; line-height: 1.6; }
+        
+        .reward-cost {
+            color:var(--th-gold); font-weight: 800; font-size: 1.2rem; margin-bottom: 1rem;
+            display: flex; align-items: center; justify-content: center; gap: 0.4rem;
+            background: rgba(245, 200, 66, 0.1); padding: 0.5rem; border-radius: 12px;
+        }
+        
+        .btn-claim {
+            width: 100%; padding: 0.9rem; background: linear-gradient(135deg, #5b9cf5, #4a8ae0);
+            border: none; border-radius: 14px; color: white; font-family: 'Cairo', sans-serif;
+            font-weight: 800; font-size: 0.95rem; cursor: pointer; transition: all 0.3s ease;
+        }
+        .btn-claim:hover:not(:disabled) { transform: scale(1.02); box-shadow: 0 4px 15px rgba(91, 156, 245, 0.4); }
+        .btn-claim:disabled { opacity: 0.5; cursor: not-allowed; background: #333; }
+    </style>
+</head>
+<body>
+    <div class="rewards-container">
+        <div class="rewards-header">
+            <h1><i class="fas fa-gift"></i> متجر المكافآت</h1>
+            <p>استبدل نقاط التميز التي جمعتها باشتراكات حصرية في أفضل المنصات!</p>
+            <div class="points-display">
+                <i class="fas fa-star"></i> <span id="currentPoints">0</span> نقطة
+            </div>
+        </div>
+
+        <div class="rewards-grid">
+            <!-- 1. Canva Pro -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #00c4cc, #7d2ae8); box-shadow: 0 0 20px rgba(125, 42, 232, 0.4);">
+                    <i class="fas fa-palette"></i>
+                </div>
+                <h3 class="reward-title">Canva Pro (شهر)</h3>
+                <p class="reward-desc">احصل على حساب Canva Pro لمدة شهر لتصميم عروضك ومشاريعك باحترافية.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 1500 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Canva Pro', 1500)">طلب المكافأة</button>
+            </div>
+
+            <!-- 2. ChatGPT Plus -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #10a37f, #0d8a6a); box-shadow: 0 0 20px rgba(16, 163, 127, 0.4);">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="reward-title">ChatGPT Plus (شهر)</h3>
+                <p class="reward-desc">وصول غير محدود لنموذج GPT-4 للمساعدة في حل الواجبات وكتابة الأبحاث.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 2000 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('ChatGPT Plus', 2000)">طلب المكافأة</button>
+            </div>
+
+            <!-- 3. Gemini Advanced (جديد) -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #4285F4, #EA4335, #FBBC05); box-shadow: 0 0 20px rgba(66, 133, 244, 0.4);">
+                    <i class="fas fa-gem"></i>
+                </div>
+                <h3 class="reward-title">Gemini Advanced (شهر)</h3>
+                <p class="reward-desc">احصل على قوة نموذج Gemini Ultra من جوجل للتفوق في الدراسة والبرمجة والتحليل.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 2000 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Gemini Advanced', 2000)">طلب المكافأة</button>
+            </div>
+
+            <!-- 4. Claude Pro -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #d97757, #b85c3e); box-shadow: 0 0 20px rgba(217, 119, 87, 0.4);">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="reward-title">Claude Pro (شهر)</h3>
+                <p class="reward-desc">مساعد ذكي متقدم من Anthropic للتحليل والكتابة الأكاديمية الطويلة.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 2000 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Claude Pro', 2000)">طلب المكافأة</button>
+            </div>
+
+            <!-- 5. Adobe Creative Cloud (جديد) -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #ff0000, #930000); box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);">
+                    <i class="fas fa-bezier-curve"></i>
+                </div>
+                <h3 class="reward-title">Adobe Creative Cloud (شهر)</h3>
+                <p class="reward-desc">الخطة الشاملة التي تجمع Photoshop, Illustrator, Premiere Pro وجميع برامج التصميم.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 4000 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Adobe Creative Cloud', 4000)">طلب المكافأة</button>
+            </div>
+
+            <!-- 6. Coursera Plus -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #0056d2, #0044a8); box-shadow: 0 0 20px rgba(0, 86, 210, 0.4);">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3 class="reward-title">Coursera Plus (شهر)</h3>
+                <p class="reward-desc">الوصول إلى آلاف الدورات التدريبية من أفضل الجامعات العالمية مجاناً.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 2500 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Coursera Plus', 2500)">طلب المكافأة</button>
+            </div>
+
+            <!-- 7. CapCut Pro -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #000000, #333333); box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);">
+                    <i class="fas fa-video"></i>
+                </div>
+                <h3 class="reward-title">CapCut Pro (شهر)</h3>
+                <p class="reward-desc">احصل على أدوات المونتاج الاحترافية، فلاتر مميزة، وتصدير فيديوهات بجودة عالية.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 1200 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('CapCut Pro', 1200)">طلب المكافأة</button>
+            </div>
+
+            <!-- 8. بطاقات Google Play (معدل) -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #01875f, #00c4cc); box-shadow: 0 0 20px rgba(0, 196, 204, 0.4);">
+                    <i class="fab fa-google-play"></i>
+                </div>
+                <h3 class="reward-title">بطاقات Google Play</h3>
+                <p class="reward-desc">كود شراء لشحن حسابك أو شراء تطبيقات وألعاب من متجر جوجل بلاي (القيمة حسب طلبك).</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 3000 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Google Play', 3000)">طلب المكافأة</button>
+            </div>
+
+            <!-- 9. Netflix / Shahid VIP -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #e50914, #b20710); box-shadow: 0 0 20px rgba(229, 9, 20, 0.4);">
+                    <i class="fas fa-tv"></i>
+                </div>
+                <h3 class="reward-title">نتفليكس / شاهد VIP</h3>
+                <p class="reward-desc">استمتع بمشاهدة أفلامك ومسلسلاتك المفضلة لمدة شهر كامل (حساب عائلي).</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 2500 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Netflix/Shahid VIP', 2500)">طلب المكافأة</button>
+            </div>
+
+            <!-- 10. Grammarly Premium -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #15c39a, #0e9f7e); box-shadow: 0 0 20px rgba(21, 195, 154, 0.4);">
+                    <i class="fas fa-spell-check"></i>
+                </div>
+                <h3 class="reward-title">Grammarly Premium</h3>
+                <p class="reward-desc">تصحيح تلقائي متقدم للغة الإنجليزية يضمن لك كتابة مقالات خالية من الأخطاء.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 1500 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Grammarly Premium', 1500)">طلب المكافأة</button>
+            </div>
+
+            <!-- 11. Quizlet Plus -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #4255ff, #3342cc); box-shadow: 0 0 20px rgba(66, 85, 255, 0.4);">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <h3 class="reward-title">Quizlet Plus</h3>
+                <p class="reward-desc">أدوات دراسة ذكية وبطاقات تعليمية تفاعلية تساعدك على الحفظ السريع.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 1500 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Quizlet Plus', 1500)">طلب المكافأة</button>
+            </div>
+
+            <!-- 12. Scribd -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #1a4d3f, #0f362c); box-shadow: 0 0 20px rgba(26, 77, 63, 0.5);">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h3 class="reward-title">Scribd (شهر)</h3>
+                <p class="reward-desc">مكتبة ضخمة من الكتب والملخصات والوثائق التعليمية بصيغة PDF.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 1800 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Scribd', 1800)">طلب المكافأة</button>
+            </div>
+
+            <!-- 13. Duolingo Super -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #58cc02, #46a302); box-shadow: 0 0 20px rgba(88, 204, 2, 0.4);">
+                    <i class="fas fa-language"></i>
+                </div>
+                <h3 class="reward-title">Duolingo Super</h3>
+                <p class="reward-desc">تعلم اللغات بدون إعلانات مع قلوب غير محدودة ومزايا حصرية.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 1500 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Duolingo Super', 1500)">طلب المكافأة</button>
+            </div>
+
+            <!-- 14. Wolfram Alpha Pro -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #ff6b35, #e55520); box-shadow: 0 0 20px rgba(255, 107, 53, 0.4);">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <h3 class="reward-title">Wolfram Alpha Pro</h3>
+                <p class="reward-desc">حل خطوة بخطوة للمسائل الرياضية والفيزيائية المعقدة مع رسوم بيانية.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 2000 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('Wolfram Alpha Pro', 2000)">طلب المكافأة</button>
+            </div>
+
+            <!-- 15. LinkedIn Premium -->
+            <div class="reward-card">
+                <div class="reward-icon" style="background: linear-gradient(135deg, #0a66c2, #084d93); box-shadow: 0 0 20px rgba(10, 102, 194, 0.4);">
+                    <i class="fab fa-linkedin"></i>
+                </div>
+                <h3 class="reward-title">LinkedIn Premium (شهر)</h3>
+                <p class="reward-desc">طور ملفك المهني وتعلم مهارات جديدة مع دورات LinkedIn Learning.</p>
+                <div class="reward-cost"><i class="fas fa-star"></i> 2500 نقطة</div>
+                <button class="btn-claim" onclick="window.claimReward('LinkedIn Premium', 2500)">طلب المكافأة</button>
+            </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="dashboard.html" class="btn btn-secondary" style="display:inline-flex; padding: 0.8rem 2rem; text-decoration: none;">
+                <i class="fas fa-arrow-right"></i> العودة للوحة التحكم
+            </a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase, showToast } from './supabase.js';
+
+        let currentUser = null;
+
+        async function checkSession() {
+            const saved = localStorage.getItem('currentUser');
+            if (!saved || saved === 'null') { window.location.href = 'login.html'; return false; }
+            currentUser = JSON.parse(saved);
+
+            const { data } = await supabase.from('students').select('points').eq('id', currentUser.id).single();
+            if (data) {
+                document.getElementById('currentPoints').textContent = data.points || 0;
+            }
+            return true;
+        }
+
+        window.claimReward = async function(rewardName, cost) {
+            if (!currentUser) return;
+            
+            const { data, error } = await supabase.from('students').select('points').eq('id', currentUser.id).single();
+            if (error || !data) return;
+
+            if (data.points < cost) {
+                showToast(`❌ نقاطك غير كافية. تحتاج ${cost - data.points} نقطة إضافية.`, 'error');
+                return;
+            }
+
+            if (!confirm(`هل أنت متأكد من استبدال ${cost} نقطة للحصول على: ${rewardName}؟`)) return;
+
+            try {
+                // 1. خصم النقاط
+                const newPoints = data.points - cost;
+                await supabase.from('students').update({ points: newPoints }).eq('id', currentUser.id);
+                
+                // 2. إرسال رسالة إلى الإدارة
+                await supabase.from('messages').insert({
+                    channel: 'admin',
+                    sender_id: currentUser.id,
+                    sender_name: currentUser.name,
+                    student_name: currentUser.name,
+                    student_class: currentUser.class,
+                    student_id: currentUser.id,
+                    sender_role: 'student',
+                    message: `🎁 طلب اشتراك: [${rewardName}] تكلفته ${cost} نقطة. يرجى تزويدي بتفاصيل التفعيل.`,
+                    status: 'pending'
+                });
+
+                // 3. تحديث الواجهة
+                document.getElementById('currentPoints').textContent = newPoints;
+                currentUser.points = newPoints;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                showToast(`✅ تم طلب ${rewardName} بنجاح! يرجى مراجعة الإدارة.`, 'success');
+                
+                if (window.opener) {
+                    window.opener.postMessage({ type: 'POINTS_UPDATED' }, '*');
+                }
+
+            } catch (e) {
+                showToast('❌ حدث خطأ: ' + e.message, 'error');
+            }
+        };
+
+        checkSession();
+    </script>
+</body>
+</html>

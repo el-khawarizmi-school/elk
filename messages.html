@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0820">
+  <title>التواصل | ثانوية الخوارزمي</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0a0820;
+      --panel: rgba(23, 27, 57, .78);
+      --panel-strong: rgba(17, 20, 46, .96);
+      --glass: rgba(255,255,255,.055);
+      --border: rgba(255,255,255,.10);
+      --gold: #f5c842;
+      --blue: #5b9cf5;
+      --muted: #a5abc2;
+      --white: #fff;
+      --danger: #ff647c;
+    }
+    * { box-sizing: border-box; }
+    html, body { width:100%; height:100%; margin:0; }
+    body {
+      font-family:'Cairo',sans-serif; color:var(--white); background:var(--bg);
+      background-image:radial-gradient(circle at 12% 8%,rgba(91,82,153,.19),transparent 32%),
+                       radial-gradient(circle at 88% 88%,rgba(245,200,66,.075),transparent 28%);
+      overflow:hidden; -webkit-font-smoothing:antialiased;
+    }
+    button,input,textarea { font:inherit; }
+    button { -webkit-tap-highlight-color:transparent; }
+    .messenger {
+      width:100%; height:100vh; height:100dvh; display:flex; overflow:hidden;
+      padding:clamp(0px,1.4vw,18px); gap:14px;
+    }
+    .sidebar,.chat {
+      min-width:0; border:1px solid var(--border); border-radius:20px;
+      background:var(--panel); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px);
+      box-shadow:0 14px 40px rgba(0,0,0,.24); overflow:hidden;
+    }
+    .sidebar { width:360px; flex:0 0 360px; display:flex; flex-direction:column; }
+    .side-head { padding:16px; border-bottom:1px solid var(--border); }
+    .topline { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .back-dashboard {
+      width:40px;height:40px;display:grid;place-items:center;border-radius:12px;
+      color:var(--gold);background:var(--glass);border:1px solid var(--border);text-decoration:none;flex-shrink:0;
+    }
+    .heading { flex:1; min-width:0; }
+    .heading h1 { margin:0;font-size:1.08rem;font-weight:900; }
+    .heading p { margin:2px 0 0;color:var(--muted);font-size:.72rem; }
+    .search { display:flex;align-items:center;gap:9px;padding:10px 13px;border-radius:13px;
+      background:rgba(0,0,0,.2);border:1px solid var(--border);color:var(--muted); }
+    .search input { min-width:0;width:100%;border:0;outline:0;background:transparent;color:white;font-size:.88rem; }
+    .search input::placeholder { color:#858ba8; }
+    .list-scroll { flex:1;min-height:0;overflow-y:auto;padding:12px;scrollbar-width:thin;scrollbar-color:rgba(91,156,245,.4) transparent; }
+    .section-label { display:flex;align-items:center;gap:8px;margin:7px 4px 9px;color:var(--gold);font-size:.78rem;font-weight:800; }
+    .section-label i { font-size:.82rem; }
+    .section-divider { height:1px;background:var(--border);margin:15px 3px; }
+    .conversation { display:flex;align-items:center;gap:10px;width:100%;padding:10px;margin-bottom:7px;
+      color:white;text-align:right;background:rgba(255,255,255,.025);border:1px solid transparent;border-radius:14px;
+      cursor:pointer;transition:background .2s,border-color .2s; }
+    .conversation:hover { background:rgba(91,156,245,.09);border-color:rgba(91,156,245,.22); }
+    .conversation.active { background:rgba(91,156,245,.15);border-color:rgba(91,156,245,.42); }
+    .avatar { width:45px;height:45px;flex:0 0 45px;border-radius:50%;display:grid;place-items:center;
+      overflow:hidden;background:linear-gradient(135deg,#386fc1,#5b9cf5);font-weight:800;color:white; }
+    .avatar img,.chat-avatar img { width:100%;height:100%;object-fit:cover; }
+    .avatar.admin { color:#211a05;background:linear-gradient(135deg,#f5d66c,#c99a24); }
+    .avatar.developer { background:linear-gradient(135deg,#8065d9,#aa8bff); }
+    .conv-info { flex:1;min-width:0; }
+    .conv-title { display:flex;align-items:center;gap:5px;font-size:.85rem;font-weight:800;min-width:0; }
+    .conv-title span { overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+    .verified { color:var(--blue);font-size:.72rem; }
+    .conv-preview { display:block;margin-top:3px;color:var(--muted);font-size:.72rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+    .delete-btn { width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border:0;border-radius:10px;
+      color:#a7abc0;background:transparent;cursor:pointer; }
+    .delete-btn:hover { color:var(--danger);background:rgba(255,100,124,.12); }
+    .empty-list { padding:22px 10px;text-align:center;color:var(--muted);font-size:.82rem; }
+    .chat { flex:1;display:flex;flex-direction:column;position:relative; }
+    .chat-empty { flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:25px;color:var(--muted); }
+    .chat-empty .empty-icon { width:90px;height:90px;display:grid;place-items:center;margin-bottom:16px;border-radius:28px;
+      color:var(--blue);font-size:2.3rem;background:rgba(91,156,245,.09);border:1px solid rgba(91,156,245,.18); }
+    .chat-empty h2 { margin:0 0 5px;color:white;font-size:1.1rem; }
+    .chat-empty p { margin:0;font-size:.82rem; }
+    .chat-header { min-height:76px;display:flex;align-items:center;gap:12px;padding:12px 18px;
+      background:rgba(10,8,32,.5);border-bottom:1px solid var(--border); }
+    .chat-avatar { width:44px;height:44px;flex:0 0 44px;border-radius:50%;display:grid;place-items:center;overflow:hidden;
+      background:linear-gradient(135deg,#386fc1,#5b9cf5);font-weight:800; }
+    .chat-avatar.admin { background:linear-gradient(135deg,#f5d66c,#c99a24);color:#211a05; }
+    .chat-avatar.developer { background:linear-gradient(135deg,#8065d9,#aa8bff); }
+    .chat-person { min-width:0;flex:1; }
+    .chat-person h2 { margin:0;font-size:.95rem;font-weight:800; }
+    .chat-person p { margin:2px 0 0;color:var(--muted);font-size:.72rem; }
+    .back-chat { display:none;width:39px;height:39px;flex:0 0 39px;border:1px solid var(--border);border-radius:12px;
+      color:var(--gold);background:var(--glass);cursor:pointer; }
+    .chat-body { flex:1;min-height:0;overflow-y:auto;display:flex;flex-direction:column;gap:11px;padding:20px; }
+    .message { max-width:min(76%,620px);display:flex;flex-direction:column;gap:4px; }
+    .message.me { align-self:flex-start; }
+    .message.other { align-self:flex-end; }
+    .bubble { padding:10px 14px;border:1px solid var(--border);border-radius:15px;background:rgba(255,255,255,.065);
+      color:#f6f6fb;font-size:.88rem;line-height:1.75;overflow-wrap:anywhere; }
+    .message.me .bubble { background:linear-gradient(135deg,rgba(91,156,245,.24),rgba(54,102,174,.19));border-color:rgba(91,156,245,.25); }
+    .message.other .bubble { background:rgba(245,200,66,.10);border-color:rgba(245,200,66,.19); }
+    .message-time { color:#9298b0;font-size:.65rem;padding:0 5px; }
+    .message.me .message-time { text-align:right; }
+    .message.other .message-time { text-align:left; }
+    .no-messages { margin:auto;text-align:center;color:var(--muted);font-size:.85rem; }
+    .composer { display:flex;align-items:flex-end;gap:10px;padding:13px 16px calc(13px + env(safe-area-inset-bottom));
+      background:rgba(10,8,32,.55);border-top:1px solid var(--border); }
+    .composer textarea { flex:1;min-width:0;min-height:45px;max-height:130px;resize:none;outline:0;
+      padding:10px 14px;border-radius:15px;border:1px solid var(--border);background:rgba(255,255,255,.06);
+      color:white;line-height:1.55;font-size:.9rem; }
+    .composer textarea:focus { border-color:rgba(91,156,245,.65); }
+    .send-btn { width:46px;height:46px;flex:0 0 46px;border:0;border-radius:14px;color:#19152a;
+      background:linear-gradient(135deg,#f8d86b,#d7a92d);cursor:pointer;box-shadow:0 5px 18px rgba(245,200,66,.2); }
+    .send-btn:disabled { opacity:.45;cursor:not-allowed; }
+    .send-btn:hover:not(:disabled) { filter:brightness(1.08); }
+    .loading { opacity:.65;pointer-events:none; }
+    @media (max-width:800px) {
+      .messenger { display:block;padding:0; }
+      .sidebar,.chat { position:absolute;inset:0;width:100%;height:100%;border:0;border-radius:0; }
+      .sidebar { z-index:2;transform:translateX(0);visibility:visible;transition:transform .28s ease,visibility .28s; }
+      .sidebar.hidden { transform:translateX(100%);visibility:hidden; }
+      .chat { z-index:1;display:none; }
+      .chat.active { display:flex; }
+      .back-chat { display:grid;place-items:center; }
+      .chat-header { min-height:68px;padding:10px 12px; }
+      .chat-body { padding:14px 11px; }
+      .message { max-width:88%; }
+      .composer { padding:9px 10px calc(9px + env(safe-area-inset-bottom)); }
+      .side-head { padding:12px; }
+      .list-scroll { padding:10px; }
+    }
+    @media (max-width:360px) {
+      .heading h1 { font-size:.98rem; }
+      .conversation { gap:8px;padding:8px; }
+      .avatar { width:41px;height:41px;flex-basis:41px; }
+      .delete-btn { width:30px;height:30px;flex-basis:30px; }
+    }
+  </style>
+
+<style id="messenger-embedded-mode">
+body.embedded-messenger .back-dashboard { display:none !important; }
+body.embedded-messenger .side-head { padding-top:16px; }
+</style>
+
+<style id="compact-reference-design">
+/* Compact conversation-list layout matching the supplied reference */
+html, body { width:100%; height:100%; min-height:0; overflow:hidden; background:#11162f !important; }
+body.embedded-messenger .messenger {
+  display:flex; flex-direction:column; width:100%; height:100%; min-height:0;
+  padding:0; gap:0; background:#11162f;
+}
+body.embedded-messenger .sidebar {
+  display:flex; position:relative; inset:auto; z-index:3; width:100%; height:100%;
+  flex:1 1 auto; min-height:0; border:0; border-radius:0; box-shadow:none;
+  background:#11162f; overflow:hidden;
+}
+body.embedded-messenger .side-head {
+  flex:0 0 auto; padding:0; background:#20294a; border:0;
+}
+body.embedded-messenger .compact-topline {
+  height:50px; padding:0 16px; display:flex; align-items:center; gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+body.embedded-messenger .compact-heading {
+  margin-inline-start:auto; display:flex; align-items:center; gap:9px;
+  color:#e8ebf5; font-size:.92rem; font-weight:800;
+}
+body.embedded-messenger .compact-heading h1 { margin:0; font:800 .92rem 'Cairo',sans-serif; }
+body.embedded-messenger .compact-heading i { color:#69a7ff; font-size:1.05rem; }
+body.embedded-messenger .conversation-count {
+  padding:3px 9px; border-radius:20px; color:#63a5ff;
+  background:rgba(39,112,218,.17); font-size:.7rem; font-weight:800;
+}
+body.embedded-messenger .compact-expand {
+  width:28px; height:28px; display:grid; place-items:center; padding:0;
+  border:0; border-radius:7px; color:#dce7ff; background:transparent; cursor:pointer;
+}
+body.embedded-messenger .compact-expand:hover { background:rgba(255,255,255,.1); }
+body.embedded-messenger .search {
+  margin:8px 9px 5px; padding:12px 14px; min-height:49px;
+  border:0; border-radius:13px; background:#242d4d; color:#aab5d0;
+}
+body.embedded-messenger .search input { font-size:.84rem; }
+body.embedded-messenger .list-scroll {
+  flex:1; min-height:0; padding:0 9px; overflow-y:auto;
+}
+body.embedded-messenger .section-label,
+body.embedded-messenger .section-divider { display:none !important; }
+body.embedded-messenger .conversation {
+  position:relative; display:flex; flex-direction:row-reverse; gap:12px;
+  width:100%; min-height:94px; margin:0; padding:13px 8px;
+  border:0; border-bottom:1px solid rgba(151,166,207,.25); border-radius:0;
+  background:transparent; text-align:right;
+}
+body.embedded-messenger .conversation:hover,
+body.embedded-messenger .conversation.active { background:rgba(255,255,255,.035); border-color:rgba(151,166,207,.25); }
+body.embedded-messenger .avatar {
+  width:46px; height:46px; flex:0 0 46px; font-size:.95rem;
+}
+body.embedded-messenger .conv-info { display:flex; flex-direction:column; justify-content:center; gap:4px; }
+body.embedded-messenger .conv-title { font-size:.88rem; }
+body.embedded-messenger .conv-preview { font-size:.7rem; color:#a4aec8; }
+body.embedded-messenger .delete-btn { display:none; }
+body.embedded-messenger .empty-list { padding:25px 10px; }
+body.embedded-messenger .chat {
+  display:none; position:absolute; inset:0; z-index:5; width:100%; height:100%;
+  border:0; border-radius:0; background:#11162f;
+}
+body.embedded-messenger .chat.active { display:flex; }
+body.embedded-messenger .chat-empty {
+  flex:0 0 42px; min-height:42px; padding:8px; order:3;
+  color:#a4aec8; background:#1b2340; border-top:1px solid rgba(151,166,207,.2);
+  font-size:.72rem;
+}
+body.embedded-messenger .chat-empty p { margin:0; }
+body.embedded-messenger .chat-header { min-height:62px; }
+body.embedded-messenger .chat-body { flex:1; }
+body.embedded-messenger .composer { flex:0 0 auto; }
+body.embedded-messenger .back-chat { display:grid; place-items:center; }
+@media(max-width:800px) {
+  body.embedded-messenger .sidebar { position:relative; inset:auto; transform:none; visibility:visible; }
+  body.embedded-messenger .sidebar.hidden { display:none; }
+  body.embedded-messenger .chat { display:none; }
+  body.embedded-messenger .chat.active { display:flex; }
+}
+</style>
+
+<style id="responsive-typography-polish">
+  /* ثانوية الخوارزمي — تحسين الخطوط والتجاوب */
+  :root { font-size: 16px; }
+  html, body { min-width: 0 !important; max-width: 100% !important; }
+  body.embedded-messenger {
+    font-size: 14px;
+    line-height: 1.55;
+    font-family: 'Cairo', Tahoma, Arial, sans-serif !important;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+  body.embedded-messenger .messenger,
+  body.embedded-messenger .sidebar,
+  body.embedded-messenger .chat { min-width: 0; max-width: 100%; }
+  body.embedded-messenger .compact-topline {
+    min-height: 54px;
+    height: auto;
+    padding: 8px clamp(10px, 2.5vw, 18px);
+    gap: 10px;
+  }
+  body.embedded-messenger .compact-heading {
+    font-size: clamp(15px, 1.5vw, 18px);
+    line-height: 1.4;
+    gap: 8px;
+  }
+  body.embedded-messenger .compact-heading h1 {
+    font-size: clamp(15px, 1.5vw, 18px) !important;
+    line-height: 1.4;
+    white-space: nowrap;
+  }
+  body.embedded-messenger .compact-heading i { font-size: 17px; }
+  body.embedded-messenger .conversation-count {
+    font-size: 12px;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+  body.embedded-messenger .compact-expand {
+    width: 34px; height: 34px; flex: 0 0 34px;
+    font-size: 14px;
+  }
+  body.embedded-messenger .search {
+    min-height: 46px;
+    margin: 9px 10px 7px;
+    padding: 9px 13px;
+    gap: 10px;
+  }
+  body.embedded-messenger .search > i { font-size: 14px; flex: 0 0 auto; }
+  body.embedded-messenger .search input {
+    min-height: 26px;
+    font-size: 14px !important;
+    line-height: 1.5;
+  }
+  body.embedded-messenger .list-scroll { padding-inline: 10px; }
+  body.embedded-messenger .conversation {
+    min-height: 78px;
+    padding: 11px 8px;
+    gap: 12px;
+  }
+  body.embedded-messenger .avatar {
+    width: 44px; height: 44px; flex-basis: 44px;
+    font-size: 14px;
+  }
+  body.embedded-messenger .conv-title {
+    font-size: 14px !important;
+    line-height: 1.5;
+    gap: 6px;
+  }
+  body.embedded-messenger .conv-preview {
+    font-size: 12px !important;
+    line-height: 1.6;
+    margin-top: 1px;
+  }
+  body.embedded-messenger .empty-list {
+    padding: 26px 12px;
+    font-size: 13px !important;
+    line-height: 1.8;
+  }
+  body.embedded-messenger .chat-header {
+    min-height: 68px;
+    padding: 10px 14px;
+    gap: 10px;
+  }
+  body.embedded-messenger .chat-person h2 {
+    font-size: 15px !important;
+    line-height: 1.5;
+  }
+  body.embedded-messenger .chat-person p {
+    font-size: 12px !important;
+    line-height: 1.5;
+  }
+  body.embedded-messenger .chat-body {
+    padding: clamp(12px, 2vw, 22px);
+    gap: 10px;
+  }
+  body.embedded-messenger .bubble {
+    font-size: 14px !important;
+    line-height: 1.85;
+    padding: 9px 13px;
+  }
+  body.embedded-messenger .message-time { font-size: 11px !important; }
+  body.embedded-messenger .composer {
+    gap: 9px;
+    padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+  }
+  body.embedded-messenger .composer textarea {
+    min-height: 44px;
+    font-size: 14px !important;
+    line-height: 1.65;
+  }
+  body.embedded-messenger .send-btn {
+    width: 44px; height: 44px; flex-basis: 44px;
+  }
+  @media (max-width: 600px) {
+    body.embedded-messenger .compact-topline {
+      min-height: 52px;
+      padding-inline: 10px;
+      gap: 7px;
+    }
+    body.embedded-messenger .compact-heading h1 {
+      font-size: 15px !important;
+    }
+    body.embedded-messenger .conversation-count {
+      padding: 3px 7px;
+      font-size: 11px;
+    }
+    body.embedded-messenger .search {
+      min-height: 44px;
+      margin: 8px 8px 5px;
+      padding-inline: 11px;
+    }
+    body.embedded-messenger .conversation {
+      min-height: 74px;
+      padding: 9px 6px;
+      gap: 10px;
+    }
+    body.embedded-messenger .avatar {
+      width: 42px; height: 42px; flex-basis: 42px;
+    }
+    body.embedded-messenger .conv-title { font-size: 13px !important; }
+    body.embedded-messenger .conv-preview { font-size: 11.5px !important; }
+    body.embedded-messenger .chat-header { min-height: 62px; padding: 8px 10px; }
+    body.embedded-messenger .chat-body { padding: 12px 9px; }
+    body.embedded-messenger .message { max-width: 90%; }
+    body.embedded-messenger .bubble { font-size: 13px !important; }
+    body.embedded-messenger .composer {
+      padding-inline: 8px;
+      padding-bottom: calc(8px + env(safe-area-inset-bottom));
+    }
+    body.embedded-messenger .composer textarea { font-size: 13px !important; }
+  }
+  @media (max-width: 360px) {
+    body.embedded-messenger .compact-heading h1 { font-size: 13px !important; }
+    body.embedded-messenger .compact-heading { gap: 5px; }
+    body.embedded-messenger .compact-expand { width: 30px; height: 30px; flex-basis: 30px; }
+    body.embedded-messenger .conversation-count { font-size: 10px; }
+  }
+</style>
+
+</head>
+<body class="embedded-messenger">
+  <main class="messenger">
+    <aside class="sidebar" id="sidebar" aria-label="قائمة المحادثات">
+      <header class="side-head">
+        <div class="compact-topline">
+          <button class="compact-expand" id="compactExpand" type="button" aria-label="ملء الشاشة" title="ملء الشاشة"><i class="fa-solid fa-expand"></i></button>
+          <span class="conversation-count" id="conversationCount">0 محادثات</span>
+          <div class="compact-heading"><h1>مركز التواصل</h1><i class="fa-regular fa-comments"></i></div>
+        </div>
+        <label class="search"><i class="fa-solid fa-magnifying-glass"></i>
+          <input id="searchInput" type="search" placeholder="ابحث عن شخص بالاسم..." autocomplete="off">
+        </label>
+      </header>
+      <div class="list-scroll" id="conversationList">
+        <div class="empty-list">جارٍ تحميل المحادثات...</div>
+      </div>
+    </aside>
+
+    <section class="chat" id="chatPanel" aria-label="نافذة الدردشة">
+      <div class="chat-empty" id="chatEmpty">
+        <p>اختر محادثة لبدء التواصل</p>
+      </div>
+      <header class="chat-header" id="chatHeader" hidden>
+        <button class="back-chat" id="backButton" type="button" aria-label="رجوع إلى القائمة"><i class="fa-solid fa-arrow-right"></i></button>
+        <div class="chat-avatar" id="chatAvatar"></div>
+        <div class="chat-person"><h2 id="chatName"></h2><p id="chatStatus"></p></div>
+      </header>
+      <div class="chat-body" id="chatBody" hidden></div>
+      <form class="composer" id="composer" hidden>
+        <textarea id="messageInput" rows="1" maxlength="5000" placeholder="اكتب رسالتك..."></textarea>
+        <button class="send-btn" id="sendButton" type="submit" aria-label="إرسال" disabled><i class="fa-solid fa-paper-plane"></i></button>
+      </form>
+    </section>
+  </main>
+
+  <script src="darkmode.js"></script>
+  <script type="module">
+    import { supabase, showToast, escapeHtml } from './supabase.js';
+    import { initLanguage } from './language.js';
+
+    initLanguage();
+
+    const $ = (id) => document.getElementById(id);
+    let currentUser = null;
+    let students = [];
+    let contacts = [];
+    let activeConversation = null;
+    let searchTerm = '';
+    let refreshTimer = null;
+    let requestVersion = 0;
+
+    const isMobile = () => window.matchMedia('(max-width: 800px)').matches;
+    const safe = (value) => escapeHtml(String(value ?? ''));
+    const initials = (name) => {
+      const words = String(name || '؟').trim().split(/\s+/);
+      return words.length > 1 ? words[0][0] + words[1][0] : words[0].slice(0, 2);
+    };
+    const time = (value) => {
+      if (!value) return '';
+      const date = new Date(value);
+      return Number.isNaN(date.getTime()) ? '' : date.toLocaleTimeString('ar-MA', {hour:'2-digit',minute:'2-digit'});
+    };
+    const normalize = (value) => String(value || '').toLowerCase()
+      .replace(/[\u064B-\u065F\u0670]/g,'').replace(/[أإآ]/g,'ا').replace(/[ىي]/g,'ي')
+      .replace(/ة/g,'ه').replace(/\s+/g,'');
+
+    function notify(message, type = 'error') {
+      if (typeof showToast === 'function') showToast(message, type);
+      else alert(message);
+    }
+
+    async function checkSession() {
+      try {
+        const raw = localStorage.getItem('currentUser');
+        if (!raw || raw === 'null') throw new Error('جلسة الدخول غير موجودة');
+        currentUser = JSON.parse(raw);
+        if (!currentUser?.id) throw new Error('بيانات المستخدم غير صالحة');
+        if (['admin','developer'].includes(currentUser.role)) {
+          location.replace('dashboard.html');
+          return false;
+        }
+        return true;
+      } catch {
+        location.replace('login.html');
+        return false;
+      }
+    }
+
+    async function fetchRows(table, configure) {
+      let query = supabase.from(table).select('*');
+      query = configure(query);
+      const { data, error } = await query;
+      if (error) throw error;
+      return data || [];
+    }
+
+    async function loadData() {
+      try {
+        const [studentRows, privateRows, channelRows] = await Promise.all([
+          fetchRows('students', q => q),
+          fetchRows('private_messages', q => q.or(`sender_id.eq.${currentUser.id},recipient_id.eq.${currentUser.id}`).order('created_at', {ascending:false})),
+          fetchRows('messages', q => q.eq('sender_id', currentUser.id).in('channel',['admin','developer']).order('created_at',{ascending:false}))
+        ]);
+        students = studentRows.filter(s => s.id !== currentUser.id && s.role === 'student');
+        const ids = new Set();
+        privateRows.forEach(row => {
+          const otherId = row.sender_id === currentUser.id ? row.recipient_id : row.sender_id;
+          if (otherId) ids.add(String(otherId));
+        });
+        contacts = [...ids].map(id => students.find(s => String(s.id) === id)).filter(Boolean);
+        renderLists(privateRows, channelRows);
+      } catch (error) { throw error; }
+    }
+
+    function latestPreview(rows, predicate, fallback) {
+      const row = rows.find(predicate);
+      return row?.message ? String(row.message).slice(0,55) : fallback;
+    }
+
+    function conversationButton({id,type,name,preview,avatarClass='',avatarText='',avatarUrl='',verified=false}) {
+      const active = activeConversation?.type === type && String(activeConversation.id) === String(id);
+      const avatar = avatarUrl
+        ? `<img src="${safe(avatarUrl)}" alt="" loading="lazy">`
+        : safe(avatarText || initials(name));
+      const openCall = type === 'channel'
+        ? `window.openChannel('${safe(id)}')`
+        : `window.openPrivateChat('${safe(id)}')`;
+      return `<div class="conversation ${active ? 'active' : ''}" data-search="${safe(normalize(name+' '+preview))}" onclick="${openCall}" role="button" tabindex="0">
+        <span class="avatar ${avatarClass}">${avatar}</span>
+        <span class="conv-info"><span class="conv-title"><span>${safe(name)}</span>${verified ? '<i class="fa-solid fa-circle-check verified"></i>' : ''}</span>
+        <span class="conv-preview">${safe(preview)}</span></span>
+        <button class="delete-btn" type="button" data-delete-type="${type}" data-delete-id="${safe(id)}" aria-label="حذف محادثة ${safe(name)}" title="حذف المحادثة"><i class="fa-solid fa-trash-can"></i></button>
+      </div>`;
+    }
+
+    function renderLists(privateRows, channelRows) {
+      const list = $('conversationList');
+      const q = normalize(searchTerm);
+      const filteredContacts = students.filter(student => {
+        const label = normalize(`${student.name || ''} ${student.class || ''}`);
+        return !q || label.includes(q);
+      }).sort((a,b) => String(a.name || '').localeCompare(String(b.name || ''),'ar'));
+
+      const adminPreview = latestPreview(channelRows, r => r.channel === 'admin', 'للتواصل مع الإدارة');
+      const devPreview = latestPreview(channelRows, r => r.channel === 'developer', 'الدعم التقني والمساعدة');
+      const fixed = [
+        conversationButton({id:'admin',type:'channel',name:'الإدارة',preview:adminPreview,avatarClass:'admin',avatarText:'إ',verified:true}),
+        conversationButton({id:'developer',type:'channel',name:'المبرمج',preview:devPreview,avatarClass:'developer',avatarText:'م',verified:true})
+      ].join('');
+
+      const peers = filteredContacts.map(student => {
+        const related = privateRows.filter(row => String(row.sender_id) === String(student.id) || String(row.recipient_id) === String(student.id));
+        const last = related[0];
+        return conversationButton({
+          id:student.id, type:'private', name:student.name || 'تلميذ',
+          preview:last?.message || student.class || 'بدء محادثة',
+          avatarUrl:student.avatar_url || '', avatarText:initials(student.name)
+        });
+      }).join('');
+
+      const noPeers = filteredContacts.length ? '' : '<div class="empty-list">لا توجد نتائج مطابقة</div>';
+      const countEl = $('conversationCount');
+      if (countEl) countEl.textContent = `${2 + filteredContacts.length} محادثات`;
+
+      list.innerHTML = `
+        <div class="section-label"><i class="fa-solid fa-comments"></i> محادثاتي</div>
+        ${fixed}
+        <div class="section-divider"></div>
+        <div class="section-label"><i class="fa-solid fa-users"></i> زملائي (${filteredContacts.length})</div>
+        ${peers || noPeers}`;
+
+      list.querySelectorAll('[data-delete-type]').forEach(button => {
+        button.addEventListener('click', (event) => {
+          event.stopPropagation();
+          deleteConversation(button.dataset.deleteType, button.dataset.deleteId);
+        });
+      });
+      list.querySelectorAll('.conversation[role="button"]').forEach(row => {
+        row.addEventListener('keydown', event => {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); row.click(); }
+        });
+      });
+    }
+
+    function showChatPanel() {
+      $('sidebar').classList.add('hidden');
+      $('chatPanel').classList.add('active');
+    }
+
+    function backToList() {
+      $('sidebar').classList.remove('hidden');
+      $('chatPanel').classList.remove('active');
+    }
+    $('backButton').addEventListener('click', backToList);
+    $('compactExpand')?.addEventListener('click', () => {
+      try {
+        const frame = window.frameElement;
+        const section = frame?.closest('#studentMessengerSection');
+        if (section) {
+          section.classList.toggle('student-messenger-fullscreen');
+          const icon = $('compactExpand').querySelector('i');
+          if (icon) icon.className = section.classList.contains('student-messenger-fullscreen') ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
+          return;
+        }
+      } catch (error) { console.warn(error); }
+      if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
+    });
+
+    function openChatLayout(name,status,avatarHtml,avatarClass) {
+      $('chatEmpty').hidden = true;
+      $('chatHeader').hidden = false;
+      $('chatBody').hidden = false;
+      $('composer').hidden = false;
+      $('chatName').textContent = name;
+      $('chatStatus').textContent = status;
+      $('chatAvatar').className = `chat-avatar ${avatarClass || ''}`;
+      $('chatAvatar').innerHTML = avatarHtml;
+      $('messageInput').value = '';
+      $('sendButton').disabled = true;
+      showChatPanel();
+    }
+
+    window.openChannel = async (channel) => {
+      if (!['admin','developer'].includes(channel)) return;
+      activeConversation = {type:'channel',id:channel,channel};
+      const isAdmin = channel === 'admin';
+      openChatLayout(isAdmin ? 'الإدارة' : 'المبرمج', 'محادثة رسمية', isAdmin ? 'إ' : '<i class="fa-solid fa-code"></i>', isAdmin ? 'admin' : 'developer');
+      await renderChannelMessages(channel);
+      highlightActive();
+    };
+
+    window.openPrivateChat = async (userId) => {
+      const student = students.find(s => String(s.id) === String(userId));
+      if (!student) return;
+      activeConversation = {type:'private',id:student.id,name:student.name};
+      const avatar = student.avatar_url ? `<img src="${safe(student.avatar_url)}" alt="">` : safe(initials(student.name));
+      openChatLayout(student.name || 'زميل', student.class || 'تلميذ', avatar, '');
+      await renderPrivateMessages(student.id);
+      highlightActive();
+    };
+
+    function highlightActive() {
+      document.querySelectorAll('.conversation').forEach(el => el.classList.remove('active'));
+      const current = [...document.querySelectorAll('.conversation')].find(el => {
+        const button = el.querySelector('[data-delete-type]');
+        return button && button.dataset.deleteType === activeConversation?.type &&
+          String(button.dataset.deleteId) === String(activeConversation?.id);
+      });
+      current?.classList.add('active');
+    }
+
+    function renderMessageRows(rows) {
+      const body = $('chatBody');
+      if (!rows.length) {
+        body.innerHTML = '<div class="no-messages">لا توجد رسائل سابقة. يمكنك بدء المحادثة الآن.</div>';
+        return;
+      }
+      body.innerHTML = rows.map(row => {
+        const mine = String(row.sender_id) === String(currentUser.id);
+        const message = safe(row.message).replace(/\r?\n/g,'<br>');
+        return `<article class="message ${mine ? 'me' : 'other'}"><div class="bubble">${message}</div><time class="message-time">${time(row.created_at)}</time></article>
+          ${row.reply ? `<article class="message other"><div class="bubble">${safe(row.reply).replace(/\r?\n/g,'<br>')}</div><time class="message-time">${time(row.reply_date)}</time></article>` : ''}`;
+      }).join('');
+      body.scrollTop = body.scrollHeight;
+    }
+
+    async function renderChannelMessages(channel) {
+      const version = ++requestVersion;
+      $('chatBody').innerHTML = '<div class="no-messages">جارٍ تحميل الرسائل...</div>';
+      try {
+        const rows = await fetchRows('messages', q => q.eq('sender_id',currentUser.id).eq('channel',channel).order('created_at',{ascending:true}));
+        if (version !== requestVersion || activeConversation?.channel !== channel) return;
+        renderMessageRows(rows);
+      } catch (error) {
+        console.error(error);
+        $('chatBody').innerHTML = '<div class="no-messages">تعذر تحميل الرسائل. تحقق من الاتصال والصلاحيات.</div>';
+      }
+    }
+
+    async function renderPrivateMessages(otherId) {
+      const version = ++requestVersion;
+      $('chatBody').innerHTML = '<div class="no-messages">جارٍ تحميل الرسائل...</div>';
+      try {
+        const rows = await fetchRows('private_messages', q =>
+          q.or(`and(sender_id.eq.${currentUser.id},recipient_id.eq.${otherId}),and(sender_id.eq.${otherId},recipient_id.eq.${currentUser.id})`)
+           .order('created_at',{ascending:true}));
+        if (version !== requestVersion || String(activeConversation?.id) !== String(otherId)) return;
+        renderMessageRows(rows);
+      } catch (error) {
+        console.error(error);
+        $('chatBody').innerHTML = '<div class="no-messages">تعذر تحميل الرسائل. تحقق من الاتصال والصلاحيات.</div>';
+      }
+    }
+
+    $('messageInput').addEventListener('input', () => {
+      const input = $('messageInput');
+      input.style.height = 'auto';
+      input.style.height = `${Math.min(input.scrollHeight,130)}px`;
+      $('sendButton').disabled = !input.value.trim();
+    });
+    $('messageInput').addEventListener('keydown', event => {
+      if (event.key === 'Enter' && !event.shiftKey) {
+        event.preventDefault();
+        $('composer').requestSubmit();
+      }
+    });
+
+    $('composer').addEventListener('submit', async event => {
+      event.preventDefault();
+      if (!activeConversation) return;
+      const input = $('messageInput');
+      const message = input.value.trim();
+      if (!message) return;
+      const button = $('sendButton');
+      button.disabled = true;
+      try {
+        if (activeConversation.type === 'channel') {
+          const {error} = await supabase.from('messages').insert({
+            channel:activeConversation.channel,
+            sender_id:currentUser.id,
+            sender_name:currentUser.name,
+            student_name:currentUser.name,
+            student_class:currentUser.class,
+            student_id:currentUser.id,
+            sender_role:currentUser.role,
+            message,
+            status:'pending'
+          });
+          if (error) throw error;
+          await renderChannelMessages(activeConversation.channel);
+        } else {
+          const {error} = await supabase.from('private_messages').insert({
+            sender_id:currentUser.id,
+            sender_name:currentUser.name,
+            recipient_id:activeConversation.id,
+            recipient_name:activeConversation.name,
+            message
+          });
+          if (error) throw error;
+          await renderPrivateMessages(activeConversation.id);
+        }
+        input.value = '';
+        input.style.height = 'auto';
+      } catch (error) {
+        console.error(error);
+        notify(`تعذر إرسال الرسالة: ${error.message}`);
+      } finally {
+        button.disabled = !input.value.trim();
+      }
+    });
+
+    async function deleteConversation(type,id) {
+      const title = type === 'channel' ? (id === 'admin' ? 'الإدارة' : 'المبرمج') :
+        (students.find(s => String(s.id) === String(id))?.name || 'هذا الزميل');
+      if (!confirm(`هل تريد حذف رسائل محادثة "${title}"؟ لا يمكن التراجع عن هذا الإجراء.`)) return;
+      try {
+        let result;
+        if (type === 'channel') {
+          result = await supabase.from('messages').delete()
+            .eq('sender_id',currentUser.id).eq('channel',id);
+        } else {
+          result = await supabase.from('private_messages').delete()
+            .or(`and(sender_id.eq.${currentUser.id},recipient_id.eq.${id}),and(sender_id.eq.${id},recipient_id.eq.${currentUser.id})`);
+        }
+        if (result.error) throw result.error;
+        if (activeConversation?.type === type && String(activeConversation.id) === String(id)) {
+          activeConversation = null;
+          requestVersion++;
+          $('chatHeader').hidden = true;
+          $('chatBody').hidden = true;
+          $('composer').hidden = true;
+          $('chatEmpty').hidden = false;
+          backToList();
+        }
+        await loadData();
+        notify('تم حذف المحادثة', 'success');
+      } catch (error) {
+        console.error(error);
+        notify(`تعذر حذف المحادثة: ${error.message}`);
+      }
+    }
+
+    $('searchInput').addEventListener('input', event => {
+      searchTerm = event.target.value;
+      loadData().catch(error => {
+        console.error(error);
+        notify('تعذر تحديث قائمة المحادثات');
+      });
+    });
+
+    async function init() {
+      if (!await checkSession()) return;
+      try {
+        await loadData();
+        refreshTimer = window.setInterval(() => {
+          loadData().catch(error => console.error('Refresh error:',error));
+          if (activeConversation?.type === 'channel') renderChannelMessages(activeConversation.channel);
+          else if (activeConversation?.type === 'private') renderPrivateMessages(activeConversation.id);
+        },30000);
+      } catch (error) {
+        console.error(error);
+        $('conversationList').innerHTML = '<div class="empty-list">تعذر تحميل المحادثات. تحقق من إعدادات قاعدة البيانات.</div>';
+        notify(`خطأ في تحميل البيانات: ${error.message}`);
+      }
+    }
+
+    window.addEventListener('beforeunload', () => {
+      if (refreshTimer) clearInterval(refreshTimer);
+    });
+    window.addEventListener('resize', () => {
+      if (!isMobile()) {
+        $('sidebar').classList.remove('hidden');
+        $('chatPanel').classList.remove('active');
+      } else if (activeConversation) {
+        $('sidebar').classList.add('hidden');
+        $('chatPanel').classList.add('active');
+      }
+    });
+
+    init();
+  </script>
+</body>
+</html>

@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل الدخول | ثانوية الخوارزمي</title>
+<meta name="theme-color" content="#0a0820">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--bg:#0a0820;--tx:#ffffff;--mu:rgba(255,255,255,.62);--gold:#f5c842;--goldt:#f5c842;--grad:linear-gradient(135deg,#f5c842,#fb923c);--on:#1a1a2e;--card:rgba(255,255,255,.05);--bd:rgba(255,255,255,.1);--fld:rgba(255,255,255,.06);--fldbd:rgba(255,255,255,.12);--fldf:rgba(255,255,255,.09);--ph:rgba(255,255,255,.42);--tabbg:rgba(255,255,255,.04);--optbg:#1e1b4b;--modal:rgba(30,27,75,.75);--ov:rgba(0,0,0,.7);--shadow:0 30px 80px rgba(0,0,0,.45);--err:#fca5a5;--okc:#86efac;--orbo:.4;--orbo3:.14}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:5rem 1rem 2rem;line-height:1.7;overflow-x:hidden}
+:focus-visible{outline:3px solid var(--goldt);outline-offset:3px}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:var(--orbo);animation:float 26s ease-in-out infinite}
+.orb:nth-child(1){width:560px;height:560px;background:radial-gradient(circle,#6d28d9,transparent 70%);top:-180px;right:-160px}
+.orb:nth-child(2){width:480px;height:480px;background:radial-gradient(circle,#db2777,transparent 70%);bottom:-150px;left:-150px;animation-delay:-9s}
+.orb:nth-child(3){width:340px;height:340px;background:radial-gradient(circle,#f5c842,transparent 70%);top:45%;left:45%;opacity:var(--orbo3);animation-delay:-17s}
+@keyframes float{33%{transform:translate(60px,-40px) scale(1.1)}66%{transform:translate(-40px,60px) scale(.95)}}
+.glass{background:var(--card);border:1px solid var(--bd);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px)}
+.back{position:fixed;top:18px;right:18px;z-index:10;display:inline-flex;align-items:center;gap:.5rem;padding:.55rem 1.1rem;border-radius:50px;color:var(--tx);text-decoration:none;font-size:.88rem;font-weight:600;transition:.3s}
+.back:hover{color:var(--goldt);border-color:var(--gold);transform:translateX(-3px)}
+.card{width:100%;max-width:480px;border-radius:28px;padding:2.3rem 2rem 2rem;box-shadow:var(--shadow);position:relative;animation:up .7s ease-out}
+.card::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:55%;height:3px;border-radius:0 0 3px 3px;background:linear-gradient(90deg,transparent,#f5c842,#fb923c,transparent)}
+@keyframes up{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+.logo{text-align:center;margin-bottom:1.7rem}
+.logo .ico{display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;border-radius:22px;font-size:2rem;color:var(--on);background:var(--grad);box-shadow:0 12px 30px rgba(245,200,66,.35)}
+.logo h1{font-size:1.65rem;font-weight:800;margin-top:.9rem;line-height:1.3}
+.logo p{color:var(--mu);font-size:.9rem}
+.tabs{display:flex;gap:.3rem;padding:.3rem;border:1px solid var(--bd);border-radius:16px;background:var(--tabbg);margin-bottom:1.7rem}
+.tab{flex:1;padding:.65rem;border:0;border-radius:12px;background:transparent;color:var(--mu);font:inherit;font-weight:700;font-size:.95rem;cursor:pointer;transition:.3s}
+.tab:hover{color:var(--tx)}
+.tab[aria-selected="true"]{color:var(--on);background:var(--grad);box-shadow:0 6px 18px rgba(245,200,66,.3)}
+.form{display:none}
+.form.active{display:block;animation:fade .45s ease-out}
+@keyframes fade{from{opacity:0;transform:translateX(18px)}to{opacity:1;transform:none}}
+.field{position:relative;margin-bottom:1.05rem}
+.field>i.lead{position:absolute;inset-inline-start:1rem;top:50%;transform:translateY(-50%);color:var(--mu);pointer-events:none;transition:color .3s}
+.field:focus-within>i.lead{color:var(--goldt)}
+.field input,.field select{width:100%;padding:.95rem 2.9rem;background:var(--fld);border:1.5px solid var(--fldbd);border-radius:14px;color:var(--tx);font:inherit;font-size:.95rem;transition:.3s}
+.field input::placeholder{color:var(--ph)}
+.field input:focus,.field select:focus{outline:none;border-color:var(--goldt);background:var(--fldf);box-shadow:0 0 0 4px rgba(245,200,66,.2)}
+.field select{appearance:none;-webkit-appearance:none;cursor:pointer}
+.field select option{background:var(--optbg);color:var(--tx)}
+.field i.chev{position:absolute;inset-inline-end:1rem;top:50%;transform:translateY(-50%);color:var(--goldt);font-size:.8rem;pointer-events:none}
+.eye{position:absolute;inset-inline-end:.5rem;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;border-radius:10px;background:transparent;color:var(--mu);cursor:pointer;transition:.25s;display:flex;align-items:center;justify-content:center}
+.eye:hover{color:var(--goldt)}
+.field.err input,.field.err select{border-color:#f87171}
+.pwd-strength { display: none; margin-top: -0.5rem; margin-bottom: 1.1rem; padding: 0 0.3rem; }
+.pwd-strength.show { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+.pwd-bar-bg { height: 4px; background: var(--bd); border-radius: 4px; overflow: hidden; margin-bottom: 0.4rem; }
+.pwd-bar { height: 100%; width: 0%; border-radius: 4px; transition: all 0.4s ease; }
+.pwd-reqs { display: flex; flex-wrap: wrap; gap: 0.4rem 0.8rem; font-size: 0.75rem; color: var(--mu); font-weight: 600; }
+.pwd-req { display: flex; align-items: center; gap: 0.3rem; transition: color 0.3s ease; }
+.pwd-req i { font-size: 0.65rem; transition: all 0.3s ease; }
+.pwd-req.valid { color: var(--okc); }
+.pwd-req.valid i { color: var(--okc); }
+.btn{width:100%;display:flex;align-items:center;justify-content:center;gap:.6rem;padding:.95rem;border:0;border-radius:14px;background:var(--grad);color:var(--on);font:inherit;font-weight:800;font-size:1.02rem;cursor:pointer;margin-top:.6rem;box-shadow:0 10px 28px rgba(245,200,66,.3);transition:.3s}
+.btn:hover{transform:translateY(-3px);box-shadow:0 16px 40px rgba(245,200,66,.5)}
+.btn:disabled{opacity:0.7;cursor:not-allowed;transform:none}
+.msg{margin-top:.9rem;padding:.7rem .9rem;border-radius:12px;font-size:.88rem;font-weight:600;text-align:center;display:none}
+.msg.show{display:block}
+.msg.error{background:rgba(239,68,68,.14);color:var(--err);border:1px solid rgba(239,68,68,.4)}
+.msg.ok{background:rgba(74,222,128,.14);color:var(--okc);border:1px solid rgba(74,222,128,.4)}
+.forgot{text-align:center;margin-top:1.1rem}
+.link{background:none;border:0;color:var(--mu);font:inherit;font-size:.9rem;cursor:pointer;display:inline-flex;align-items:center;gap:.45rem;padding:.4rem .9rem;border-radius:10px;transition:.25s}
+.link:hover{color:var(--goldt);background:rgba(245,200,66,.08)}
+.overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:1rem;background:var(--ov);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+.overlay.open{display:flex;animation:fadeo .3s ease}
+@keyframes fadeo{from{opacity:0}to{opacity:1}}
+.modal{width:100%;max-width:420px;border-radius:26px;padding:1.8rem;background:var(--modal);box-shadow:var(--shadow);animation:pop .35s cubic-bezier(.175,.885,.32,1.275)}
+@keyframes pop{from{opacity:0;transform:scale(.9) translateY(20px)}to{opacity:1;transform:none}}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+.mh h2{font-size:1.15rem;font-weight:700;display:flex;align-items:center;gap:.6rem}
+.mh h2 i{color:var(--goldt)}
+.close{width:38px;height:38px;border-radius:12px;background:var(--fld);border:1px solid var(--bd);color:var(--mu);cursor:pointer;transition:.3s;display:flex;align-items:center;justify-content:center}
+.close:hover{color:var(--tx);background:rgba(248,113,113,.25);transform:rotate(90deg)}
+.modal p.d{color:var(--mu);font-size:.9rem;margin-bottom:1.2rem}
+.field select optgroup{background:var(--optbg);color:var(--goldt);font-style:normal;font-weight:800}
+.field select option{font-weight:600}
+.hint{display:none;margin:-.45rem .3rem 1rem;font-size:.84rem;font-weight:600;color:var(--goldt)}
+.hint.show{display:block}
+.class-group{margin-bottom:1.05rem}
+.cg-title{display:block;font-size:.92rem;font-weight:700;margin-bottom:.65rem}
+.cg-title i{color:var(--goldt);margin-inline-end:.4rem}
+.cg-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem}
+.cpart label{display:block;font-size:.76rem;color:var(--mu);margin-bottom:.3rem;font-weight:600}
+.cpart .field{margin-bottom:0}
+.cpart .field input,.cpart .field select{padding:.85rem .7rem;font-size:.85rem}
+.cpart .field select{padding-inline-end:1.8rem;text-overflow:ellipsis}
+.cpart .field input{text-align:start;font-weight:700;letter-spacing:.5px}
+.cpart .field i.chev{inset-inline-end:.6rem;font-size:.7rem}
+.class-group .hint{margin:.65rem .2rem 0;direction:ltr;text-align:right}
+@media(max-width:520px){.cg-row{grid-template-columns:1fr 1fr}.cpart:last-child{grid-column:1/-1}}
+@media(max-width:480px){body{padding-top:4.5rem}.card{padding:1.9rem 1.2rem 1.6rem;border-radius:22px}.logo h1{font-size:1.4rem}.back{top:12px;right:12px}}
+
+/* Gender Selection */
+.gender-group {
+  margin-bottom: 1.05rem;
+}
+
+.gender-title {
+  display: block;
+  font-size: .92rem;
+  font-weight: 700;
+  margin-bottom: .65rem;
+}
+
+.gender-title i {
+  color: var(--goldt);
+  margin-inline-end: .4rem;
+}
+
+.gender-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .7rem;
+}
+
+.gender-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  padding: .85rem;
+  border: 1.5px solid var(--fldbd);
+  border-radius: 14px;
+  background: var(--fld);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  color: var(--tx);
+  cursor: pointer;
+  transition: .3s;
+  font-weight: 700;
+}
+
+.gender-option:hover {
+  background: var(--fldf);
+  border-color: var(--goldt);
+}
+
+.gender-option:has(input:checked) {
+  border-color: var(--goldt);
+  background: rgba(245, 200, 66, .12);
+  box-shadow: 0 0 0 2px rgba(245, 200, 66, .08);
+}
+
+.gender-option input {
+  accent-color: var(--goldt);
+  width: 17px;
+  height: 17px;
+  cursor: pointer;
+}
+
+
+.gender-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+}
+
+.gender-label i {
+  color: var(--goldt);
+  font-size: 1.05rem;
+  transition: transform .3s ease, color .3s ease;
+}
+
+.gender-option:has(input:checked) .gender-label i {
+  transform: scale(1.12);
+  color: var(--gold);
+}
+
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<a class="back glass" href="index.html"><i class="fas fa-arrow-right"></i> العودة للرئيسية</a>
+<main class="card glass">
+  <div class="logo">
+    <span class="ico"><i class="fas fa-graduation-cap"></i></span>
+    <h1>ثانوية الخوارزمي</h1>
+    <p>مرحباً بك في منصتك الدراسية</p>
+  </div>
+  <div class="tabs" role="tablist">
+    <button class="tab" type="button" role="tab" id="tabLogin" aria-selected="true" aria-controls="loginForm">تسجيل الدخول</button>
+    <button class="tab" type="button" role="tab" id="tabRegister" aria-selected="false" aria-controls="registerForm">حساب جديد</button>
+  </div>
+  <form class="form active" id="loginForm" role="tabpanel" aria-labelledby="tabLogin" novalidate>
+    <div class="field">
+      <i class="fas fa-envelope lead"></i>
+      <input type="email" id="loginEmail" placeholder="البريد الإلكتروني" aria-label="البريد الإلكتروني" autocomplete="email">
+    </div>
+    <div class="field">
+      <i class="fas fa-lock lead"></i>
+      <input type="password" id="loginPassword" placeholder="كلمة المرور" aria-label="كلمة المرور" autocomplete="current-password">
+      <button type="button" class="eye" data-target="loginPassword" aria-label="إظهار كلمة المرور"><i class="fas fa-eye"></i></button>
+    </div>
+    <button class="btn" type="submit"><i class="fas fa-right-to-bracket"></i> دخول</button>
+    <div class="msg" id="loginMsg" role="alert"></div>
+    <div class="forgot"><button type="button" class="link" id="forgotBtn"><i class="fas fa-key"></i> نسيت كلمة المرور؟</button></div>
+  </form>
+  <form class="form" id="registerForm" role="tabpanel" aria-labelledby="tabRegister" novalidate>
+    <div class="field">
+      <i class="fas fa-user lead"></i>
+      <input type="text" id="regName" placeholder="الاسم الكامل" aria-label="الاسم الكامل" autocomplete="name">
+    </div>
+    <div class="field">
+      <i class="fas fa-envelope lead"></i>
+      <input type="email" id="regEmail" placeholder="البريد الإلكتروني" aria-label="البريد الإلكتروني" autocomplete="email">
+    </div>
+    <div class="field">
+      <i class="fas fa-lock lead"></i>
+      <input type="password" id="regPassword" placeholder="كلمة المرور (8 أحرف على الأقل)" aria-label="كلمة المرور" autocomplete="new-password">
+      <button type="button" class="eye" data-target="regPassword" aria-label="إظهار كلمة المرور"><i class="fas fa-eye"></i></button>
+    </div>
+    <!-- اختيار الجنس -->
+    <div class="gender-group">
+      <span class="gender-title">
+        <i class="fas fa-venus-mars"></i> الجنس
+      </span>
+
+      <div class="gender-options">
+        <label class="gender-option">
+          <input type="radio" name="regGender" value="male" checked>
+          <span class="gender-label"><i class="fas fa-mars" aria-hidden="true"></i> ذكر</span>
+        </label>
+
+        <label class="gender-option">
+          <input type="radio" name="regGender" value="female">
+          <span class="gender-label"><i class="fas fa-venus" aria-hidden="true"></i> أنثى</span>
+        </label>
+      </div>
+    </div>
+    <div class="pwd-strength" id="pwdStrength">
+      <div class="pwd-bar-bg"><div class="pwd-bar" id="pwdBar"></div></div>
+      <div class="pwd-reqs">
+        <span class="pwd-req" data-req="length"><i class="fas fa-circle"></i> 8 أحرف</span>
+        <span class="pwd-req" data-req="upper"><i class="fas fa-circle"></i> حرف كبير (A-Z)</span>
+        <span class="pwd-req" data-req="number"><i class="fas fa-circle"></i> رقم (0-9)</span>
+      </div>
+    </div>
+    <div class="class-group">
+      <span class="cg-title"><i class="fas fa-users"></i> القسم</span>
+      <div class="cg-row">
+        <div class="cpart">
+          <label for="regLevel">المستوى</label>
+          <div class="field">
+            <select id="regLevel">
+              <option value="">اختر</option>
+              <option value="TC">الجذع المشترك</option>
+              <option value="1BAC">الأولى باكالوريا</option>
+              <option value="2BAC">الثانية باكالوريا</option>
+            </select>
+            <i class="fas fa-chevron-down chev"></i>
+          </div>
+        </div>
+        <div class="cpart">
+          <label for="regBranch">الشعبة</label>
+          <div class="field">
+            <select id="regBranch">
+              <option value="">اختر</option>
+              <option value="علوم">علوم</option>
+              <option value="آداب وعلوم إنسانية">آداب وعلوم إنسانية</option>
+            </select>
+            <i class="fas fa-chevron-down chev"></i>
+          </div>
+        </div>
+        <div class="cpart">
+          <label for="regClassFree">القسم بالحروف</label>
+          <div class="field">
+            <input type="text" id="regClassFree" placeholder="2bacsh1 مثال" dir="auto" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false">
+          </div>
+        </div>
+      </div>
+      <div class="hint" id="classHint" aria-live="polite"></div>
+    </div>
+    <button class="btn" type="submit"><i class="fas fa-user-plus"></i> تسجيل حساب</button>
+    <div class="msg" id="regMsg" role="alert"></div>
+  </form>
+</main>
+<div class="overlay" id="overlay">
+  <div class="modal glass" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="mh">
+      <h2 id="mTitle"><i class="fas fa-key"></i> استعادة كلمة المرور</h2>
+      <button type="button" class="close" id="closeBtn" aria-label="إغلاق"><i class="fas fa-xmark"></i></button>
+    </div>
+    <p class="d">أدخل بريدك الإلكتروني وسيتم توجيهك للتواصل مع الإدارة عبر الواتساب لاستعادة كلمة المرور.</p>
+    <form id="forgotForm" novalidate>
+      <div class="field">
+        <i class="fas fa-envelope lead"></i>
+        <input type="email" id="forgotEmail" placeholder="البريد الإلكتروني" aria-label="البريد الإلكتروني" autocomplete="email">
+      </div>
+      <button class="btn" type="submit"><i class="fab fa-whatsapp"></i> التواصل عبر واتساب</button>
+      <div class="msg" id="forgotMsg" role="alert"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+  var $ = function(id){ return document.getElementById(id); };
+  var tabs = {login: $('tabLogin'), register: $('tabRegister')};
+  var forms = {login: $('loginForm'), register: $('registerForm')};
+  window.switchTab = function(name){
+    Object.keys(tabs).forEach(function(k){
+      var on = k === name;
+      tabs[k].setAttribute('aria-selected', on ? 'true' : 'false');
+      forms[k].classList.toggle('active', on);
+    });
+    if($('loginMsg')) { $('loginMsg').className = 'msg'; $('loginMsg').textContent=''; }
+    if($('regMsg')) { $('regMsg').className = 'msg'; $('regMsg').textContent=''; }
+  };
+  tabs.login.addEventListener('click', function(){ window.switchTab('login'); });
+  tabs.register.addEventListener('click', function(){ window.switchTab('register'); });
+
+  document.querySelectorAll('.eye').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var input = $(btn.dataset.target), icon = btn.querySelector('i');
+      var hidden = input.type === 'password';
+      input.type = hidden ? 'text' : 'password';
+      icon.className = hidden ? 'fas fa-eye-slash' : 'fas fa-eye';
+    });
+  });
+
+  var regPass = $('regPassword');
+  var pwdStrength = $('pwdStrength');
+  var pwdBar = $('pwdBar');
+  var reqs = document.querySelectorAll('.pwd-req');
+
+  regPass.addEventListener('input', function() {
+    var val = this.value;
+    if(val.length === 0) { pwdStrength.classList.remove('show'); } 
+    else { pwdStrength.classList.add('show'); }
+
+    var checks = { length: val.length >= 8, upper: /[A-Z]/.test(val), number: /[0-9]/.test(val) };
+    var score = 0;
+    reqs.forEach(function(req) {
+      var type = req.dataset.req;
+      if(checks[type]) { req.classList.add('valid'); req.querySelector('i').className = 'fas fa-check-circle'; score++; } 
+      else { req.classList.remove('valid'); req.querySelector('i').className = 'fas fa-circle'; }
+    });
+
+    if(val.length === 0) { pwdBar.style.width = '0%'; } 
+    else {
+      pwdBar.style.width = (score / 3 * 100) + '%';
+      if(score === 1) pwdBar.style.background = '#f87171';
+      else if(score === 2) pwdBar.style.background = '#fbbf24';
+      else if(score === 3) pwdBar.style.background = '#4ade80';
+    }
+  });
+
+  var overlay = $('overlay');
+  window.openForgotModal = function() {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if($('forgotMsg')) { $('forgotMsg').className = 'msg'; $('forgotMsg').textContent=''; }
+    $('forgotEmail').value = $('loginEmail').value;
+    setTimeout(function(){ $('forgotEmail').focus(); }, 50);
+  };
+  window.closeForgotModal = function() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+  
+  $('forgotBtn').addEventListener('click', window.openForgotModal);
+  $('closeBtn').addEventListener('click', window.closeForgotModal);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) window.closeForgotModal(); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && overlay.classList.contains('open')) window.closeForgotModal(); });
+</script>
+
+<script type="module">
+  import { supabase, secureLogin, secureRegister } from './supabase.js';
+  import { checkLoginLockout } from './security.js';
+
+  var $ = function(id){ return document.getElementById(id); };
+  var emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  function show(el, text, type){ if(!el) return; el.textContent = text; el.className = 'msg show ' + type; }
+  function mark(input, bad){ if(input && input.parentNode) input.parentNode.classList.toggle('err', !!bad); }
+
+  document.querySelectorAll('.field input,.field select').forEach(function(el){
+    el.addEventListener('input', function(){ mark(el, false); });
+    el.addEventListener('change', function(){ mark(el, false); });
+  });
+
+  // ==== تسجيل الدخول ====
+  var loginForm = $('loginForm');
+  if(loginForm) {
+    loginForm.addEventListener('submit', async function(e){
+      e.preventDefault();
+      var email = $('loginEmail').value.trim().toLowerCase();
+      var pass = $('loginPassword').value;
+      var msg = $('loginMsg');
+      var btn = loginForm.querySelector('.btn');
+
+      mark($('loginEmail'), !emailRe.test(email));
+      mark($('loginPassword'), !pass);
+      if(!emailRe.test(email) || !pass) { show(msg, 'أدخل البيانات بشكل صحيح', 'error'); return; }
+
+      var lockStatus = checkLoginLockout(email);
+      if(lockStatus.locked) { show(msg, `⛔ الحساب مقفل مؤقتاً. حاول بعد ${lockStatus.remainingMinutes} دقيقة`, 'error'); return; }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الدخول...';
+
+      try {
+        const result = await secureLogin(email, pass);
+
+        if (!result.success) {
+          show(msg, '❌ ' + result.error, 'error');
+          btn.disabled = false;
+          btn.innerHTML = '<i class="fas fa-right-to-bracket"></i> دخول';
+          return;
+        }
+
+        // حفظ ملف المستخدم محلياً حتى تتمكن الصفحات الأخرى من قراءته.
+        // نعتمد على جلسة Supabase أولاً، ثم نكمل بيانات المستخدم من جدول students.
+        let authUser = result.user || result.data?.user || result.data?.session?.user || null;
+
+        if (!authUser) {
+          const { data: authData, error: authError } = await supabase.auth.getUser();
+          if (!authError && authData?.user) authUser = authData.user;
+        }
+
+        const { data: studentProfile, error: profileError } = await supabase
+          .from('students')
+          .select('*')
+          .eq('email', email)
+          .maybeSingle();
+
+        if (profileError) {
+          console.error('تعذر تحميل ملف المستخدم:', profileError);
+        }
+
+        const userId = studentProfile?.id || authUser?.id || result.profile?.id || result.data?.profile?.id;
+        if (!userId) {
+          throw new Error('تم التحقق من كلمة المرور، لكن تعذر تحديد هوية المستخدم. أعد المحاولة.');
+        }
+
+        const currentUser = {
+          ...(authUser || {}),
+          ...(studentProfile || result.profile || result.data?.profile || {}),
+          id: userId,
+          email: email,
+          name: studentProfile?.name || result.profile?.name || result.data?.profile?.name || authUser?.user_metadata?.name || email
+        };
+
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+        // تحقق من نجاح الحفظ قبل الانتقال إلى لوحة التحكم.
+        const savedUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        if (!savedUser?.id) throw new Error('تعذر حفظ بيانات المستخدم على هذا الجهاز.');
+
+        show(msg, '✅ تم تسجيل الدخول! جاري التوجيه...', 'ok');
+        setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+
+      } catch(err) {
+        show(msg, 'حدث خطأ غير متوقع', 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-right-to-bracket"></i> دخول';
+      }
+    });
+  }
+
+  // ==== إنشاء حساب ====
+  var classFull = '';
+  var lvl = $('regLevel'), brn = $('regBranch'), free = $('regClassFree');
+
+  function cleanFree(v){ return v.replace(/[^A-Za-z0-9 -]/g, '').replace(/ +/g, ' ').toUpperCase(); }
+  function refreshHint() {
+    var h = $('classHint'), f = cleanFree(free.value).trim();
+    classFull = (lvl.value && brn.value && f.length >= 2) ? lvl.value + ' - ' + brn.value + ' - ' + f : '';
+    h.textContent = classFull;
+    h.classList.toggle('show', !!classFull);
+  }
+  if (free) {
+    free.addEventListener('input', function() {
+      var c = cleanFree(free.value);
+      if(free.value !== c) free.value = c;
+      refreshHint();
+    });
+    lvl.addEventListener('change', refreshHint);
+    brn.addEventListener('change', refreshHint);
+  }
+
+  var registerForm = $('registerForm');
+  if(registerForm) {
+    registerForm.addEventListener('submit', async function(e){
+      e.preventDefault();
+      var name = $('regName').value.trim(), email = $('regEmail').value.trim().toLowerCase(), pass = $('regPassword').value;
+      var msg = $('regMsg');
+      var btn = registerForm.querySelector('.btn');
+      var f = cleanFree(free.value).trim();
+
+      var bad = { n: name.length < 3, e: !emailRe.test(email), p: pass.length < 8, l: !lvl.value, b: !brn.value, f: f.length < 2 };
+      mark($('regName'), bad.n); mark($('regEmail'), bad.e); mark($('regPassword'), bad.p); mark(lvl, bad.l); mark(brn, bad.b); mark(free, bad.f);
+
+      if(bad.n) return show(msg, 'أدخل اسمك الكامل (3 أحرف على الأقل)', 'error');
+      if(bad.e) return show(msg, 'أدخل بريداً إلكترونياً صحيحاً', 'error');
+      if(bad.p) return show(msg, 'كلمة المرور يجب أن تكون 8 أحرف على الأقل', 'error');
+      if(bad.l || bad.b || bad.f) return show(msg, 'أكمل بيانات القسم', 'error');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التسجيل...';
+
+      try {
+        classFull = lvl.value + ' - ' + brn.value + ' - ' + f;
+
+        const selectedGender = document.querySelector('input[name="regGender"]:checked').value;
+
+        const result = await secureRegister(name, classFull, email, pass, selectedGender);
+
+        if (!result.success) {
+          show(msg, '❌ ' + result.error, 'error');
+          btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> تسجيل حساب';
+          return;
+        }
+
+        show(msg, '✅ تم إنشاء الحساب بنجاح! يمكنك الدخول الآن.', 'ok');
+        setTimeout(() => {
+          window.switchTab('login');
+          $('loginEmail').value = email;
+          show($('loginMsg'), 'تم إنشاء الحساب! أدخل كلمة المرور.', 'ok');
+        }, 2000);
+
+      } catch(err) {
+        show(msg, 'حدث خطأ أثناء التسجيل: ' + err.message, 'error');
+        btn.disabled = false; btn.innerHTML = '<i class="fas fa-user-plus"></i> تسجيل حساب';
+      }
+    });
+  }
+
+  // ==== نسيت كلمة المرور ====
+  var forgotForm = $('forgotForm');
+  if(forgotForm) {
+    forgotForm.addEventListener('submit', async function(e){
+      e.preventDefault();
+      var email = $('forgotEmail').value.trim().toLowerCase(), msg = $('forgotMsg');
+      var btn = forgotForm.querySelector('.btn');
+
+      if(!emailRe.test(email)) { mark($('forgotEmail'), true); return show(msg, 'أدخل بريداً إلكترونياً صحيحاً', 'error'); }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التحقق...';
+
+      try {
+        const { data: existing } = await supabase.from('students').select('name').eq('email', email).maybeSingle();
+        if(!existing) throw new Error('هذا البريد غير مسجل لدينا');
+
+        var schoolWhatsapp = "212635644240";
+        var text = "السلام عليكم، أنا التلميذ(ة) " + existing.name + ".\nنسيت كلمة المرور.\nبريدي: " + email;
+        var whatsappUrl = "https://wa.me/" + schoolWhatsapp + "?text=" + encodeURIComponent(text);
+
+        show(msg, '✅ جاري تحويلك إلى واتساب...', 'ok');
+        setTimeout(() => {
+            window.open(whatsappUrl, '_blank');
+            window.closeForgotModal();
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fab fa-whatsapp"></i> التواصل عبر واتساب';
+        }, 1000);
+
+      } catch (error) {
+        show(msg, '❌ ' + error.message, 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fab fa-whatsapp"></i> التواصل عبر واتساب';
+      }
+    });
+  }
+</script>
+</body>
+</html>

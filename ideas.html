@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="ideasHeader">الاقتراحات - ثانوية الخوارزمي</title>
+    <meta name="description" content="اقتراحات التلاميذ لتطوير ثانوية الخوارزمي">
+    <meta name="theme-color" content="#667eea">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="theme.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <script>
+        /* الحفاظ على المظهر المختار (يتزامن مع الصفحة الرئيسية عبر المفتاح 'theme') */
+        (function(){
+            try{
+                var light=localStorage.getItem('theme')==='light', r=document.documentElement;
+                r.classList.toggle('light',light);
+                r.classList.toggle('dark-mode',!light);
+                document.addEventListener('DOMContentLoaded',function(){
+                    document.body.classList.toggle('dark-mode',!light);
+                    var m=document.querySelector('meta[name="theme-color"]');
+                    if(m)m.setAttribute('content',light?'#e4e8f2':'#0a0820');
+                });
+            }catch(e){}
+        })();
+    </script>
+    
+    <style>
+        /* ===== أنماط خاصة بـ Ideas فقط ===== */
+        .ideas-container {
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .ideas-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        .ideas-header h1 {
+            font-size: 3rem;
+            color:var(--th-text);
+            margin-bottom: 1rem;
+        }
+
+        .ideas-header p {
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== نموذج إضافة اقتراح ===== */
+        .add-idea {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            animation: slideUp 0.7s ease-out;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .form-group { margin-bottom: 1.5rem; }
+
+        .form-group label {
+            display: block;
+            color:var(--th-text);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            transition: all var(--transition-base);
+            font-size: 0.9rem;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: var(--glass-bg-hover);
+            box-shadow: 0 0 0 3px rgba(255,215,0,0.1);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-disabled);
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: white;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            background: var(--gradient-gold);
+            color: #1a1a2e;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            width: 100%;
+            font-family: 'Cairo', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(255,215,0,0.4);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ===== شريط الفلترة ===== */
+        .filter-section {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 0.5rem 1.5rem;
+            border-radius: var(--radius-full);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            backdrop-filter: var(--glass-blur);
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--accent-gold);
+            color: #333;
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+        }
+
+        /* ===== قائمة الاقتراحات ===== */
+        .ideas-list {
+            display: grid;
+            gap: 1.5rem;
+        }
+
+        .idea-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: 1.5rem;
+            transition: all var(--transition-base);
+            animation: slideInRight 0.5s ease-out;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .idea-card:hover {
+            transform: translateX(-10px);
+            background: var(--glass-bg-hover);
+            border-color: var(--glass-border-hover);
+            box-shadow: var(--glass-shadow-hover);
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .idea-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .idea-category {
+            background: rgba(255,107,107,0.3);
+            padding: 0.3rem 1rem;
+            border-radius: var(--radius-full);
+            font-size: 0.85rem;
+            color:var(--th-text);
+            border: 1px solid rgba(255,107,107,0.4);
+        }
+
+        .idea-content {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .student-info {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+
+        .idea-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .idea-stats {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .vote-btn {
+            background: var(--glass-bg);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            color:var(--th-text);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid var(--glass-border);
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .vote-btn:hover {
+            background: var(--accent-gold);
+            color: #333;
+            border-color: var(--accent-gold);
+            transform: translateY(-2px);
+        }
+
+        .vote-count {
+            font-weight: 600;
+            color: var(--accent-gold);
+        }
+
+        .vote-btn:hover .vote-count {
+            color: #333;
+        }
+
+        .idea-date {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        .status-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: var(--radius-full);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: rgba(255,107,107,0.3);
+            color: #ff6b6b;
+            border: 1px solid rgba(255,107,107,0.4);
+        }
+
+        .status-approved {
+            background: rgba(81,207,102,0.2);
+            color: #51cf66;
+            border: 1px solid rgba(81,207,102,0.4);
+        }
+
+        /* ===== التعليقات ===== */
+        .comments-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .comment {
+            background: var(--glass-bg);
+            border-radius: var(--radius-md);
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+            border: 1px solid var(--glass-border-light);
+        }
+
+        .comment strong { color: var(--accent-gold); }
+
+        .comment.admin {
+            background: rgba(255,215,0,0.1);
+            border-right: 3px solid var(--accent-gold);
+        }
+
+        .comment .comment-date {
+            color: var(--text-disabled);
+            font-size: 0.6rem;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .add-comment {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .add-comment input {
+            flex: 1;
+            min-width: 150px;
+            padding: 0.5rem 1rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-full);
+            color: var(--text-primary);
+            font-family: 'Cairo', sans-serif;
+            transition: all var(--transition-base);
+        }
+
+        .add-comment input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            background: var(--glass-bg-hover);
+        }
+
+        .add-comment input::placeholder {
+            color: var(--text-disabled);
+        }
+
+        .add-comment button {
+            padding: 0.5rem 1.2rem;
+            background: var(--gradient-gold);
+            border: none;
+            border-radius: var(--radius-full);
+            color: #1a1a2e;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: all var(--transition-base);
+        }
+
+        .add-comment button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255,215,0,0.3);
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .ideas-container { padding: 1rem; }
+            .ideas-header h1 { font-size: 2rem; }
+            .ideas-header p { font-size: 1rem; }
+            .add-idea { padding: 1.5rem; }
+            .idea-card:hover { transform: translateX(-5px); }
+        }
+
+        @media (max-width: 480px) {
+            .ideas-header h1 { font-size: 1.5rem; }
+            .idea-title { font-size: 1.1rem; }
+            .idea-footer { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <div class="offline-banner" id="offlineBanner">
+        <i class="fas fa-wifi"></i> أنت غير متصل بالإنترنت - بعض الميزات قد لا تعمل
+    </div>
+
+    <div class="ideas-container">
+        <!-- ===== Header ===== -->
+        <div class="ideas-header">
+            <h1><i class="fas fa-lightbulb"></i> <span data-i18n="ideasHeader">اقتراحات التلاميذ</span></h1>
+            <p data-i18n="ideasDesc">شاركنا أفكارك لتطوير المدرسة | صوت على اقتراحات زملائك</p>
+        </div>
+
+        <!-- ===== نموذج إضافة اقتراح ===== -->
+        <div class="add-idea">
+            <form id="ideaForm">
+                <div class="form-group">
+                    <label data-i18n="ideaTitle">عنوان الاقتراح</label>
+                    <input type="text" id="ideaTitle" placeholder="مثال: إنشاء نادي للروبوتيك" required maxlength="150">
+                </div>
+                <div class="form-group">
+                    <label data-i18n="ideaCategory">التصنيف</label>
+                    <select id="ideaCategory">
+                        <option value="تعليمي" data-i18n="educational">📚 تعليمي</option>
+                        <option value="رياضي" data-i18n="sports">⚽ رياضي</option>
+                        <option value="ثقافي" data-i18n="cultural">🎭 ثقافي</option>
+                        <option value="بنية تحتية" data-i18n="infrastructure">🏗️ بنية تحتية</option>
+                        <option value="أخرى" data-i18n="other">💡 أخرى</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="ideaContent">محتوى الاقتراح</label>
+                    <textarea id="ideaContent" placeholder="اشرح فكرتك بالتفصيل..." required maxlength="1000"></textarea>
+                </div>
+                <button type="submit" class="submit-btn" id="submitIdeaBtn">
+                    <i class="fas fa-paper-plane"></i> <span data-i18n="sendIdea">إرسال الاقتراح</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- ===== شريط الفلترة ===== -->
+        <div class="filter-section">
+            <button class="filter-btn active" data-filter="all" data-i18n="all">الكل</button>
+            <button class="filter-btn" data-filter="تعليمي" data-i18n="educational">📚 تعليمي</button>
+            <button class="filter-btn" data-filter="رياضي" data-i18n="sports">⚽ رياضي</button>
+            <button class="filter-btn" data-filter="ثقافي" data-i18n="cultural">🎭 ثقافي</button>
+            <button class="filter-btn" data-filter="بنية تحتية" data-i18n="infrastructure">🏗️ بنية تحتية</button>
+        </div>
+
+        <!-- ===== قائمة الاقتراحات ===== -->
+        <div class="ideas-list" id="ideasList">
+            <div class="skeleton-card">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line tiny"></div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-line"></div>
+                <div class="skeleton-line short"></div>
+                <div class="skeleton-line tiny"></div>
+            </div>
+        </div>
+
+        <!-- ===== زر العودة ===== -->
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="dashboard.html" class="btn btn-accent" style="display:inline-flex;">
+                <i class="fas fa-arrow-right"></i><span data-i18n="backToDashboard">العودة للرئيسية</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="darkmode.js"></script>
+    <script type="module">
+        import { supabase, showToast, escapeHtml, getCurrentUser } from './supabase.js';
+        import { checkRateLimit } from './security.js';
+        import { initLanguage, getCurrentLanguage, translate } from './language.js';
+        
+        initLanguage();
+        
+        function updateOnlineStatus() {
+            const banner = document.getElementById('offlineBanner');
+            if (!banner) return;
+            if (navigator.onLine) banner.classList.remove('active');
+            else banner.classList.add('active');
+        }
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+        
+        let ideas = [];
+        let currentFilter = "all";
+        let currentUser = getCurrentUser();
+        
+        async function loadIdeas() {
+            try {
+                const { data, error } = await supabase
+                    .from('ideas')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                ideas = data || [];
+                displayIdeas();
+            } catch (error) {
+                console.error('خطأ في تحميل الاقتراحات:', error);
+                showToast('❌ فشل تحميل الاقتراحات', 'error');
+                document.getElementById('ideasList').innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>خطأ في التحميل</p>
+                        <button onclick="window.loadIdeas()" class="btn-add" style="margin-top:10px;">
+                            <i class="fas fa-sync"></i> إعادة المحاولة
+                        </button>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayIdeas() {
+            const ideasList = document.getElementById('ideasList');
+            let filteredIdeas = currentFilter === "all" ? ideas : ideas.filter(idea => idea.category === currentFilter);
+            
+            if (filteredIdeas.length === 0) {
+                ideasList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-inbox" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <p data-i18n="noIdeas">لا توجد اقتراحات في هذا التصنيف</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            ideasList.innerHTML = filteredIdeas.map(idea => {
+                const comments = Array.isArray(idea.comments) ? idea.comments : [];
+                
+                return `
+                <div class="idea-card">
+                    <div class="idea-header">
+                        <div class="idea-title">${escapeHtml(idea.title)}</div>
+                        <div class="idea-category">${escapeHtml(idea.category)}</div>
+                    </div>
+                    <div class="idea-content">${escapeHtml(idea.content)}</div>
+                    <div class="student-info">
+                        <i class="fas fa-user"></i> ${escapeHtml(idea.student_name)} | 
+                        <i class="fas fa-graduation-cap"></i> ${escapeHtml(idea.student_class)}
+                    </div>
+                    <div class="idea-footer">
+                        <div class="idea-stats">
+                            <button class="vote-btn" onclick="window.voteIdea('${idea.id}')">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span class="vote-count">${idea.votes || 0}</span>
+                                <span data-i18n="vote">صوت</span>
+                            </button>
+                        </div>
+                        <div class="idea-date">
+                            <i class="fas fa-calendar"></i> ${new Date(idea.created_at).toLocaleDateString('ar-EG')}
+                        </div>
+                        <div class="status-badge ${idea.status === 'approved' ? 'status-approved' : 'status-pending'}">
+                            ${idea.status === 'approved' ? '✓ ' + translate('approved') : '⏳ ' + translate('pendingIdea')}
+                        </div>
+                    </div>
+                    
+                    <div class="comments-section">
+                        ${comments.map(c => `
+                            <div class="comment ${c.isAdmin ? 'admin' : ''}">
+                                <strong>${escapeHtml(c.userName)}:</strong> ${escapeHtml(c.text)}
+                                <span class="comment-date">${new Date(c.date).toLocaleString('ar-EG')}</span>
+                            </div>
+                        `).join('')}
+                        
+                        <div class="add-comment">
+                            <input type="text" id="commentInput_${idea.id}" placeholder="أضف رداً..." data-i18n-placeholder="addComment">
+                            <button onclick="window.addComment('${idea.id}')"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `}).join('');
+        }
+        
+        window.addComment = async function(ideaId) {
+            const input = document.getElementById(`commentInput_${ideaId}`);
+            if (!input) return;
+            
+            const text = input.value.trim();
+            if (!text) {
+                showToast('⚠️ الرجاء كتابة التعليق أولاً', 'error');
+                return;
+            }
+            
+            if (!currentUser) {
+                showToast('⚠️ الرجاء تسجيل الدخول أولاً', 'error');
+                return;
+            }
+            
+            if (text.length > 500) {
+                showToast('⚠️ التعليق طويل جداً (الحد الأقصى 500 حرف)', 'error');
+                return;
+            }
+            
+            try {
+                const { data: idea, error: fetchError } = await supabase
+                    .from('ideas')
+                    .select('comments')
+                    .eq('id', ideaId)
+                    .single();
+                
+                if (fetchError) throw fetchError;
+                
+                const newComment = {
+                    text: text,
+                    userName: currentUser.name || 'مستخدم',
+                    isAdmin: currentUser.role === 'admin',
+                    date: new Date().toISOString()
+                };
+                
+                const comments = Array.isArray(idea.comments) ? idea.comments : [];
+                comments.push(newComment);
+                
+                const { error: updateError } = await supabase
+                    .from('ideas')
+                    .update({ comments: comments })
+                    .eq('id', ideaId);
+                
+                if (updateError) throw updateError;
+                
+                input.value = '';
+                showToast('✅ ' + translate('commentAdded'), 'success');
+                await loadIdeas();
+            } catch (error) {
+                console.error('خطأ في إضافة التعليق:', error);
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            }
+        };
+        
+        window.voteIdea = async function(id) {
+            if (!currentUser) {
+                showToast('⚠️ الرجاء تسجيل الدخول أولاً', 'error');
+                return;
+            }
+            
+            try {
+                const { data: idea, error: fetchError } = await supabase
+                    .from('ideas')
+                    .select('votes')
+                    .eq('id', id)
+                    .single();
+                
+                if (fetchError) throw fetchError;
+                
+                const newVotes = (idea.votes || 0) + 1;
+                
+                const { error: updateError } = await supabase
+                    .from('ideas')
+                    .update({ votes: newVotes })
+                    .eq('id', id);
+                
+                if (updateError) throw updateError;
+                
+                showToast('✅ ' + translate('voteSuccess'), 'success');
+                await loadIdeas();
+            } catch (error) {
+                console.error('خطأ في التصويت:', error);
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            }
+        };
+        
+        document.getElementById('ideaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!currentUser) {
+                showToast('⚠️ الرجاء تسجيل الدخول أولاً', 'error');
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // Rate Limiting
+            const rateCheck = checkRateLimit('idea', currentUser.id);
+            if (!rateCheck.allowed) {
+                showToast(rateCheck.message, 'error');
+                return;
+            }
+            
+            const title = document.getElementById('ideaTitle').value.trim();
+            const category = document.getElementById('ideaCategory').value;
+            const content = document.getElementById('ideaContent').value.trim();
+            
+            if (!title || !content) {
+                showToast('⚠️ الرجاء ملء جميع الحقول', 'error');
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitIdeaBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري الإرسال...';
+            
+            try {
+                const { error } = await supabase
+                    .from('ideas')
+                    .insert([{
+                        title: title,
+                        category: category,
+                        content: content,
+                        votes: 0,
+                        status: 'pending',
+                        student_name: currentUser.name,
+                        student_class: currentUser.class,
+                        comments: [],
+                        created_at: new Date().toISOString()
+                    }]);
+                
+                if (error) throw error;
+                
+                document.getElementById('ideaForm').reset();
+                showToast('✅ تم إرسال اقتراحك بنجاح! 🎉', 'success');
+                await loadIdeas();
+            } catch (error) {
+                console.error('خطأ في إضافة الاقتراح:', error);
+                showToast('❌ حدث خطأ: ' + error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> <span>إرسال الاقتراح</span>';
+            }
+        });
+        
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                displayIdeas();
+            });
+        });
+        
+        window.loadIdeas = loadIdeas;
+        loadIdeas();
+    </script>
+        <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="enhancements.css">
+</body>
+</html>

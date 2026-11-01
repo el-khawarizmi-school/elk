@@ -1,0 +1,869 @@
+/* ============================================
+   enhancements.css
+   تحسينات إضافية للموقع - ثانوية الخوارزمي
+   ✅ Typography | Focus | Scrollbar | Animations
+   ============================================ */
+
+/* ═══════════════════════════════════════════ */
+/* 1. Typography محسّن                          */
+/* ═══════════════════════════════════════════ */
+:root {
+    /* أحجام الخطوط */
+    --text-xs: 0.75rem;
+    --text-sm: 0.875rem;
+    --text-base: 1rem;
+    --text-lg: 1.125rem;
+    --text-xl: 1.25rem;
+    --text-2xl: 1.5rem;
+    --text-3xl: 1.875rem;
+    --text-4xl: 2.25rem;
+
+    /* أوزان الخطوط */
+    --font-light: 300;
+    --font-normal: 400;
+    --font-medium: 500;
+    --font-semibold: 600;
+    --font-bold: 700;
+    --font-extrabold: 800;
+
+    /* ارتفاع الأسطر */
+    --leading-tight: 1.25;
+    --leading-normal: 1.5;
+    --leading-relaxed: 1.7;
+    --leading-loose: 2;
+}
+
+/* تحسين العناوين بـ clamp() */
+h1 { font-size: clamp(1.75rem, 4vw, 2.5rem); line-height: 1.2; }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); line-height: 1.25; }
+h3 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); line-height: 1.3; }
+h4 { font-size: clamp(1.1rem, 2vw, 1.25rem); line-height: 1.4; }
+h5 { font-size: clamp(1rem, 1.5vw, 1.1rem); line-height: 1.5; }
+
+/* تحسين النصوص الطويلة */
+p, .description, .text-content {
+    line-height: var(--leading-relaxed);
+    max-width: 65ch;
+}
+
+/* تحسين الأزرار */
+button, .btn {
+    font-weight: var(--font-semibold);
+    letter-spacing: 0.3px;
+}
+
+/* منع zoom على iOS */
+input, textarea, select {
+    font-size: 16px;
+}
+
+@media (min-width: 768px) {
+    input, textarea, select {
+        font-size: 0.95rem;
+    }
+}
+
+/* ═══════════════════════════════════════════ */
+/* 2. Focus States للوصولية                     */
+/* ═══════════════════════════════════════════ */
+*:focus {
+    outline: none;
+}
+
+*:focus-visible {
+    outline: 2px solid var(--accent-gold, #f5c842);
+    outline-offset: 3px;
+    border-radius: 8px;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+    outline: none;
+    border-color: var(--accent-gold, #f5c842);
+    box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.15);
+}
+
+button:focus-visible,
+.btn:focus-visible {
+    outline: 2px solid var(--accent-gold, #f5c842);
+    outline-offset: 3px;
+}
+
+a:focus-visible {
+    outline: 2px solid var(--accent-gold, #f5c842);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+/* ═══════════════════════════════════════════ */
+/* 3. Scrollbar موحّد                           */
+/* ═══════════════════════════════════════════ */
+
+/* Chrome/Safari/Edge */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, rgba(245, 200, 66, 0.4), rgba(251, 146, 60, 0.4));
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, rgba(245, 200, 66, 0.7), rgba(251, 146, 60, 0.7));
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(245, 200, 66, 0.4) rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode * {
+    scrollbar-color: rgba(251, 191, 36, 0.4) rgba(0, 0, 0, 0.3);
+}
+
+/* ═══════════════════════════════════════════ */
+/* 4. Micro-interactions                        */
+/* ═══════════════════════════════════════════ */
+
+/* نبض عند النقر */
+@keyframes clickPulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.96); }
+    100% { transform: scale(1); }
+}
+
+button:active,
+.btn:active,
+.service-card:active,
+.action-btn-small:active {
+    animation: clickPulse 0.2s ease;
+}
+
+/* اهتزاز عند الخطأ */
+@keyframes shakeError {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-6px); }
+    75% { transform: translateX(6px); }
+}
+
+.shake {
+    animation: shakeError 0.4s ease;
+}
+
+/* ظهور سلس */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* نبض للعناصر المهمة */
+@keyframes softPulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(245, 200, 66, 0.4);
+    }
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 0 12px rgba(245, 200, 66, 0);
+    }
+}
+
+.pulse {
+    animation: softPulse 2s ease-in-out infinite;
+}
+
+/* دوران للأيقونات */
+@keyframes rotateSlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.spin {
+    animation: rotateSlow 2s linear infinite;
+}
+
+.spin-fast {
+    animation: rotateSlow 0.8s linear infinite;
+}
+
+/* ═══════════════════════════════════════════ */
+/* 5. Skeleton Loader محسّن                     */
+/* ═══════════════════════════════════════════ */
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.05) 0%,
+        rgba(255, 255, 255, 0.1) 50%,
+        rgba(255, 255, 255, 0.05) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeletonWave 1.5s ease-in-out infinite;
+    border-radius: 12px;
+}
+
+@keyframes skeletonWave {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+.skeleton-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.skeleton-text {
+    height: 14px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+}
+
+.skeleton-text.short { width: 60%; }
+.skeleton-text.long { width: 90%; }
+.skeleton-text.tiny { width: 40%; }
+
+.skeleton-title {
+    height: 22px;
+    width: 40%;
+    margin-bottom: 12px;
+    border-radius: 8px;
+}
+
+.skeleton-card {
+    padding: 1rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* ═══════════════════════════════════════════ */
+/* 6. Tooltips                                  */
+/* ═══════════════════════════════════════════ */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    padding: 0.5rem 0.85rem;
+    background: rgba(30, 27, 75, 0.98);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.25s ease;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    font-family: 'Cairo', sans-serif;
+}
+
+[data-tooltip]::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: rgba(30, 27, 75, 0.98);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease;
+}
+
+[data-tooltip]:hover::before {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(-4px);
+}
+
+[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* ═══════════════════════════════════════════ */
+/* 7. Empty States احترافية                     */
+/* ═══════════════════════════════════════════ */
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--text-muted, rgba(255, 255, 255, 0.65));
+}
+
+.empty-state-icon {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(245, 200, 66, 0.1), rgba(79, 70, 229, 0.1));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.2rem;
+    border: 2px dashed rgba(245, 200, 66, 0.3);
+    animation: floatIcon 3s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+.empty-state-icon i {
+    font-size: 2.5rem;
+    color: var(--accent-gold, #f5c842);
+    opacity: 0.6;
+}
+
+.empty-state h3 {
+    color: var(--text-primary, white);
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.empty-state p {
+    color: var(--text-muted, rgba(255, 255, 255, 0.65));
+    font-size: 0.85rem;
+    max-width: 300px;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.empty-state .btn {
+    margin-top: 0.5rem;
+}
+
+/* ═══════════════════════════════════════════ */
+/* 8. Fallback للـ Backdrop Filter              */
+/* ═══════════════════════════════════════════ */
+@supports not (backdrop-filter: blur(10px)) {
+    .glass-card,
+    .section-card,
+    .dashboard-header,
+    .service-card,
+    .modal-box,
+    .side-menu,
+    .notifications-dropdown {
+        background: rgba(30, 27, 75, 0.9);
+    }
+    
+    body.dark-mode .glass-card,
+    body.dark-mode .section-card,
+    body.dark-mode .dashboard-header,
+    body.dark-mode .service-card,
+    body.dark-mode .modal-box,
+    body.dark-mode .side-menu,
+    body.dark-mode .notifications-dropdown {
+        background: rgba(15, 23, 42, 0.98);
+    }
+}
+
+/* ═══════════════════════════════════════════ */
+/* 9. Toast Notifications محسّنة                */
+/* ═══════════════════════════════════════════ */
+.toast-message {
+    animation: toastSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes toastSlideIn {
+    0% {
+        opacity: 0;
+        transform: translateX(100%) scale(0.8);
+    }
+    60% {
+        transform: translateX(-10px) scale(1.02);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+.toast-message::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.4);
+    animation: toastProgress 4s linear forwards;
+}
+
+@keyframes toastProgress {
+    from { width: 100%; }
+    to { width: 0%; }
+}
+
+.toast-message.fade-out {
+    animation: toastSlideOut 0.3s ease forwards;
+}
+
+@keyframes toastSlideOut {
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+/* ═══════════════════════════════════════════ */
+/* 10. Print Styles                             */
+/* ═══════════════════════════════════════════ */
+@media print {
+    .menu-trigger,
+    .side-menu,
+    .side-menu-overlay,
+    .notifications-wrapper,
+    .btn-logout,
+    .admin-logout,
+    .chat-input-wrapper,
+    .chat-send-btn,
+    .sidebar,
+    .btn-add,
+    .search-bar,
+    .filter-bar,
+    .mobile-bottom-nav,
+    .admin-actions {
+        display: none !important;
+    }
+    
+    body,
+    .dashboard-container,
+    .section-card,
+    .dashboard-header {
+        background: white !important;
+        color: black !important;
+        box-shadow: none !important;
+        border: 1px solid #ddd !important;
+    }
+    
+    h1, h2, h3, h4 {
+        color: black !important;
+        page-break-after: avoid;
+    }
+    
+    a {
+        color: black !important;
+        text-decoration: underline;
+    }
+    
+    a[href^="http"]::after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+    
+    table {
+        page-break-inside: avoid;
+    }
+    
+    th, td {
+        border: 1px solid #ddd !important;
+        padding: 6px !important;
+    }
+}
+
+/* ═══════════════════════════════════════════ */
+/* 11. Selection Style                          */
+/* ═══════════════════════════════════════════ */
+::selection {
+    background: rgba(245, 200, 66, 0.4);
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+::-moz-selection {
+    background: rgba(245, 200, 66, 0.4);
+    color: white;
+}
+
+/* ═══════════════════════════════════════════ */
+/* 12. Scroll Snap للـ Chat                     */
+/* ═══════════════════════════════════════════ */
+.tg-chat-body,
+.chat-messages-container {
+    scroll-snap-type: y proximity;
+}
+
+.tg-msg,
+.chat-bubble {
+    scroll-snap-align: end;
+    scroll-margin-bottom: 20px;
+}
+
+/* ═══════════════════════════════════════════ */
+/* 13. Loading States للأزرار                   */
+/* ═══════════════════════════════════════════ */
+.btn.loading,
+button.loading {
+    position: relative;
+    color: transparent !important;
+    pointer-events: none;
+}
+
+.btn.loading::after,
+button.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    margin: -9px 0 0 -9px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: rotateSlow 0.8s linear infinite;
+}
+
+.btn.loading::before,
+button.loading::before {
+    display: none;
+}
+
+/* شريط تقدم أعلى الصفحة */
+.progress-bar-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #f5c842, #fb923c, #f5c842);
+    background-size: 200% 100%;
+    animation: progressSlide 1.5s linear infinite;
+    z-index: 99999;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 10px rgba(245, 200, 66, 0.5);
+}
+
+@keyframes progressSlide {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* ═══════════════════════════════════════════ */
+/* 14. Card Hover Effects                       */
+/* ═══════════════════════════════════════════ */
+.service-card,
+.feature-card,
+.resource-card,
+.book-card,
+.idea-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.service-card::before,
+.feature-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.1) 50%,
+        transparent 70%
+    );
+    transform: translateX(-100%) translateY(-100%);
+    transition: transform 0.8s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.service-card:hover::before,
+.feature-card:hover::before {
+    transform: translateX(100%) translateY(100%);
+}
+
+.service-card:hover {
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 60px var(--card-color-glow, rgba(245, 200, 66, 0.15));
+}
+
+/* ═══════════════════════════════════════════ */
+/* 15. أيقونات 3D متقدمة                        */
+/* ═══════════════════════════════════════════ */
+.icon-3d-wrapper {
+    perspective: 1000px;
+    display: inline-block;
+}
+
+.icon-3d {
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    display: inline-block;
+}
+
+.icon-3d-wrapper:hover .icon-3d {
+    transform: rotateY(360deg) rotateX(15deg);
+}
+
+.icon-reflection {
+    position: relative;
+}
+
+.icon-reflection::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 20px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.3), transparent 70%);
+    filter: blur(5px);
+}
+
+/* ═══════════════════════════════════════════ */
+/* إضافات إضافية                                */
+/* ═══════════════════════════════════════════ */
+
+/* منع تحديد النص على الأزرار */
+button,
+.btn,
+.service-card,
+.action-btn-small {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* تمرير سلس على كل الصفحة */
+html {
+    scroll-behavior: smooth;
+}
+
+/* تحسين الأداء */
+.service-card,
+.feature-card,
+.section-card,
+.stat-card-dash {
+    will-change: transform, box-shadow;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+/* إزالة will-change بعد الاستخدام */
+.service-card:hover,
+.feature-card:hover {
+    will-change: auto;
+}
+
+/* تحسين الجداول */
+table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* خط انقسام مخصص */
+.divider-gold {
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(245, 200, 66, 0.5), transparent);
+    margin: 1.5rem 0;
+    border-radius: 2px;
+}
+
+/* تأثير الظهور المتتالي */
+.stagger-item {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.2s; }
+.stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.stagger-item:nth-child(6) { animation-delay: 0.3s; }
+.stagger-item:nth-child(7) { animation-delay: 0.35s; }
+.stagger-item:nth-child(8) { animation-delay: 0.4s; }
+.stagger-item:nth-child(9) { animation-delay: 0.45s; }
+.stagger-item:nth-child(10) { animation-delay: 0.5s; }
+
+/* ألوان الحالة للـ focus */
+input:invalid:not(:placeholder-shown) {
+    border-color: rgba(248, 113, 113, 0.5);
+}
+
+input:valid:not(:placeholder-shown) {
+    border-color: rgba(74, 222, 128, 0.5);
+}
+
+/* شريط تحميل للمحتوى */
+.content-loading {
+    position: relative;
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.content-loading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.05) 50%,
+        transparent 100%
+    );
+    animation: contentShimmer 1.5s infinite;
+}
+
+@keyframes contentShimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* تحسين الـ Modal */
+.modal-overlay {
+    animation: modalBackdropIn 0.3s ease;
+}
+
+@keyframes modalBackdropIn {
+    from { opacity: 0; backdrop-filter: blur(0); }
+    to { opacity: 1; backdrop-filter: blur(8px); }
+}
+
+/* نبض للـ Live indicator */
+.live-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #4ade80;
+    border-radius: 50%;
+    position: relative;
+    margin-right: 5px;
+}
+
+.live-indicator::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: #4ade80;
+    animation: livePulse 2s infinite;
+}
+
+@keyframes livePulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}
+
+/* ═══════════════════════════════════════════ */
+/* Responsive                                    */
+/* ═══════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* تقليل حجم الأيقونات 3D على الهاتف */
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .empty-state-icon i {
+        font-size: 2rem;
+    }
+    
+    /* تقليل الحركات */
+    .pulse {
+        animation: none;
+    }
+}
+
+/* احترام تفضيلات المستخدم */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+    
+    .empty-state-icon {
+        animation: none;
+    }
+}
+
+/* الوضع الليلي */
+body.dark-mode .empty-state-icon {
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(79, 70, 229, 0.15));
+    border-color: rgba(251, 191, 36, 0.4);
+}
+
+body.dark-mode [data-tooltip]::before {
+    background: rgba(15, 23, 42, 0.98);
+    border-color: rgba(148, 163, 184, 0.2);
+}
+
+body.dark-mode [data-tooltip]::after {
+    border-top-color: rgba(15, 23, 42, 0.98);
+}
+
+/* إصلاح الـ Focus في الوضع الليلي */
+body.dark-mode *:focus-visible {
+    outline-color: var(--accent-gold, #fbbf24);
+}
+
+/* ═══════════════════════════════════════════ */
+/* Print                                        */
+/* ═══════════════════════════════════════════ */
+@media print {
+    .no-print { display: none !important; }
+    .page-break { page-break-before: always; }
+}
+
+/* ═══════════════════════════════════════════ */
+/* نهاية الملف                                 */
+/* ═══════════════════════════════════════════ */

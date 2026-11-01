@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>دليل التوجيه الجامعي | ثانوية الخوارزمي</title>
+<meta name="theme-color" content="#0a0820">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+:root{--bg:#0a0820;--tx:#ffffff;--mu:rgba(255,255,255,.62);--gold:#f5c842;--grad:linear-gradient(135deg,#f5c842,#fb923c);--on:#1a1a2e;--card:rgba(255,255,255,.05);--bd:rgba(255,255,255,.1);--fld:rgba(255,255,255,.06);--orbo:.4;--orbo3:.14}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.7;overflow-x:hidden}
+:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+a{color:inherit;text-decoration:none}
+
+/* الخلفية */
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(100px);opacity:var(--orbo);animation:float 26s ease-in-out infinite}
+.orb:nth-child(1){width:560px;height:560px;background:radial-gradient(circle,#6d28d9,transparent 70%);top:-180px;right:-160px}
+.orb:nth-child(2){width:480px;height:480px;background:radial-gradient(circle,#db2777,transparent 70%);bottom:-150px;left:-150px;animation-delay:-9s}
+.orb:nth-child(3){width:340px;height:340px;background:radial-gradient(circle,#f5c842,transparent 70%);top:45%;left:45%;opacity:var(--orbo3);animation-delay:-17s}
+@keyframes float{33%{transform:translate(60px,-40px) scale(1.1)}66%{transform:translate(-40px,60px) scale(.95)}}
+
+/* الهيكل */
+.guidance-container{max-width:1200px;margin:0 auto;padding:2rem 1.5rem 4rem}
+.header-nav{display:flex;align-items:center;margin-bottom:2rem}
+.btn-back{display:inline-flex;align-items:center;gap:0.5rem;background:var(--card);border:1px solid var(--bd);color:var(--tx);padding:0.6rem 1.2rem;border-radius:50px;font-size:0.9rem;font-weight:600;transition:all 0.3s ease;backdrop-filter:blur(10px)}
+.btn-back:hover{color:var(--gold);border-color:var(--gold);transform:translateX(-3px)}
+
+/* العناوين */
+.page-header{text-align:center;margin-bottom:2rem}
+.page-header h1{font-size:clamp(1.8rem,4vw,2.5rem);font-weight:900;color:var(--tx);margin-bottom:0.5rem}
+.page-header h1 i{color:var(--gold);margin-left:0.5rem}
+.page-header p{color:var(--mu);font-size:1rem;max-width:600px;margin:0 auto}
+
+/* التنبيه */
+.alert-box{background:rgba(245,200,66,0.1);border:1px solid rgba(245,200,66,0.3);border-radius:16px;padding:1rem 1.2rem;margin-bottom:2rem;display:flex;align-items:flex-start;gap:0.8rem;font-size:0.88rem}
+.alert-box i{color:var(--gold);font-size:1.2rem;margin-top:2px}
+.alert-box strong{color:var(--gold)}
+.alert-box a{color:var(--gold);text-decoration:underline}
+
+/* الفلاتر */
+.filters{display:flex;flex-wrap:wrap;gap:0.6rem;justify-content:center;margin-bottom:2.5rem}
+.filter-btn{background:var(--card);border:1px solid var(--bd);color:var(--mu);padding:0.5rem 1.2rem;border-radius:50px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:0.85rem;font-weight:600;transition:all 0.3s ease}
+.filter-btn:hover,.filter-btn.active{background:rgba(245,200,66,0.15);border-color:var(--gold);color:var(--gold)}
+
+/* الشبكة والبطاقات */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:1.5rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:20px;padding:1.5rem;transition:all 0.3s ease;backdrop-filter:blur(20px);display:flex;flex-direction:column;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;right:0;width:4px;height:100%;background:var(--gold);opacity:0.5}
+.card:hover{transform:translateY(-5px);border-color:rgba(245,200,66,0.4);box-shadow:0 15px 40px rgba(0,0,0,0.3), 0 0 20px rgba(245,200,66,0.1)}
+.card-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:var(--on);background:var(--grad);margin-bottom:1rem;flex-shrink:0}
+.card h3{font-size:1.1rem;font-weight:800;margin-bottom:0.5rem;color:var(--tx)}
+.card .desc{font-size:0.85rem;color:var(--mu);margin-bottom:1rem;flex:1}
+.card .details{font-size:0.8rem;color:var(--tx);background:rgba(255,255,255,0.03);border-radius:10px;padding:0.8rem;margin-bottom:1rem;border-right:3px solid var(--gold)}
+.card .details strong{color:var(--gold)}
+.card .btn-link{display:inline-flex;align-items:center;gap:0.4rem;color:var(--gold);font-weight:700;font-size:0.85rem;transition:all 0.3s ease}
+.card .btn-link:hover{gap:0.8rem}
+
+/* الشارات */
+.badge{position:absolute;top:1rem;left:1rem;background:rgba(74,222,128,0.15);color:#4ade80;border:1px solid rgba(74,222,128,0.3);padding:0.2rem 0.6rem;border-radius:20px;font-size:0.65rem;font-weight:700}
+.badge.blue{background:rgba(91,156,245,0.15);color:#5b9cf5;border-color:rgba(91,156,245,0.3)}
+
+/* الفوتر */
+.footer{text-align:center;margin-top:3rem;padding-top:2rem;border-top:1px solid var(--bd);color:var(--mu);font-size:0.8rem}
+
+@media(max-width:768px){
+  .guidance-container{padding:1.5rem 1rem}
+  .grid{grid-template-columns:1fr}
+  .filters{justify-content:flex-start;overflow-x:auto;flex-wrap:nowrap;padding-bottom:0.5rem}
+  .filter-btn{white-space:nowrap}
+}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+
+<div class="guidance-container">
+  <div class="header-nav">
+    <a href="dashboard.html" class="btn-back"><i class="fas fa-arrow-right"></i> العودة للوحة التحكم</a>
+  </div>
+
+  <div class="page-header">
+    <h1><i class="fas fa-compass"></i> دليل التوجيه الجامعي</h1>
+    <p>دليلك الشامل للمسارات والمؤسسات الجامعية في المغرب بعد البكالوريا</p>
+  </div>
+
+  <div class="alert-box">
+    <i class="fas fa-exclamation-triangle"></i>
+    <div>
+      <strong>تنبيه هام:</strong> جميع الترشيحات للمؤسسات ذات الاستقطاب المحدود تتم الآن عبر المنصة الوطنية الرسمية <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener">cursussup.gov.ma</a> (التي حلت محل منصة Tawjihi سابقاً). يرجى دائماً مراجعة الموقع الرسمي للتأكد من الشروط والمعدلات المستجدة، فالمعدلات (العتبات) تتغير كل سنة.
+    </div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterCards('all', this)">الكل</button>
+    <button class="filter-btn" onclick="filterCards('science', this)">العلوم الرياضية</button>
+    <button class="filter-btn" onclick="filterCards('physics', this)">العلوم الفيزيائية</button>
+    <button class="filter-btn" onclick="filterCards('svt', this)">علوم الحياة والأرض</button>
+    <button class="filter-btn" onclick="filterCards('eco', this)">الاقتصاد والتدبير</button>
+    <button class="filter-btn" onclick="filterCards('arts', this)">الآداب والعلوم الإنسانية</button>
+  </div>
+
+  <div class="grid" id="cardsGrid">
+    
+    <!-- الطب -->
+    <div class="card" data-branch="science physics svt">
+      <div class="badge blue">علمي فقط</div>
+      <div class="card-icon"><i class="fas fa-stethoscope"></i></div>
+      <h3>الطب والصيدلة وطب الأسنان</h3>
+      <p class="desc">كليات الطب والصيدلة (FMP) وكليات طب الأسنان (FMD). مسار طويل (6-7 سنوات) يتطلب تفوقاً أكاديمياً.</p>
+      <div class="details">
+        <strong>الشروط:</strong> بكالوريا علمية (علوم رياضية، فيزيائية، أو علوم الحياة والأرض). الانتقاء يتم بناءً على المعدل العام (75% وطني + 25% جهوي) واجتياز مباراة كتابية (QCU).
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- ENSA -->
+    <div class="card" data-branch="science physics">
+      <div class="card-icon"><i class="fas fa-cogs"></i></div>
+      <h3>المدارس الوطنية للعلوم التطبيقية (ENSA)</h3>
+      <p class="desc">تكوين مهندسي الدولة في 5 سنوات (سنتان تحضيريتان + 3 سنوات تخصص) في مجالات الهندسة المتنوعة.</p>
+      <div class="details">
+        <strong>الشروط:</strong> الشعب العلمية والتقنية (SM, SP, STE, STM). التسجيل عبر المنصة الوطنية. العتبة التقريبية للانتقاء الأولي تتراوح بين 12 و 15/20 حسب المدرسة.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- ENSAM -->
+    <div class="card" data-branch="science physics">
+      <div class="card-icon"><i class="fas fa-industry"></i></div>
+      <h3>المدارس الوطنية العليا للفنون والمهن (ENSAM)</h3>
+      <p class="desc">تكوين مهندسي الدولة في مجالات الهندسة الصناعية والميكانيكية والكهربائية. مدة الدراسة 5 سنوات.</p>
+      <div class="details">
+        <strong>الشروط:</strong> الشعب العلمية والتقنية (SM, SP, STE, STM) وبعض مسالك البكالوريا المهنية. الترشيح عبر Cursussup. العتبة التقريبية: 12-15/20.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- CPGE -->
+    <div class="card" data-branch="science physics svt">
+      <div class="badge blue">نخبة</div>
+      <div class="card-icon"><i class="fas fa-graduation-cap"></i></div>
+      <h3>الأقسام التحضيرية (CPGE)</h3>
+      <p class="desc">مسار النخبة للولوج إلى المدارس العليا للمهندسين (EMI, ENSIAS, INPT...) عبر المباراة الوطنية الموحدة (CNC).</p>
+      <div class="details">
+        <strong>الشروط:</strong> الشعب العلمية (SM, SP, SVT). يشترط الحصول على ميزة "مستحسن" على الأقل (باستثناء العلوم الرياضية)، والسن أقل من 21 سنة. العتبة التقريبية: 15-17/20.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- EST -->
+    <div class="card" data-branch="science physics svt eco">
+      <div class="card-icon"><i class="fas fa-tools"></i></div>
+      <h3>المدارس العليا للتكنولوجيا (EST)</h3>
+      <p class="desc">تكوين تقني عالي (سنتان بعد الباكالوريا) في مجالات الصناعة، المعلوميات، التدبير، واللوجستيك. دبلوم تقني متخصص.</p>
+      <div class="details">
+        <strong>الشروط:</strong> مفتوحة لجميع الشعب (علمية، تقنية، اقتصادية). التسجيل عبر Cursussup. الانتقاء يعتمد على المعدل العام.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- FST -->
+    <div class="card" data-branch="science physics svt">
+      <div class="card-icon"><i class="fas fa-flask"></i></div>
+      <h3>كليات العلوم والتقنيات (FST)</h3>
+      <p class="desc">تكوين جامعي في مجالات العلوم والتقنيات (إجازة، ماستر، دكتوراه). ولوج مباشر عبر الانتقاء.</p>
+      <div class="details">
+        <strong>الشروط:</strong> الشعب العلمية والتقنية. التسجيل عبر Cursussup. الانتقاء يعتمد على المعدل العام للبكالوريا.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- ENCG -->
+    <div class="card" data-branch="science physics svt eco arts">
+      <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+      <h3>المدارس الوطنية للتجارة والتسيير (ENCG)</h3>
+      <p class="desc">تكوين في التجارة، التسيير، والمالية. مدة الدراسة 5 سنوات. مفتوحة لجميع الشعب.</p>
+      <div class="details">
+        <strong>الشروط:</strong> جميع الشعب. اجتياز مباراة TAFEM (اختبار كتابي). التسجيل عبر Cursussup. العتبة التقريبية: 13-16/20.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- ISCAE -->
+    <div class="card" data-branch="science physics eco">
+      <div class="badge blue">تنافسية عالية</div>
+      <div class="card-icon"><i class="fas fa-briefcase"></i></div>
+      <h3>المعهد العالي للتجارة وإدارة المقاولات (ISCAE)</h3>
+      <p class="desc">من أرقى مدارس التجارة في المغرب. مسار 5 سنوات (سنتان تحضيريتان + 3 سنوات تخصص).</p>
+      <div class="details">
+        <strong>الشروط:</strong> الشعب العلمية والاقتصادية. اجتياز مباراة كتابية وشفوية. العتبة التقريبية: 16-18/20 (تنافسية جداً).
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- الإجازة في التربية -->
+    <div class="card" data-branch="science physics svt eco arts">
+      <div class="card-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+      <h3>الإجازة في التربية (ENS / ESEF)</h3>
+      <p class="desc">مسار جديد لإعداد أساتذة التعليم الابتدائي والثانوي. مدة الدراسة 3 سنوات.</p>
+      <div class="details">
+        <strong>الشروط:</strong> جميع الشعب. مباراة ولوج عبر Cursussup. السن أقل من 22 سنة (لولوج السنة الثانية) أو 23 سنة (لولوج السنة الثالثة). العتبة التقريبية: 12-15/20.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- ISPITS -->
+    <div class="card" data-branch="science physics svt">
+      <div class="card-icon"><i class="fas fa-hand-holding-medical"></i></div>
+      <h3>معاهد التكوين في المهن التمريضية (ISPITS)</h3>
+      <p class="desc">تكوين في المهن الصحية (تمريض، تقني أشعة، مختبرات، إلخ). مدة الدراسة 3 سنوات.</p>
+      <div class="details">
+        <strong>الشروط:</strong> الشعب العلمية (SVT, SP, SM). الانتقاء عبر Cursussup. العتبة التقريبية: 11-15/20.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- ENSAD -->
+    <div class="card" data-branch="science physics arts">
+      <div class="card-icon"><i class="fas fa-paint-brush"></i></div>
+      <h3>المدرسة الوطنية العليا للفن والتصميم (ENSAD)</h3>
+      <p class="desc">تكوين في الفنون البصرية، التصميم الجرافيكي، والتصميم الداخلي.</p>
+      <div class="details">
+        <strong>الشروط:</strong> مفتوحة لشعب محددة (حسب المذكرة). الترشيح عبر Cursussup. اجتياز اختبارات القبول (رسم، تصميم).
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- كليات الحقوق -->
+    <div class="card" data-branch="arts eco">
+      <div class="card-icon"><i class="fas fa-balance-scale"></i></div>
+      <h3>كليات الحقوق والعلوم السياسية</h3>
+      <p class="desc">ولوج مباشر (بدون مباراة) للكليات ذات الاستقطاب المفتوح. مسار جامعي في القانون.</p>
+      <div class="details">
+        <strong>الشروط:</strong> جميع الشعب. التسجيل المسبق عبر المنصة الجامعية. لا توجد عتبة محددة، الولوج مفتوح.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- كليات الآداب -->
+    <div class="card" data-branch="arts eco">
+      <div class="card-icon"><i class="fas fa-book"></i></div>
+      <h3>كليات الآداب والعلوم الإنسانية</h3>
+      <p class="desc">ولوج مباشر (بدون مباراة). مسارات في اللغة العربية، الفرنسية، التاريخ، الجغرافيا، الفلسفة، وعلم النفس.</p>
+      <div class="details">
+        <strong>الشروط:</strong> جميع الشعب (مع أولوية للشعب الأدبية). التسجيل المسبق عبر المنصة الجامعية. الولوج مفتوح.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+    <!-- كليات العلوم -->
+    <div class="card" data-branch="science physics svt">
+      <div class="card-icon"><i class="fas fa-atom"></i></div>
+      <h3>كليات العلوم (FS)</h3>
+      <p class="desc">ولوج مباشر (بدون مباراة). مسارات في الرياضيات، الفيزياء، الكيمياء، وعلوم الحياة.</p>
+      <div class="details">
+        <strong>الشروط:</strong> الشعب العلمية. التسجيل المسبق عبر المنصة الجامعية. الولوج مفتوح.
+      </div>
+      <a href="https://www.cursussup.gov.ma" target="_blank" rel="noopener" class="btn-link">التسجيل عبر Cursussup <i class="fas fa-external-link-alt"></i></a>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <p>تم إعداد هذا الدليل لأغراض إرشادية فقط. يرجى مراجعة المنصة الرسمية <strong>Cursussup</strong> للحصول على أحدث المعلومات والمعدلات.</p>
+  </div>
+</div>
+
+<script>
+function filterCards(branch, btn) {
+  // تحديث الأزرار
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+
+  // فلترة البطاقات
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card => {
+    if (branch === 'all') {
+      card.style.display = 'flex';
+    } else {
+      const branches = card.getAttribute('data-branch') || '';
+      if (branches.includes(branch)) {
+        card.style.display = 'flex';
+      } else {
+        card.style.display = 'none';
+      }
+    }
+  });
+}
+</script>
+</body>
+</html>

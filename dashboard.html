@@ -1,0 +1,4004 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="schoolName">ثانوية الخوارزمي - لوحة التحكم</title>
+    <meta name="description" content="لوحة تحكم تلاميذ ثانوية الخوارزمي">
+    <meta name="theme-color" content="#0a0820">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            color-scheme: dark;
+            --accent-gold: #f5c842;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-bg-hover: rgba(255, 255, 255, 0.075);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-blur: blur(18px);
+            --glass-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+            --glass-shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.3), 0 0 18px rgba(245, 200, 66, 0.1);
+            --radius-lg: 18px;
+            --transition-base: 0.3s ease;
+            --text-secondary: rgba(255, 255, 255, 0.65);
+            --text-muted: rgba(255, 255, 255, 0.6);
+        }
+
+        html, body {
+            min-height: 100%;
+            background: #0a0820 !important;
+            color: #ffffff !important;
+        }
+
+        body {
+            background-color: #0a0820 !important;
+            background-image: radial-gradient(circle at 12% 8%, rgba(91, 82, 153, 0.18), transparent 32%),
+                              radial-gradient(circle at 88% 88%, rgba(245, 200, 66, 0.07), transparent 28%) !important;
+        }
+
+        /* ملاحظة: .dashboard-container لا يجب أن يحمل backdrop-filter،
+           لأنه يجعل أي عنصر position:fixed بداخله (مثل نافذة الإشعارات) نسبةً إليه بدل الشاشة */
+        .section-card, .stat-card-dash, .stats-grid > *,
+        .services-section, .service-card, .admin-stat-card, .admin-action-btn,
+        .admin-messenger-section, .profile-modal-content, .modal-box,
+        .modal-content {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            -webkit-backdrop-filter: blur(18px);
+            backdrop-filter: blur(18px);
+        }
+
+        .services-title, .section-title, .admin-dashboard-title,
+        .rewards-text h3, h1, h2 {
+            text-shadow: 0 2px 16px rgba(245, 200, 66, 0.12);
+        }
+
+        .btn-rewards {
+            box-shadow: 0 4px 15px rgba(245, 200, 66, 0.3) !important;
+        }
+
+        .btn-rewards:hover {
+            box-shadow: 0 8px 25px rgba(245, 200, 66, 0.42) !important;
+        }
+
+        .stat-card-dash, .admin-stat-card {
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card-dash:hover, .admin-stat-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent-gold) !important;
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25), 0 0 16px rgba(245, 200, 66, 0.12);
+        }
+
+        input, select, textarea {
+            color: #ffffff;
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* تحسينات الخطوط والتناسق                     */
+        /* ═══════════════════════════════════════════ */
+        body {
+            font-family: 'Cairo', 'Segoe UI', 'Tahoma', sans-serif !important;
+            font-weight: 500 !important;
+            line-height: 1.8 !important;
+            letter-spacing: 0.2px !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            text-rendering: optimizeLegibility !important;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Cairo', sans-serif !important;
+            letter-spacing: -0.3px !important;
+        }
+
+        .service-title {
+            font-size: clamp(1rem, 2.5vw, 1.25rem) !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.2px !important;
+        }
+
+        .service-desc {
+            font-size: 0.85rem !important;
+            font-weight: 500 !important;
+            line-height: 1.7 !important;
+        }
+
+        .section-title {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.6rem !important;
+            font-size: 1.05rem !important;
+            font-weight: 800 !important;
+            padding-bottom: 0.8rem !important;
+            margin-bottom: 1rem !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .section-title i {
+            color: var(--accent-gold, #f5c842) !important;
+            font-size: 1.1rem !important;
+        }
+
+        .stat-number-dash {
+            font-size: 1.7rem !important;
+            font-weight: 900 !important;
+            font-variant-numeric: tabular-nums !important;
+            letter-spacing: -0.5px !important;
+        }
+
+        .stat-info h3 {
+            font-size: 0.78rem !important;
+            font-weight: 600 !important;
+            color: var(--text-muted) !important;
+        }
+
+        .dashboard-header {
+            position: relative !important;
+            z-index: 1000 !important;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            position: relative !important;
+            z-index: 1001 !important;
+        }
+
+        .notifications-wrapper {
+            position: relative !important;
+            display: inline-block !important;
+            z-index: 1002 !important;
+        }
+
+        .stats-grid, .section-card, .stat-card-dash, .dashboard-container {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* ✅ الصورة الشخصية - تحسينات شاملة          */
+        /* ═══════════════════════════════════════════ */
+        .profile-avatar-large {
+            width: 120px !important;
+            height: 120px !important;
+            border-radius: 50% !important;
+            margin: 0 auto 1.2rem !important;
+            position: relative !important;
+            cursor: pointer !important;
+            overflow: hidden !important;
+            padding: 3px !important;
+            background: linear-gradient(135deg, #f5c842 0%, #fb923c 50%, #a78bfa 100%) !important;
+            box-shadow:
+                0 0 0 4px rgba(245, 200, 66, 0.18),
+                0 0 0 5px rgba(255, 255, 255, 0.1),
+                0 15px 40px rgba(0, 0, 0, 0.4) !important;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        }
+
+        .profile-avatar-large:hover {
+            transform: scale(1.05) !important;
+            box-shadow:
+                0 0 0 4px rgba(245, 200, 66, 0.18),
+                0 0 0 5px rgba(245, 200, 66, 0.4),
+                0 20px 50px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .profile-avatar-large img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            border-radius: 50% !important;
+            display: block !important;
+            background: rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .profile-avatar-large .avatar-overlay {
+            position: absolute !important;
+            inset: 3px !important;
+            background: rgba(20, 18, 45, 0.85) !important;
+            backdrop-filter: blur(4px) !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            color: white !important;
+            gap: 6px !important;
+            opacity: 0 !important;
+            transition: opacity 0.3s ease !important;
+            border-radius: 50% !important;
+            z-index: 2 !important;
+        }
+
+        .profile-avatar-large:hover .avatar-overlay {
+            opacity: 1 !important;
+        }
+
+        .profile-avatar-large .avatar-overlay i {
+            font-size: 1.6rem !important;
+            color:#f5c842 !important;
+            text-shadow: 0 2px 10px rgba(245, 200, 66, 0.5) !important;
+        }
+
+        .profile-avatar-large .avatar-overlay span {
+            font-size: 0.72rem !important;
+            font-weight: 700 !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        .user-avatar {
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 50% !important;
+            background: rgba(0, 0, 0, 0.3) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1.6rem !important;
+            color:#ffffff !important;
+            overflow: hidden !important;
+        }
+
+        .user-avatar img {
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover !important;
+            border-radius: 50% !important;
+            display: block !important;
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* بطاقة متجر المكافآت                         */
+        /* ═══════════════════════════════════════════ */
+        .rewards-banner {
+            background: linear-gradient(135deg, rgba(245, 200, 66, 0.15), rgba(251, 146, 60, 0.15));
+            border: 1px solid rgba(245, 200, 66, 0.4);
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(245, 200, 66, 0.1);
+        }
+
+        .rewards-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(245, 200, 66, 0.2), transparent 70%);
+            border-radius: 50%;
+        }
+
+        .rewards-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1;
+        }
+
+        .rewards-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, #f5c842, #fb923c);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #1a1a2e;
+            box-shadow: 0 8px 20px rgba(245, 200, 66, 0.4);
+            flex-shrink: 0;
+        }
+
+        .rewards-text h3 {
+            color:#ffffff;
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 0.3rem;
+        }
+
+        .rewards-text p {
+            color:rgba(255, 255, 255, 0.72);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        .rewards-text strong {
+            color: var(--accent-gold);
+            font-size: 1.1rem;
+        }
+
+        .btn-rewards {
+            background: linear-gradient(135deg, #f5c842, #fb923c);
+            color: #1a1a2e;
+            padding: 0.8rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 800;
+            font-family: 'Cairo', sans-serif;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(245, 200, 66, 0.4);
+            flex-shrink: 0;
+        }
+
+        .btn-rewards:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(245, 200, 66, 0.6);
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* لوحة المشرف/المطور                          */
+        /* ═══════════════════════════════════════════ */
+        .admin-dashboard-section {
+            background: linear-gradient(135deg, rgba(245, 200, 66, 0.08), rgba(79, 70, 229, 0.08));
+            border: 1px solid rgba(245, 200, 66, 0.2);
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .admin-dashboard-title {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            color:#ffffff;
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin-bottom: 1.2rem;
+        }
+
+        .admin-dashboard-title i {
+            color: var(--accent-gold);
+            font-size: 1.3rem;
+        }
+
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .admin-stat-card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            text-align: center;
+            transition: all var(--transition-base);
+            cursor: pointer;
+            box-shadow: var(--glass-shadow);
+        }
+
+        .admin-stat-card:hover {
+            background: var(--glass-bg-hover);
+            transform: translateY(-3px);
+            border-color: rgba(245, 200, 66, 0.3);
+            box-shadow: var(--glass-shadow-hover);
+        }
+
+        .admin-stat-card .number {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--accent-gold);
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .admin-stat-card .label {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            margin-top: 0.2rem;
+            font-weight: 600;
+        }
+
+        .admin-quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+
+        .admin-action-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 0.9rem 0.6rem;
+            color:#ffffff;
+            text-decoration: none;
+            text-align: center;
+            transition: all var(--transition-base);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.78rem;
+            font-weight: 600;
+            font-family: 'Cairo', sans-serif;
+            cursor: pointer;
+        }
+
+        .admin-action-btn:hover {
+            background: var(--glass-bg-hover);
+            border-color: var(--accent-gold);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(245, 200, 66, 0.2);
+        }
+
+        .admin-action-btn i {
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+            transition: transform 0.3s ease;
+        }
+
+        .admin-action-btn:hover i {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* إدارة الرسائل والردود                      */
+        /* ═══════════════════════════════════════════ */
+        .admin-messenger-section {
+            margin-bottom: 1.5rem;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.3s ease;
+        }
+
+        .admin-messenger-section.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 99999;
+            margin: 0;
+            border-radius: 0;
+            background: rgba(20, 18, 45, 0.94);
+        }
+
+        .admin-messenger-section.fullscreen .admin-messenger-wrapper {
+            height: calc(100vh - 65px);
+        }
+
+        .admin-messenger-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(91, 156, 245, 0.12), rgba(79, 70, 229, 0.08));
+            border-bottom: 1px solid rgba(91, 156, 245, 0.2);
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .admin-messenger-header h3 {
+            color:#ffffff;
+            font-size: 1.05rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            margin: 0;
+        }
+
+        .admin-messenger-header h3 i {
+            color:#5b9cf5;
+            font-size: 1.2rem;
+        }
+
+        .btn-fullscreen {
+            background:rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color:rgba(255, 255, 255, 0.72);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-fullscreen:hover {
+            background: rgba(91, 156, 245, 0.2);
+            color:#5b9cf5;
+            border-color: #5b9cf5;
+        }
+
+        .admin-messenger-wrapper {
+            display: flex;
+            height: 600px;
+            background: rgba(20, 18, 45, 0.4);
+            overflow: hidden;
+        }
+
+        .admin-messenger-list {
+            width: 340px;
+            flex-shrink: 0;
+            background: rgba(20, 18, 45, 0.94);
+            border-left: 1px solid rgba(91, 156, 245, 0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-messenger-search {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-messenger-search input {
+            width: 100%;
+            padding: 0.6rem 1rem;
+            background:rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            color:#ffffff;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .admin-messenger-search input:focus {
+            border-color: #5b9cf5;
+            background:rgba(255, 255, 255, 0.08);
+        }
+
+        .admin-messenger-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.4rem;
+        }
+
+        .admin-msg-item {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            padding: 0.75rem 0.8rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            margin-bottom: 0.3rem;
+            border: 1px solid transparent;
+        }
+
+        .admin-msg-item:hover {
+            background: rgba(91, 156, 245, 0.08);
+        }
+
+        .admin-msg-item.active {
+            background: rgba(91, 156, 245, 0.15);
+            border-color: rgba(91, 156, 245, 0.3);
+        }
+
+        .admin-msg-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5b9cf5, #4a8ae0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .admin-msg-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .admin-msg-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .admin-msg-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.4rem;
+            margin-bottom: 3px;
+        }
+
+        .admin-msg-name {
+            color:#ffffff;
+            font-size: 0.88rem;
+            font-weight: 700;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .admin-msg-time {
+            color:rgba(255, 255, 255, 0.58);
+            font-size: 0.65rem;
+            flex-shrink: 0;
+        }
+
+        .admin-msg-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .admin-msg-preview {
+            color:rgba(255, 255, 255, 0.58);
+            font-size: 0.75rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+        }
+
+        .admin-msg-badge {
+            background: #5b9cf5;
+            color: white;
+            font-size: 0.6rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 10px;
+            flex-shrink: 0;
+        }
+
+        .admin-messenger-chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: rgba(14, 12, 35, 0.92);
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        .admin-chat-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color:rgba(255, 255, 255, 0.58);
+            text-align: center;
+        }
+
+        .admin-chat-empty i {
+            font-size: 4rem;
+            color: rgba(91, 156, 245, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .admin-chat-empty h3 {
+            color:rgba(255, 255, 255, 0.72);
+            font-size: 1.1rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .admin-chat-header {
+            padding: 0.9rem 1.2rem;
+            background: rgba(20, 18, 45, 0.94);
+            border-bottom: 1px solid rgba(91, 156, 245, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .admin-chat-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #5b9cf5, #4a8ae0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .admin-chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .admin-chat-name {
+            color:#ffffff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .admin-chat-status {
+            color:rgba(255, 255, 255, 0.58);
+            font-size: 0.72rem;
+        }
+
+        .admin-chat-body {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .admin-chat-body::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .admin-chat-body::-webkit-scrollbar-thumb {
+            background: rgba(91, 156, 245, 0.3);
+            border-radius: 10px;
+        }
+
+        .admin-bubble {
+            display: flex;
+            gap: 0.6rem;
+            max-width: 75%;
+            animation: devBubbleIn 0.3s ease;
+        }
+
+        @keyframes devBubbleIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .admin-bubble.student { align-self: flex-start; }
+        .admin-bubble.admin { align-self: flex-end; flex-direction: row-reverse; }
+
+        .admin-bubble-avatar {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 0.75rem;
+            font-weight: 700;
+            overflow: hidden;
+        }
+
+        .admin-bubble.student .admin-bubble-avatar {
+            background: linear-gradient(135deg, #5b5299, #7c6ec8);
+            color: white;
+        }
+
+        .admin-bubble.admin .admin-bubble-avatar {
+            background: linear-gradient(135deg, #e5b855, #d4a440);
+            color: #1a1a2e;
+        }
+
+        .admin-bubble-content {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+        }
+
+        .admin-bubble-name {
+            font-size: 0.7rem;
+            color:rgba(255, 255, 255, 0.58);
+            font-weight: 600;
+            padding: 0 8px;
+        }
+
+        .admin-bubble.admin .admin-bubble-name {
+            text-align: left;
+            color: #e5b855;
+        }
+
+        .admin-bubble.student .admin-bubble-name { text-align: right; }
+
+        .admin-bubble-text {
+            padding: 0.65rem 1rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .admin-bubble.student .admin-bubble-text {
+            background: rgba(91, 82, 153, 0.35);
+            border: 1px solid rgba(91, 82, 153, 0.5);
+            color:#ffffff;
+            border-top-right-radius: 4px;
+        }
+
+        .admin-bubble.admin .admin-bubble-text {
+            background: linear-gradient(135deg, rgba(229, 184, 85, 0.9), rgba(212, 164, 64, 0.9));
+            color: #1a1a2e;
+            border-top-left-radius: 4px;
+            font-weight: 600;
+        }
+
+        .admin-bubble-time {
+            font-size: 0.62rem;
+            color:rgba(255, 255, 255, 0.58);
+            padding: 0 8px;
+        }
+
+        .admin-bubble.admin .admin-bubble-time { text-align: left; }
+        .admin-bubble.student .admin-bubble-time { text-align: right; }
+
+        .admin-reply-box {
+            padding: 0.9rem 1.2rem;
+            background: rgba(20, 18, 45, 0.94);
+            border-top: 1px solid rgba(91, 156, 245, 0.15);
+            display: flex;
+            align-items: flex-end;
+            gap: 0.6rem;
+            flex-shrink: 0;
+            min-height: 70px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .admin-reply-input {
+            flex: 1;
+            background: rgba(91, 156, 245, 0.08);
+            border: 1px solid rgba(91, 156, 245, 0.2);
+            border-radius: 20px;
+            padding: 0.75rem 1rem;
+            color:#ffffff;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            resize: none;
+            outline: none;
+            min-height: 44px;
+            max-height: 120px;
+        }
+
+        .admin-reply-input:focus {
+            border-color: rgba(91, 156, 245, 0.5);
+            background: rgba(91, 156, 245, 0.12);
+        }
+
+        .admin-reply-input::placeholder {
+            color:rgba(255, 255, 255, 0.58);
+        }
+
+        .admin-send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e5b855, #d4a440);
+            border: none;
+            color: #1a1a2e;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(229, 184, 85, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .admin-send-btn:hover:not(:disabled) {
+            transform: scale(1.08) rotate(-8deg);
+            box-shadow: 0 6px 20px rgba(229, 184, 85, 0.6);
+        }
+
+        .admin-send-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* الخدمات                                     */
+        /* ═══════════════════════════════════════════ */
+        .services-section {
+            padding: 1.5rem !important;
+            background:rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .services-header {
+            text-align: center;
+            margin-bottom: 1.8rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .services-title {
+            color:#ffffff;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            letter-spacing: 0.5px;
+        }
+
+        .services-title i {
+            color:#f5c842;
+            font-size: 1.4rem;
+            animation: servicesTitlePulse 3s ease-in-out infinite;
+        }
+
+        @keyframes servicesTitlePulse {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.1) rotate(-5deg); }
+        }
+
+        .services-subtitle {
+            color:rgba(255, 255, 255, 0.72);
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .service-card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1.5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 22px;
+            padding: 2rem 1.5rem 1.7rem;
+            text-align: center;
+            text-decoration: none;
+            color:#ffffff;
+            cursor: pointer;
+            transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.9rem;
+            min-height: 220px;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--card-color, #f5c842), transparent);
+            opacity: 0.6;
+            transition: all 0.45s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            border-color: var(--card-color-border, rgba(245, 200, 66, 0.4));
+            box-shadow:
+                0 25px 50px rgba(0, 0, 0, 0.35),
+                0 0 60px var(--card-color-glow, rgba(245, 200, 66, 0.15));
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: white;
+            flex-shrink: 0;
+            background: var(--card-color, linear-gradient(135deg, #f5c842, #fb923c));
+            box-shadow:
+                0 10px 30px var(--card-color-shadow, rgba(245, 200, 66, 0.35)),
+                inset 0 2px 0 rgba(255, 255, 255, 0.25);
+            transition: all 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .service-card:hover .service-icon {
+            transform: rotateY(15deg) rotateX(8deg) scale(1.12) translateY(-5px);
+        }
+
+        .service-title {
+            color:#ffffff;
+            font-size: 1.15rem;
+            font-weight: 800;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-title {
+            color: var(--card-color-text, #f5c842);
+        }
+
+        .service-desc {
+            color:rgba(255, 255, 255, 0.58);
+            font-size: 0.78rem;
+            font-weight: 500;
+            line-height: 1.5;
+            margin: 0;
+            max-width: 220px;
+        }
+
+        .service-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            min-width: 26px;
+            height: 26px;
+            padding: 0 8px;
+            border-radius: 13px;
+            background: linear-gradient(135deg, #f87171, #fb923c);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(248, 113, 113, 0.5);
+            z-index: 2;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+        .service-badge { display: none !important; }
+                #announcementsServiceBadge { display: flex !important; }
+        @keyframes badgePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .service-badge.new {
+            background: linear-gradient(135deg, #4ade80, #2dd4bf);
+        }
+
+        .service-card[data-service="messages"] {
+            --card-color: linear-gradient(135deg, #5b9cf5, #4a8ae0);
+            --card-color-border: rgba(91, 156, 245, 0.4);
+            --card-color-glow: rgba(91, 156, 245, 0.15);
+            --card-color-shadow: rgba(91, 156, 245, 0.35);
+            --card-color-text: #5b9cf5;
+        }
+
+        .service-card[data-service="english"] {
+            --card-color: linear-gradient(135deg, #5b9cf5, #9d7cf5);
+            --card-color-border: rgba(91, 156, 245, 0.5);
+            --card-color-glow: rgba(91, 156, 245, 0.20);
+            --card-color-shadow: rgba(91, 156, 245, 0.4);
+            --card-color-text: #5b9cf5;
+        }
+
+        .service-card[data-service="resources"] {
+            --card-color: linear-gradient(135deg, #4ac9a0, #3bb589);
+            --card-color-border: rgba(74, 201, 160, 0.4);
+            --card-color-glow: rgba(74, 201, 160, 0.15);
+            --card-color-shadow: rgba(74, 201, 160, 0.35);
+            --card-color-text: #4ac9a0;
+        }
+
+        .service-card[data-service="guidance"] {
+            --card-color: linear-gradient(135deg, #fb923c, #f5c842);
+            --card-color-border: rgba(251, 146, 60, 0.4);
+            --card-color-glow: rgba(251, 146, 60, 0.15);
+            --card-color-shadow: rgba(251, 146, 60, 0.35);
+            --card-color-text: #fb923c;
+        }
+
+        .service-card[data-service="library"] {
+            --card-color: linear-gradient(135deg, #9d7cf5, #8566e8);
+            --card-color-border: rgba(157, 124, 245, 0.4);
+            --card-color-glow: rgba(157, 124, 245, 0.15);
+            --card-color-shadow: rgba(157, 124, 245, 0.35);
+            --card-color-text: #9d7cf5;
+        }
+
+        .service-card[data-service="ideas"] {
+            --card-color: linear-gradient(135deg, #f5c842, #e5b855);
+            --card-color-border: rgba(245, 200, 66, 0.4);
+            --card-color-glow: rgba(245, 200, 66, 0.15);
+            --card-color-shadow: rgba(245, 200, 66, 0.35);
+            --card-color-text: #f5c842;
+        }
+
+        .service-card[data-service="announcements"] {
+            --card-color: linear-gradient(135deg, #fb923c, #f87171);
+            --card-color-border: rgba(251, 146, 60, 0.4);
+            --card-color-glow: rgba(251, 146, 60, 0.15);
+            --card-color-shadow: rgba(251, 146, 60, 0.35);
+            --card-color-text: #fb923c;
+        }
+
+        .service-card[data-service="admin"] {
+            --card-color: linear-gradient(135deg, #e5b855, #d4a440);
+            --card-color-border: rgba(229, 184, 85, 0.4);
+            --card-color-glow: rgba(229, 184, 85, 0.15);
+            --card-color-shadow: rgba(229, 184, 85, 0.35);
+            --card-color-text: #e5b855;
+        }
+        .service-card[data-service="home"] {
+            --card-color: linear-gradient(135deg, #f472b6, #ec4899);
+            --card-color-border: rgba(244, 114, 182, 0.4);
+            --card-color-glow: rgba(244, 114, 182, 0.15);
+            --card-color-shadow: rgba(244, 114, 182, 0.35);
+            --card-color-text: #f472b6;
+        }
+
+        .service-card[data-service="profile"] {
+            --card-color: linear-gradient(135deg, #2dd4bf, #14b8a6);
+            --card-color-border: rgba(45, 212, 191, 0.4);
+            --card-color-glow: rgba(45, 212, 191, 0.15);
+            --card-color-shadow: rgba(45, 212, 191, 0.35);
+            --card-color-text: #2dd4bf;
+        }
+
+        .service-card[data-service="links"] {
+            --card-color: linear-gradient(135deg, #0ea5e9, #3b82f6);
+            --card-color-border: rgba(14, 165, 233, 0.4);
+            --card-color-glow: rgba(14, 165, 233, 0.15);
+            --card-color-shadow: rgba(14, 165, 233, 0.35);
+            --card-color-text: #0ea5e9;
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* Profile Modal                               */
+        /* ═══════════════════════════════════════════ */
+        .profile-modal-content {
+            background: linear-gradient(165deg, rgba(20, 18, 45, 0.94) 0%, rgba(14, 12, 35, 0.92) 100%) !important;
+            backdrop-filter: blur(40px) !important;
+            border-radius: 28px !important;
+            width: 94% !important;
+            max-width: 460px !important;
+            max-height: 92vh !important;
+            overflow-y: auto !important;
+            direction: rtl !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5) !important;
+            animation: profileModalFadeIn 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+        }
+
+        @keyframes profileModalFadeIn {
+            from { opacity: 0; transform: scale(0.92) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .profile-modal-header {
+            background: linear-gradient(135deg, #4c4a8a 0%, #5b5299 100%) !important;
+            padding: 1.2rem 1.5rem !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 10 !important;
+            border-radius: 28px 28px 0 0 !important;
+        }
+
+        .header-brand {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.7rem !important;
+            color:#ffffff !important;
+            font-weight: 700 !important;
+            font-size: 1rem !important;
+        }
+
+        .header-brand i {
+            font-size: 1.25rem !important;
+            color: rgba(245, 200, 66, 0.85) !important;
+        }
+
+        .modal-close-btn {
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            background:rgba(255, 255, 255, 0.08) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color:rgba(255, 255, 255, 0.72) !important;
+            cursor: pointer !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .modal-close-btn:hover {
+            background: rgba(248, 113, 113, 0.25) !important;
+            color:#ffffff !important;
+            transform: rotate(90deg) !important;
+        }
+
+        .profile-modal-body {
+            padding: 2rem 1.5rem 1.5rem !important;
+            text-align: center !important;
+        }
+
+        .profile-display-name {
+            color:#ffffff !important;
+            font-size: 1.35rem !important;
+            font-weight: 700 !important;
+            margin-bottom: 0.7rem !important;
+        }
+
+        .profile-role-badge {
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 0.45rem !important;
+            padding: 0.45rem 1.15rem !important;
+            border-radius: 50px !important;
+            font-size: 0.8rem !important;
+            font-weight: 700 !important;
+        }
+
+        .profile-role-badge.admin {
+            background: linear-gradient(135deg, rgba(245, 200, 66, 0.18), rgba(251, 146, 60, 0.15)) !important;
+            color: rgba(245, 200, 66, 0.95) !important;
+            border: 1px solid rgba(245, 200, 66, 0.25) !important;
+        }
+
+        .profile-role-badge.developer {
+            background: linear-gradient(135deg, rgba(157, 124, 245, 0.18), rgba(192, 132, 252, 0.15)) !important;
+            color: rgba(192, 132, 252, 0.95) !important;
+            border: 1px solid rgba(157, 124, 245, 0.25) !important;
+        }
+
+        .profile-role-badge.student {
+            background: linear-gradient(135deg, rgba(91, 156, 245, 0.18), rgba(168, 85, 247, 0.15)) !important;
+            color: rgba(168, 200, 245, 0.95) !important;
+            border: 1px solid rgba(91, 156, 245, 0.25) !important;
+        }
+
+        .profile-info-cards {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 0.55rem !important;
+            margin-bottom: 1.5rem !important;
+            text-align: right !important;
+        }
+
+        .info-card {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.85rem !important;
+            padding: 0.85rem 1rem !important;
+            background:rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 14px !important;
+            transition: all 0.3s ease !important;
+        }
+
+        .info-card:hover {
+            background:rgba(255, 255, 255, 0.08) !important;
+            transform: translateX(-3px) !important;
+        }
+
+        .info-card.hidden {
+            display: none !important;
+        }
+
+        .info-icon {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 12px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            font-size: 1rem !important;
+            flex-shrink: 0 !important;
+            color:#ffffff !important;
+        }
+
+        .info-icon.icon-blue {
+            background: linear-gradient(135deg, #5b9cf5, #4a8ae0) !important;
+        }
+
+        .info-icon.icon-purple {
+            background: linear-gradient(135deg, #9d7cf5, #8566e8) !important;
+        }
+
+        .info-icon.icon-green {
+            background: linear-gradient(135deg, #4ac9a0, #3bb589) !important;
+        }
+
+        .info-icon.icon-gold {
+            background: linear-gradient(135deg, #e5b855, #d4a440) !important;
+            color: #1a1a2e !important;
+        }
+
+        .info-content {
+            flex: 1 !important;
+            min-width: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 3px !important;
+        }
+
+        .info-label {
+            font-size: 0.7rem !important;
+            color:rgba(255, 255, 255, 0.58) !important;
+        }
+
+        .info-value {
+            font-size: 0.88rem !important;
+            color:#ffffff !important;
+            font-weight: 600 !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+        }
+
+        .profile-divider {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.8rem !important;
+            margin: 1.3rem 0 1rem !important;
+            color:rgba(255, 255, 255, 0.58) !important;
+            font-size: 0.7rem !important;
+            font-weight: 600 !important;
+        }
+
+        .profile-divider::before,
+        .profile-divider::after {
+            content: '' !important;
+            flex: 1 !important;
+            height: 1px !important;
+            background:rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .password-input-wrapper {
+            position: relative !important;
+            margin-bottom: 0.7rem !important;
+        }
+
+        .password-input-wrapper .input-icon {
+            position: absolute !important;
+            right: 15px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            color:rgba(255, 255, 255, 0.58) !important;
+            font-size: 0.85rem !important;
+            pointer-events: none !important;
+        }
+
+        .password-input-wrapper input {
+            width: 100% !important;
+            padding: 0.9rem 2.8rem 0.9rem 2.8rem !important;
+            background:rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            border-radius: 14px !important;
+            color:#ffffff !important;
+            font-family: 'Cairo', sans-serif !important;
+            font-size: 0.88rem !important;
+        }
+
+        .password-input-wrapper input:focus {
+            outline: none !important;
+            border-color: rgba(245, 200, 66, 0.4) !important;
+            box-shadow: 0 0 0 3px rgba(245, 200, 66, 0.08) !important;
+        }
+
+        .toggle-pwd {
+            position: absolute !important;
+            left: 10px !important;
+            top: 50% !important;
+            transform: translateY(-50%) !important;
+            width: 34px !important;
+            height: 34px !important;
+            border-radius: 10px !important;
+            background: transparent !important;
+            border: none !important;
+            color:rgba(255, 255, 255, 0.58) !important;
+            cursor: pointer !important;
+        }
+
+        .btn-profile-action {
+            width: 100% !important;
+            padding: 0.9rem 1.5rem !important;
+            border: none !important;
+            border-radius: 14px !important;
+            color:#ffffff !important;
+            cursor: pointer !important;
+            font-family: 'Cairo', sans-serif !important;
+            font-size: 0.9rem !important;
+            font-weight: 700 !important;
+            transition: all 0.3s ease !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.55rem !important;
+        }
+
+        .btn-profile-action.btn-primary {
+            background: linear-gradient(135deg, #5b5299 0%, #6d5fb8 100%) !important;
+            box-shadow: 0 4px 15px rgba(91, 82, 153, 0.35) !important;
+            margin-bottom: 0.6rem !important;
+        }
+
+        .btn-profile-action.btn-primary:hover {
+            transform: translateY(-2px) !important;
+        }
+
+        .btn-profile-action.btn-danger {
+            background: rgba(248, 113, 113, 0.15) !important;
+            border: 1px solid rgba(248, 113, 113, 0.25) !important;
+            color: rgba(255, 180, 180, 0.95) !important;
+        }
+
+        .btn-profile-action.btn-danger:hover {
+            transform: translateY(-2px) !important;
+            background: rgba(248, 113, 113, 0.22) !important;
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* Responsive                                  */
+        /* ═══════════════════════════════════════════ */
+        @media (max-width: 900px) {
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 1rem;
+            }
+
+            .service-card {
+                min-height: 200px;
+                padding: 1.7rem 1.2rem 1.5rem;
+            }
+
+            .service-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 1.9rem;
+            }
+
+            .admin-messenger-list {
+                width: 260px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .rewards-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .services-section {
+                padding: 1.2rem 1rem;
+                border-radius: 20px;
+            }
+
+            .services-title {
+                font-size: 1.2rem;
+            }
+
+            .services-subtitle {
+                font-size: 0.75rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.9rem;
+            }
+
+            .service-card {
+                min-height: 130px;
+                padding: 1.3rem 1.2rem;
+                flex-direction: row;
+                justify-content: flex-start;
+                text-align: right;
+                gap: 1rem;
+            }
+
+            .service-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 1.6rem;
+                border-radius: 18px;
+            }
+
+            .service-title {
+                font-size: 0.95rem;
+                text-align: right;
+            }
+
+            .service-desc {
+                text-align: right;
+                max-width: none;
+                font-size: 0.7rem;
+            }
+
+            .profile-avatar-large {
+                width: 100px !important;
+                height: 100px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-avatar-large {
+                width: 90px !important;
+                height: 90px !important;
+            }
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* الإشعارات (تعريف واحد فقط)                  */
+        /* نستخدم #id لرفع الأولوية فوق أي CSS خارجي    */
+        /* ═══════════════════════════════════════════ */
+
+        /* الإشعارات للحاسوب */
+        #notificationsDropdown {
+            position: absolute !important;
+            top: calc(100% + 12px) !important;
+            left: 0 !important;
+            right: auto !important;
+            bottom: auto !important;
+            transform: none !important;
+            width: 380px !important;
+            max-width: calc(100vw - 32px) !important;
+            max-height: 500px !important;
+            overflow-y: auto;
+            z-index: 9999 !important;
+            display: none !important;
+            background: #14122d !important;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            margin: 0 !important;
+        }
+        #notificationsDropdown.active {
+            display: flex !important;
+            flex-direction: column;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
+
+        /* الإشعارات للهاتف (نافذة منبثقة في منتصف الشاشة)
+           ملاحظة: الجافاسكريبت ينقل العنصر إلى <body> أثناء الفتح على الهاتف
+           حتى لا يتأثر بأي backdrop-filter / transform في العناصر الأب */
+        @media (max-width: 768px) {
+            #notificationsDropdown,
+            #notificationsDropdown.active {
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                right: auto !important;
+                bottom: auto !important;
+                transform: translate(-50%, -50%) !important;
+                width: calc(100vw - 32px) !important;
+                max-width: 400px !important;
+                max-height: 80vh !important;
+                z-index: 99999 !important;
+                box-shadow: 0 0 0 100vw rgba(0, 0, 0, 0.7) !important;
+            }
+        }
+
+        /* ═══════════════════════════════════════════ */
+        /* إدارة الرسائل: Sliding Panels للهاتف         */
+        /* ═══════════════════════════════════════════ */
+
+        /* زر الرجوع: مخفي على الحاسوب */
+        .admin-back-btn {
+            display: none;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(91, 156, 245, 0.15);
+            border: 1px solid rgba(91, 156, 245, 0.3);
+            color: #5b9cf5;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            font-size: 1rem;
+            transition: background 0.25s ease;
+        }
+        .admin-back-btn:active { background: rgba(91, 156, 245, 0.3); }
+
+        /* تناسق الحاسوب */
+        .admin-messenger-items { min-height: 0; }
+        .admin-messenger-items::-webkit-scrollbar { width: 5px; }
+        .admin-messenger-items::-webkit-scrollbar-thumb {
+            background: rgba(91, 156, 245, 0.3);
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-messenger-header {
+                padding: 0.75rem 1rem;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                align-items: center;
+                gap: 0.6rem;
+            }
+            .admin-messenger-header h3 {
+                flex: 1;
+                min-width: 0;
+                font-size: 0.95rem;
+                gap: 0.5rem;
+            }
+            .admin-messenger-header h3 > span:first-of-type {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .btn-fullscreen { flex-shrink: 0; }
+
+            /* الحاوية: لوحتان فوق بعضهما */
+            .admin-messenger-wrapper {
+                position: relative;
+                display: block;
+                height: 72vh;
+                height: 72dvh;
+                min-height: 460px;
+                overflow: hidden;
+            }
+            .admin-messenger-section.fullscreen .admin-messenger-wrapper {
+                height: calc(100vh - 62px);
+                height: calc(100dvh - 62px);
+            }
+
+            .admin-messenger-list,
+            .admin-messenger-chat {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                max-width: 100%;
+                height: 100%;
+                max-height: none;
+                border: none;
+                transition: transform 0.35s ease, visibility 0.35s;
+            }
+
+            /* الافتراضي: القائمة ظاهرة، الدردشة مخفية خارج الشاشة */
+            .admin-messenger-list {
+                transform: translateX(0);
+                visibility: visible;
+                z-index: 2;
+            }
+            .admin-messenger-chat {
+                transform: translateX(-100%);
+                visibility: hidden;
+                z-index: 1;
+            }
+
+            /* عند فتح محادثة */
+            .admin-messenger-wrapper.chat-open .admin-messenger-list {
+                transform: translateX(100%);
+                visibility: hidden;
+            }
+            .admin-messenger-wrapper.chat-open .admin-messenger-chat {
+                transform: translateX(0);
+                visibility: visible;
+            }
+
+            /* زر الرجوع يظهر على الهاتف فقط */
+            .admin-back-btn { display: flex; }
+
+            .admin-chat-header { padding: 0.7rem 0.9rem; gap: 0.6rem; }
+            .admin-chat-body { padding: 0.9rem; }
+            .admin-bubble { max-width: 88%; }
+            .admin-reply-box {
+                padding: 0.7rem 0.9rem;
+                padding-bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px));
+            }
+
+            /* منع تكبير الشاشة تلقائياً في iOS: خط 16px على الأقل */
+            .admin-messenger-search input,
+            .admin-reply-input,
+            .password-input-wrapper input,
+            .edit-input {
+                font-size: 16px !important;
+            }
+        }
+        .bottom-actions-bar {
+            display: flex; justify-content: center; gap: 1.5rem; margin-top: 1.5rem; margin-bottom: 3rem; padding: 1rem;
+            background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; backdrop-filter: var(--glass-blur);
+        }
+        .bottom-action-btn {
+            display: flex; align-items: center; gap: 0.6rem; padding: 0.8rem 2rem; border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white; font-family: 'Cairo', sans-serif; font-weight: 700; font-size: 0.95rem;
+            cursor: pointer; text-decoration: none; transition: all 0.3s ease;
+        }
+        .bottom-action-btn i { color: var(--accent-gold); font-size: 1.1rem; }
+        .bottom-action-btn:hover { background: rgba(255, 255, 255, 0.1); transform: translateY(-3px); border-color: var(--accent-gold); }
+        @media (max-width: 480px) { .bottom-actions-bar { flex-direction: column; gap: 0.8rem; } .bottom-action-btn { justify-content: center; } }
+    </style>
+
+<style id="admin-messenger-mobile-final-fix">
+/* Mobile/tablet: show the contact list alone, then the selected chat alone.
+   This intentionally avoids the old 36%/64% split that left a blank panel. */
+@media screen and (max-width: 1200px) {
+  #adminMessengerSection,
+  #adminMessengerSection * { box-sizing: border-box; }
+
+  #adminMessengerSection .admin-messenger-wrapper {
+    display: block !important;
+    position: relative !important;
+    width: 100% !important;
+    height: min(76dvh, 760px) !important;
+    min-height: 440px !important;
+    overflow: hidden !important;
+  }
+
+  #adminMessengerSection .admin-messenger-list {
+    display: flex !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    flex-direction: column !important;
+    transform: none !important;
+    visibility: visible !important;
+    z-index: 2 !important;
+    border: 0 !important;
+  }
+
+  #adminMessengerSection .admin-messenger-items {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    width: 100% !important;
+  }
+
+  #adminMessengerSection .admin-messenger-chat {
+    display: none !important;
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    transform: none !important;
+    visibility: visible !important;
+    z-index: 3 !important;
+  }
+
+  #adminMessengerSection .admin-messenger-wrapper.chat-open .admin-messenger-list {
+    display: none !important;
+  }
+
+  #adminMessengerSection .admin-messenger-wrapper.chat-open .admin-messenger-chat {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+
+  #adminMessengerSection .admin-back-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  #adminMessengerSection .admin-messenger-search {
+    flex: 0 0 auto !important;
+    width: 100% !important;
+  }
+
+  #adminMessengerSection .admin-msg-item {
+    width: auto !important;
+    max-width: none !important;
+  }
+
+  #adminMessengerSection.fullscreen .admin-messenger-wrapper {
+    height: calc(100dvh - 68px) !important;
+    min-height: 0 !important;
+  }
+}
+@media screen and (max-width: 480px) {
+  #adminMessengerSection .admin-messenger-wrapper {
+    height: 72dvh !important;
+    min-height: 420px !important;
+  }
+  #adminMessengerSection .admin-messenger-header h3 {
+    font-size: clamp(.82rem, 3.5vw, .98rem) !important;
+  }
+  #adminMessengerSection .admin-msg-item {
+    padding: .72rem .65rem !important;
+    margin: .12rem .2rem !important;
+  }
+}
+</style>
+
+</head>
+<body>
+    <div class="offline-banner" id="offlineBanner">
+        <i class="fas fa-wifi"></i> أنت غير متصل بالإنترنت - بعض الميزات قد لا تعمل
+    </div>
+
+    <div class="dashboard-container">
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- الهيدر                                       -->
+        <!-- ═══════════════════════════════════════════ -->
+        <div class="dashboard-header">
+            <div class="user-info">
+                <div class="user-avatar-wrapper" id="avatarWrapper">
+                    <div class="user-avatar" id="headerAvatar">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                </div>
+                <div class="welcome-text">
+                    <h2 id="welcomeName"><span data-i18n="welcome">أهلاً بك</span>،</h2>
+                    <p id="userInfo"></p>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="notifications-wrapper">
+                    <button class="notifications-trigger" id="notificationsTrigger" type="button" onclick="window.toggleNotifications(event)">
+                        <i class="fas fa-bell"></i>
+                        <span class="notifications-badge" id="notificationsBadge" style="display:none;">0</span>
+                    </button>
+
+                    <div class="notifications-dropdown" id="notificationsDropdown">
+                        <div class="notifications-header">
+                            <h4><i class="fas fa-bell"></i> الإشعارات</h4>
+                            <div class="notifications-actions">
+                                <button class="notif-action-btn" onclick="window.markAllNotificationsRead()">
+                                    <i class="fas fa-check-double"></i>
+                                </button>
+                                <button class="notif-action-btn" onclick="window.clearAllNotifications()">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="notifications-list" id="notificationsList">
+                            <div class="notifications-empty">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p>جاري التحميل...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="date-time" id="dateTime"></div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- قسم التلميذ                                  -->
+        <!-- ═══════════════════════════════════════════ -->
+        <div id="studentDashboard" style="display:none;">
+            <div class="rewards-banner">
+                <div class="rewards-info">
+                    <div class="rewards-icon"><i class="fas fa-gift"></i></div>
+                    <div class="rewards-text">
+                        <h3>متجر المكافآت</h3>
+                        <p>لديك <strong id="bannerPoints">0</strong> نقطة. استبدلها بجوائز رائعة!</p>
+                    </div>
+                </div>
+                <a href="rewards.html" class="btn-rewards">
+                    <i class="fas fa-shopping-cart"></i> استبدل نقاطك الآن
+                </a>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card-dash" onclick="window.openStatModal('homeworks')">
+                    <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="stat-info">
+                        <h3 data-i18n="remainingHomeworks">الواجبات المتبقية</h3>
+                        <div class="stat-number-dash" id="remainingHomeworks">0</div>
+                    </div>
+                </div>
+                <div class="stat-card-dash" onclick="window.openStatModal('messages')">
+                    <div class="stat-icon"><i class="fas fa-envelope"></i></div>
+                    <div class="stat-info">
+                        <h3 data-i18n="messages">الرسائل الواردة</h3>
+                        <div class="stat-number-dash" id="unreadCount">0</div>
+                    </div>
+                </div>
+                <div class="stat-card-dash" onclick="window.openStatModal('progress')">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <h3 data-i18n="completionRate">نسبة الإنجاز</h3>
+                        <div class="stat-number-dash" id="completionRate">0%</div>
+                    </div>
+                </div>
+                <div class="stat-card-dash" onclick="window.openStatModal('points')">
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-info">
+                        <h3 data-i18n="points">نقاط التميز</h3>
+                        <div class="stat-number-dash" id="userPoints">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    <i class="fas fa-table"></i><span data-i18n="scheduleTitle">جدول الحصص الأسبوعي</span>
+                    <div class="section-actions">
+                        <button class="btn-action" onclick="window.toggleScheduleEdit()" id="editScheduleBtn">
+                            <i class="fas fa-pen"></i> <span data-i18n="edit">تعديل</span>
+                        </button>
+                        <button class="btn-action save" onclick="window.saveSchedule()" id="saveScheduleBtn" style="display:none;">
+                            <i class="fas fa-save"></i> <span data-i18n="save">حفظ</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="schedule-table" id="scheduleTable"></div>
+                <div class="schedule-note">
+                    <i class="fas fa-clock"></i> <span data-i18n="note">الفترة الصباحية: 8:00 - 12:00 | الفترة المسائية: 14:00 - 18:00</span>
+                </div>
+            </div>
+
+            <div class="section-card">
+                <div class="section-title">
+                    <i class="fas fa-home"></i><span data-i18n="homeworks">الواجبات المنزلية</span>
+                    <div class="section-actions">
+                        <button class="btn-action" onclick="window.toggleHomeworkEdit()" id="editHomeworkBtn">
+                            <i class="fas fa-pen"></i> <span data-i18n="edit">تعديل</span>
+                        </button>
+                        <button class="btn-action save" onclick="window.saveHomeworks()" id="saveHomeworkBtn" style="display:none;">
+                            <i class="fas fa-save"></i> <span data-i18n="save">حفظ</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="homework-list" id="homeworkList"></div>
+            </div>
+
+            <!-- مركز التواصل الخاص بالتلاميذ: يظهر مباشرة بعد الواجبات المنزلية -->
+            <section id="studentMessengerSection" class="student-messenger-section" aria-label="مركز التواصل">
+                <header class="student-messenger-heading">
+                    <div class="student-messenger-title">
+                        <i class="fas fa-comments"></i>
+                        <div>
+                            <h2>مركز التواصل</h2>
+                            <p>تواصل خاص مع الإدارة والمبرمج وزملائك</p>
+                        </div>
+                    </div>
+                    <button type="button" class="student-messenger-fullscreen" id="studentMessengerFullscreen" aria-label="ملء الشاشة" title="ملء الشاشة">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                </header>
+                <iframe
+                    id="studentMessengerFrame"
+                    class="student-messenger-frame"
+                    src="messages.html?embed=1"
+                    title="مركز التواصل - ثانوية الخوارزمي"
+                    loading="eager"
+                    allow="clipboard-read; clipboard-write">
+                </iframe>
+            </section>
+
+        </div>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- قسم المشرف/المطور                            -->
+        <!-- ═══════════════════════════════════════════ -->
+        <div id="adminDashboard" style="display:none;">
+            <div class="admin-dashboard-section">
+                <div class="admin-dashboard-title">
+                    <i class="fas fa-shield-alt"></i>
+                    <span id="adminPanelTitle">لوحة الإشراف</span>
+                </div>
+
+                <div class="admin-stats-grid">
+                    <div class="admin-stat-card">
+                        <div class="number" id="adminTotalStudents">0</div>
+                        <div class="label">👥 التلاميذ</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="number" id="adminNewMessages">0</div>
+                        <div class="label">💬 الرسائل الجديدة</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="number" id="adminIdeas">0</div>
+                        <div class="label">💡 الاقتراحات</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="number" id="adminPendingResources">0</div>
+                        <div class="label">📚 موارد قيد المراجعة</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="number" id="adminAnnouncements">0</div>
+                        <div class="label">📢 الإعلانات</div>
+                    </div>
+                    <div class="admin-stat-card">
+                        <div class="number" id="adminAdmins">0</div>
+                        <div class="label">👑 المشرفون</div>
+                    </div>
+                </div>
+
+                <div class="admin-quick-actions">
+                    <a href="ideas.html" class="admin-action-btn">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>الاقتراحات</span>
+                    </a>
+                    <a href="resources.html" class="admin-action-btn">
+                        <i class="fas fa-book-open"></i>
+                        <span>الموارد</span>
+                    </a>
+                    <a href="announcements.html" class="admin-action-btn">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>الإعلانات</span>
+                    </a>
+                    <a href="admin.html" target="_blank" rel="noopener" class="admin-action-btn">
+                        <i class="fas fa-users"></i>
+                        <span>التلاميذ</span>
+                    </a>
+                    <a href="admin.html" target="_blank" rel="noopener" class="admin-action-btn">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>اللوحة الكاملة</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="admin-messenger-section" id="adminMessengerSection">
+                <div class="admin-messenger-header">
+                    <h3>
+                        <i class="fas fa-comments"></i>
+                        <span>إدارة الرسائل والردود</span>
+                        <span style="margin-right:auto; background:rgba(91,156,245,0.2); color:#5b9cf5; padding:2px 10px; border-radius:20px; font-size:0.7rem;" id="adminMsgCount">0 محادثة</span>
+                    </h3>
+                    <button class="btn-fullscreen" onclick="window.toggleFullScreen()" title="ملء الشاشة">
+                        <i class="fas fa-expand" id="fullscreenIcon"></i>
+                    </button>
+                </div>
+                <div class="admin-messenger-wrapper" id="adminMessengerWrapper">
+                    <div class="admin-messenger-list">
+                        <div class="admin-messenger-search">
+                            <input type="text" id="adminMsgSearch" placeholder="ابحث عن تلميذ بالاسم أو القسم..." oninput="window.filterAdminMessages(this.value)">
+                        </div>
+                        <div class="admin-messenger-items" id="adminMsgList">
+                            <div style="padding: 1rem; text-align: center; color:rgba(255, 255, 255, 0.58);">
+                                <i class="fas fa-spinner fa-spin"></i>
+                                <p style="font-size: 0.75rem; margin-top: 0.5rem;">جاري التحميل...</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="admin-messenger-chat" id="adminChatArea">
+                        <div class="admin-chat-empty" id="adminChatEmpty">
+                            <i class="fas fa-comments"></i>
+                            <h3>اختر محادثة</h3>
+                            <p>اختر تلميذاً من القائمة لعرض الرسائل والرد عليها</p>
+                        </div>
+                        <div class="admin-chat-header" id="adminChatHeader" style="display:none;">
+                            <button class="admin-back-btn" id="adminBackBtn" type="button" onclick="window.backToAdminList()" aria-label="رجوع إلى المحادثات">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <div class="admin-chat-avatar" id="adminChatAvatar">؟</div>
+                            <div class="admin-chat-info">
+                                <div class="admin-chat-name" id="adminChatName">—</div>
+                                <div class="admin-chat-status" id="adminChatStatus">—</div>
+                            </div>
+                        </div>
+                        <div class="admin-chat-body" id="adminChatBody" style="display:none;"></div>
+                        <div class="admin-reply-box" id="adminReplyBox" style="display:none;">
+                            <textarea id="adminReplyInput" class="admin-reply-input" placeholder="اكتب ردك هنا..." rows="1" maxlength="1000"></textarea>
+                            <button class="admin-send-btn" id="adminSendBtn" onclick="window.sendAdminReply()" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════════ -->
+        <!-- الخدمات                                      -->
+        <!-- ═══════════════════════════════════════════ -->
+        <div class="services-section">
+            <div class="services-header">
+                <h2 class="services-title">
+                    <i class="fas fa-star"></i>
+                    <span data-i18n="servicesTitle">خدماتنا المتكاملة</span>
+                </h2>
+                <p class="services-subtitle" data-i18n="servicesSubtitle">كل ما تحتاجه في مكان واحد - اضغط على أي خدمة للبدء</p>
+            </div>
+
+            <div class="services-grid">
+<a href="english.html" class="service-card" data-service="english">
+                    <div class="service-badge new" data-i18n="newBadge">جديد</div>
+                    <div class="service-icon"><i class="fas fa-language"></i></div>
+                    <h3 class="service-title" data-i18n="englishLabel">تعلم اللغات الأجنبية</h3>
+                    <p class="service-desc" data-i18n="serviceEnglishDesc">الإنجليزية، الفرنسية، الإسبانية - دروس وموارد شاملة</p>
+                </a>
+
+                <a href="resources.html" class="service-card" data-service="resources">
+                    <div class="service-icon"><i class="fas fa-book-open"></i></div>
+                    <h3 class="service-title" data-i18n="resourcesLabel">الموارد التعليمية</h3>
+                    <p class="service-desc" data-i18n="serviceResourcesDesc">دروس، ملخصات، امتحانات وتمارين</p>
+                </a>
+
+                <a href="guidance.html" class="service-card" data-service="guidance">
+                    <div class="service-badge new" style="background: linear-gradient(135deg, #f5c842, #fb923c); color: #1a1a2e;">جديد</div>
+                    <div class="service-icon"><i class="fas fa-compass"></i></div>
+                    <h3 class="service-title">دليل التوجيه</h3>
+                    <p class="service-desc">اكتشف المسارات والمدارس العليا بعد البكالوريا</p>
+                </a>
+
+                <a href="library.html" class="service-card" data-service="library">
+                    <div class="service-icon"><i class="fas fa-book"></i></div>
+                    <h3 class="service-title" data-i18n="libraryLabel">المكتبة الرقمية</h3>
+                    <p class="service-desc" data-i18n="serviceLibraryDesc">كتب وروايات بصيغة PDF للقراءة والتحميل</p>
+                </a>
+
+                <a href="ideas.html" class="service-card" data-service="ideas">
+                    <div class="service-icon"><i class="fas fa-lightbulb"></i></div>
+                    <h3 class="service-title" data-i18n="ideasLabel">الاقتراحات</h3>
+                    <p class="service-desc" data-i18n="serviceIdeasDesc">شارك أفكارك وصوّت على اقتراحات زملائك</p>
+                </a>
+
+                <a href="announcements.html" class="service-card" data-service="announcements">
+                    <div class="service-badge new" id="announcementsServiceBadge" style="display:none;">جديد</div>
+                    <div class="service-icon"><i class="fas fa-bullhorn"></i></div>
+                    <h3 class="service-title" data-i18n="announcementsLabel">الإعلانات</h3>
+                    <p class="service-desc" data-i18n="serviceAnnouncementsDesc">آخر الأخبار والإعلانات المدرسية</p>
+                </a>
+
+                <a href="links.html" class="service-card" data-service="links">
+                    <div class="service-badge new" style="background: linear-gradient(135deg, #4ade80, #2dd4bf);">جديد</div>
+                    <div class="service-icon"><i class="fas fa-link"></i></div>
+                    <h3 class="service-title">مواقع مفيدة</h3>
+                    <p class="service-desc">أكثر من 30 موقعاً لدراسة، مسار، وأدوات ذكاء اصطناعي</p>
+                </a>
+                                <!-- ✅ خدمة مؤقت التركيز الجديدة -->
+                <a href="pomodoro.html" class="service-card" data-service="pomodoro">
+                    <div class="service-badge new" style="background: linear-gradient(135deg, #4ade80, #2dd4bf); color: #1a1a2e;">جديد</div>
+                    <div class="service-icon" style="background: linear-gradient(135deg, #4ade80, #2dd4bf);"><i class="fas fa-clock"></i></div>
+                    <h3 class="service-title">مؤقت التركيز (بومودورو)</h3>
+                    <p class="service-desc">نظام دراسة بفترات تركيز وراحة مع مكافآت ونقاط</p>
+                </a>
+
+                <a href="admin.html" target="_blank" rel="noopener" class="service-card" data-service="admin" id="adminServiceCard" style="display:none;">
+                    <div class="service-icon"><i class="fas fa-user-shield"></i></div>
+                    <h3 class="service-title" data-i18n="adminPanel">لوحة المشرف</h3>
+                    <p class="service-desc" data-i18n="serviceAdminDesc">إدارة التلاميذ، الموارد، والإعلانات</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="bottom-actions-bar">
+            <a href="index.html" class="bottom-action-btn">
+                <i class="fas fa-home"></i>
+                <span>الرئيسية</span>
+            </a>
+            <button class="bottom-action-btn" onclick="window.openProfileModal()">
+                <i class="fas fa-user-circle"></i>
+                <span>ملفي الشخصي</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal التفاصيل -->
+    <div class="modal-overlay" id="statModal">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="statModalTitle"><i class="fas fa-info-circle"></i> التفاصيل</h3>
+                <span class="modal-close" onclick="window.closeModal('statModal')">&times;</span>
+            </div>
+            <div class="modal-body" id="statModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Modal الملف الشخصي -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="profile-modal-content">
+            <div class="profile-modal-header">
+                <div class="header-brand">
+                    <i class="fas fa-user-circle"></i>
+                    <span data-i18n="profileTitle">ملفي الشخصي</span>
+                </div>
+                <button class="modal-close-btn" onclick="window.closeModal('profileModal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="profile-modal-body">
+                <div class="profile-avatar-large" id="profileAvatarLarge">
+                    <img id="profileAvatarImg" src="" alt="الصورة الشخصية">
+                    <div class="avatar-overlay">
+                        <i class="fas fa-camera"></i>
+                        <span>تغيير</span>
+                    </div>
+                </div>
+                <input type="file" id="avatarUpload" accept="image/*" style="display:none;">
+                <h3 class="profile-display-name" id="profileDisplayName">—</h3>
+                <div class="profile-role-badge" id="profileRoleBadge">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>تلميذ</span>
+                </div>
+
+                <div class="profile-info-cards" id="profileInfoCards">
+                    <div class="info-card">
+                        <div class="info-icon icon-blue"><i class="fas fa-user"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">الاسم الكامل</span>
+                            <span class="info-value" id="profileName">—</span>
+                        </div>
+                    </div>
+                    <div class="info-card">
+                        <div class="info-icon icon-purple"><i class="fas fa-envelope"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">البريد الإلكتروني</span>
+                            <span class="info-value" id="profileEmail" dir="ltr">—</span>
+                        </div>
+                    </div>
+                    <div class="info-card" id="classInfoCard">
+                        <div class="info-icon icon-green"><i class="fas fa-graduation-cap"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">القسم</span>
+                            <span class="info-value" id="profileClass">—</span>
+                        </div>
+                    </div>
+                    <div class="info-card" id="pointsInfoCard">
+                        <div class="info-icon icon-gold"><i class="fas fa-star"></i></div>
+                        <div class="info-content">
+                            <span class="info-label">نقاط التميز</span>
+                            <span class="info-value" id="profilePoints">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-divider"><span>الإعدادات</span></div>
+
+                <div class="password-input-wrapper">
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="newPassword" placeholder="كلمة المرور الجديدة" minlength="8">
+                    <button class="toggle-pwd" onclick="window.togglePasswordVisibility('newPassword', this)" type="button">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+                <button id="updatePasswordBtn" class="btn-profile-action btn-primary">
+                    <i class="fas fa-key"></i>
+                    <span>تغيير كلمة المرور</span>
+                </button>
+
+                <button id="logoutBtn" class="btn-profile-action btn-danger">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>تسجيل الخروج</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { supabase, showToast, escapeHtml } from './supabase.js';
+        import { initLanguage } from './language.js';
+        import {
+            initNotifications,
+            loadNotifications,
+            renderNotifications,
+            markAllAsRead,
+            clearAllNotifications
+        } from './notifications.js';
+
+        window.addEventListener('error', (e) => console.error('❌ Global error:', e.message));
+        window.addEventListener('unhandledrejection', (e) => console.error('❌ Unhandled promise:', e.reason));
+
+        function updateOnlineStatus() {
+            const banner = document.getElementById('offlineBanner');
+            if (!banner) return;
+            if (navigator.onLine) banner.classList.remove('active');
+            else banner.classList.add('active');
+        }
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        initLanguage();
+
+        let currentUser = null;
+        let homeworksData = [];
+        let isHomeworkEditMode = false;
+        let isScheduleEditMode = false;
+        let scheduleData = [];
+        let dateTimeIntervalId = null;
+        let isAvatarUploading = false;
+
+        async function checkSession() {
+            try {
+                const savedUserStr = localStorage.getItem('currentUser');
+                if (!savedUserStr || savedUserStr === 'null') {
+                    window.location.href = 'login.html';
+                    return false;
+                }
+
+                const savedUser = JSON.parse(savedUserStr);
+                if (!savedUser || !savedUser.id) {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'login.html';
+                    return false;
+                }
+
+                const { data, error } = await supabase
+                    .from('students')
+                    .select('id, name, email, class, role, points, avatar_url, gender')
+                    .eq('id', savedUser.id)
+                    .single();
+
+                if (error || !data) {
+                    localStorage.removeItem('currentUser');
+                    window.location.href = 'login.html';
+                    return false;
+                }
+
+                currentUser = {
+                    id: data.id,
+                    name: data.name,
+                    email: data.email,
+                    class: data.class,
+                    role: data.role || 'student',
+                    points: data.points || 0,
+                    avatar_url: data.avatar_url || null,
+                    gender: data.gender || null
+                };
+
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                return true;
+            } catch (error) {
+                console.error('❌ خطأ في التحقق:', error);
+                window.location.href = 'login.html';
+                return false;
+            }
+        }
+
+        function showCorrectDashboard() {
+            const role = currentUser.role || 'student';
+
+            document.getElementById('studentDashboard').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'none';
+
+            if (role === 'student') {
+                document.getElementById('studentDashboard').style.display = 'block';
+                loadStudentData();
+            } else {
+                document.getElementById('adminDashboard').style.display = 'block';
+
+                const title = document.getElementById('adminPanelTitle');
+                if (role === 'developer') {
+                    title.textContent = '🛠️ لوحة الإدارة (وضع المطور)';
+                } else {
+                    title.textContent = '👑 لوحة الإشراف';
+                }
+
+                loadAdminData();
+                loadAdminMessages();
+            }
+
+            const adminCard = document.getElementById('adminServiceCard');
+            if (adminCard) {
+                adminCard.style.display = (role === 'admin' || role === 'developer') ? 'flex' : 'none';
+            }
+
+            const pointsCard = document.getElementById('pointsInfoCard');
+            if (pointsCard) {
+                pointsCard.classList.toggle('hidden', role !== 'student');
+            }
+
+            const classCard = document.getElementById('classInfoCard');
+            if (classCard) {
+                classCard.classList.toggle('hidden', !currentUser.class);
+            }
+        }
+
+        window.toggleFullScreen = function() {
+            const section = document.getElementById('adminMessengerSection');
+            const icon = document.getElementById('fullscreenIcon');
+            if (!section) return;
+            section.classList.toggle('fullscreen');
+            if (section.classList.contains('fullscreen')) {
+                icon.className = 'fas fa-compress';
+            } else {
+                icon.className = 'fas fa-expand';
+            }
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const section = document.getElementById('adminMessengerSection');
+                if (section && section.classList.contains('fullscreen')) {
+                    window.toggleFullScreen();
+                }
+            }
+        });
+
+        const defaultSchedule = [
+            { day: "الأحد", morning: "🌟 يوم عطلة رسمي 🌟", evening: "", isHoliday: true },
+            { day: "الإثنين", morning: "📐 الرياضيات\n⚡ الفيزياء", evening: "📖 اللغة العربية\n🕌 التربية الإسلامية" },
+            { day: "الثلاثاء", morning: "🔬 العلوم\n📐 الرياضيات", evening: "🇬🇧 الإنجليزية\n💭 الفلسفة" },
+            { day: "الأربعاء", morning: "⚡ الفيزياء\n📐 الرياضيات", evening: "📜 التاريخ\n🇫🇷 الفرنسية" },
+            { day: "الخميس", morning: "📐 الرياضيات\n🔬 العلوم", evening: "⚡ الفيزياء\n🏃 التربية البدنية" },
+            { day: "الجمعة", morning: "⚪ صباح فارغ", evening: "📐 الرياضيات (15:00-17:00)\n⚡ الفيزياء (17:00-19:00)" },
+            { day: "السبت", morning: "💭 الفلسفة\n🇬🇧 الإنجليزية", evening: "⚪ لا توجد حصص مسائية" }
+        ];
+
+        function loadStudentData() {
+            loadSchedule();
+            loadHomeworks();
+            loadMessagesCount();
+            loadUserPoints();
+        }
+
+        function loadSchedule() {
+            const saved = localStorage.getItem('scheduleData');
+            if (saved) {
+                try {
+                    scheduleData = JSON.parse(saved);
+                } catch (e) {
+                    scheduleData = JSON.parse(JSON.stringify(defaultSchedule));
+                }
+            } else {
+                scheduleData = JSON.parse(JSON.stringify(defaultSchedule));
+            }
+            displaySchedule();
+        }
+
+        function displaySchedule() {
+            const container = document.getElementById('scheduleTable');
+            if (!container) return;
+
+            if (isScheduleEditMode) {
+                let html = `<table><thead><tr><th>اليوم</th><th>الفترة الصباحية</th><th>الفترة المسائية</th><th>إجراءات</th></tr></thead><tbody>`;
+                scheduleData.forEach((day, index) => {
+                    html += `<tr>
+                        <td class="day-cell">${escapeHtml(day.day)}</td>
+                        <td>${day.isHoliday ? `<input type="text" class="edit-input" value="${escapeHtml(day.morning)}" id="schedule_morning_${index}">` : `<textarea class="edit-input" id="schedule_morning_${index}" rows="2">${escapeHtml(day.morning)}</textarea>`}</td>
+                        <td>${day.isHoliday ? `<span style="color:rgba(255, 255, 255, 0.58);font-size:0.7rem;">لا توجد حصص</span>` : `<textarea class="edit-input" id="schedule_evening_${index}" rows="2">${escapeHtml(day.evening)}</textarea>`}</td>
+                        <td><button class="btn-action" onclick="window.toggleHoliday(${index})" style="font-size:0.6rem;">${day.isHoliday ? '📅 إلغاء' : '🌟 عطلة'}</button></td>
+                    </tr>`;
+                });
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+            } else {
+                let html = `<table><thead><tr><th>اليوم</th><th>الفترة الصباحية</th><th>الفترة المسائية</th></tr></thead><tbody>`;
+                scheduleData.forEach(day => {
+                    if (day.isHoliday) {
+                        html += `<tr><td class="day-cell">${escapeHtml(day.day)}</td><td colspan="2" class="holiday-cell">🌟 ${escapeHtml(day.morning)}</td></tr>`;
+                    } else {
+                        html += `<tr><td class="day-cell">${escapeHtml(day.day)}</td>
+                            <td>${day.morning.split('\n').filter(m => m.trim()).map(m => `<div class="subject-item">${escapeHtml(m)}</div>`).join('')}</td>
+                            <td>${day.evening.split('\n').filter(e => e.trim()).map(e => `<div class="subject-item">${escapeHtml(e)}</div>`).join('')}</td>
+                        </tr>`;
+                    }
+                });
+                html += `</tbody></table>`;
+                container.innerHTML = html;
+            }
+        }
+
+        window.toggleScheduleEdit = function() {
+            isScheduleEditMode = !isScheduleEditMode;
+            document.getElementById('editScheduleBtn').style.display = isScheduleEditMode ? 'none' : 'inline-flex';
+            document.getElementById('saveScheduleBtn').style.display = isScheduleEditMode ? 'inline-flex' : 'none';
+            displaySchedule();
+        };
+
+        window.toggleHoliday = function(index) {
+            if (!isScheduleEditMode) return;
+            scheduleData[index].isHoliday = !scheduleData[index].isHoliday;
+            displaySchedule();
+        };
+
+        window.saveSchedule = function() {
+            if (!isScheduleEditMode) return;
+            scheduleData.forEach((day, index) => {
+                const morningInput = document.getElementById(`schedule_morning_${index}`);
+                const eveningInput = document.getElementById(`schedule_evening_${index}`);
+                if (morningInput && !day.isHoliday) day.morning = morningInput.value;
+                if (eveningInput && !day.isHoliday) day.evening = eveningInput.value;
+            });
+            localStorage.setItem('scheduleData', JSON.stringify(scheduleData));
+            isScheduleEditMode = false;
+            document.getElementById('editScheduleBtn').style.display = 'inline-flex';
+            document.getElementById('saveScheduleBtn').style.display = 'none';
+            displaySchedule();
+            showToast('✅ تم حفظ الجدول بنجاح!', 'success');
+        };
+
+        async function loadHomeworks() {
+            if (!currentUser) return;
+            const container = document.getElementById('homeworkList');
+            if (container) {
+                container.innerHTML = `
+                    <div class="skeleton-card"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                    <div class="skeleton-card"><div class="skeleton-line"></div><div class="skeleton-line short"></div></div>
+                `;
+            }
+
+            try {
+                const { data, error } = await supabase
+                    .from('homeworks')
+                    .select('*')
+                    .eq('student_id', currentUser.id)
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+                homeworksData = data || [];
+                displayHomeworks();
+                updateCompletionRate();
+            } catch (error) {
+                homeworksData = [];
+                displayHomeworks();
+            }
+        }
+
+        function displayHomeworks() {
+            const container = document.getElementById('homeworkList');
+            if (!container) return;
+
+            if (isHomeworkEditMode) {
+                if (homeworksData.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align:center; color:rgba(255, 255, 255, 0.58); padding:1rem;">
+                            <i class="fas fa-plus-circle" style="font-size:2rem; display:block; margin-bottom:0.5rem;"></i>
+                            <span>لا توجد واجبات حالياً</span>
+                        </div>
+                        <button class="add-btn" onclick="window.addHomework()"><i class="fas fa-plus"></i> إضافة واجب جديد</button>
+                    `;
+                    return;
+                }
+                container.innerHTML = homeworksData.map((hw, index) => `
+                    <div class="homework-card edit-mode">
+                        <div class="homework-info" style="flex:1;width:100%;">
+                            <input type="text" class="edit-input" value="${escapeHtml(hw.subject || '')}" id="hw_subject_${index}" placeholder="المادة">
+                            <input type="text" class="edit-input" value="${escapeHtml(hw.task || '')}" id="hw_task_${index}" placeholder="الوصف">
+                            <input type="date" class="edit-input" value="${escapeHtml(hw.deadline || '')}" id="hw_deadline_${index}" style="width:100%;">
+                        </div>
+                        <button class="delete-btn" onclick="window.deleteHomework(${index})"><i class="fas fa-trash"></i> حذف</button>
+                    </div>
+                `).join('') + `<button class="add-btn" onclick="window.addHomework()"><i class="fas fa-plus"></i> إضافة واجب جديد</button>`;
+            } else {
+                if (homeworksData.length === 0) {
+                    container.innerHTML = `<div style="text-align:center; color:rgba(255, 255, 255, 0.58); padding:1rem;">لا توجد واجبات حالياً</div>`;
+                    return;
+                }
+                container.innerHTML = homeworksData.map(hw => `
+                    <div class="homework-card">
+                        <div class="homework-info">
+                            <h4>📖 ${escapeHtml(hw.subject || 'مادة')}</h4>
+                            <p>${escapeHtml(hw.task || 'لا يوجد وصف')}</p>
+                        </div>
+                        <div class="homework-deadline"><i class="fas fa-clock"></i> ${escapeHtml(hw.deadline || 'غير محدد')}</div>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('remainingHomeworks').textContent = homeworksData.length;
+        }
+
+        function updateCompletionRate() {
+            const rateEl = document.getElementById('completionRate');
+            if (!rateEl) return;
+            const total = homeworksData.length;
+            if (total === 0) { rateEl.textContent = '0%'; return; }
+            const rate = Math.min(70 + (total * 3), 100);
+            rateEl.textContent = `${rate}%`;
+        }
+
+        window.saveHomeworks = async function() {
+            const newHomeworks = [];
+            for (let i = 0; i < homeworksData.length; i++) {
+                const subjectInput = document.getElementById(`hw_subject_${i}`);
+                const taskInput = document.getElementById(`hw_task_${i}`);
+                const deadlineInput = document.getElementById(`hw_deadline_${i}`);
+                if (subjectInput && taskInput && deadlineInput) {
+                    newHomeworks.push({
+                        subject: subjectInput.value || 'مادة',
+                        task: taskInput.value || 'وصف',
+                        deadline: deadlineInput.value || 'غير محدد',
+                        completed: homeworksData[i]?.completed || false
+                    });
+                }
+            }
+            homeworksData = newHomeworks;
+
+            if (currentUser) {
+                try {
+                    await supabase.from('homeworks').delete().eq('student_id', currentUser.id);
+                    if (homeworksData.length > 0) {
+                        const insertData = homeworksData.map(hw => ({
+                            student_id: currentUser.id,
+                            subject: hw.subject,
+                            task: hw.task,
+                            deadline: hw.deadline,
+                            completed: hw.completed || false
+                        }));
+                        await supabase.from('homeworks').insert(insertData);
+                    }
+                } catch (error) {
+                    console.error('خطأ في حفظ الواجبات:', error);
+                }
+            }
+            window.toggleHomeworkEdit();
+            displayHomeworks();
+            updateCompletionRate();
+            showToast('✅ تم حفظ الواجبات بنجاح!', 'success');
+        };
+
+        window.toggleHomeworkEdit = function() {
+            isHomeworkEditMode = !isHomeworkEditMode;
+            document.getElementById('editHomeworkBtn').style.display = isHomeworkEditMode ? 'none' : 'inline-flex';
+            document.getElementById('saveHomeworkBtn').style.display = isHomeworkEditMode ? 'inline-flex' : 'none';
+            displayHomeworks();
+        };
+
+        window.addHomework = function() {
+            homeworksData.push({
+                subject: "مادة جديدة",
+                task: "وصف الواجب",
+                deadline: new Date().toISOString().split('T')[0],
+                completed: false
+            });
+            displayHomeworks();
+        };
+
+        window.deleteHomework = function(index) {
+            if (!confirm('حذف هذا الواجب؟')) return;
+            homeworksData.splice(index, 1);
+            displayHomeworks();
+            updateCompletionRate();
+        };
+
+        async function loadMessagesCount() {
+            if (!currentUser) return;
+            try {
+                const { data, error } = await supabase
+                    .from('messages')
+                    .select('id, status')
+                    .eq('student_id', currentUser.id)
+                    .eq('channel', 'admin');
+
+                if (error) throw error;
+                const repliedCount = (data || []).filter(m => m.status === 'replied').length;
+                const unreadEl = document.getElementById('unreadCount');
+                if (unreadEl) unreadEl.textContent = repliedCount;
+            } catch (error) {}
+        }
+
+        async function loadUserPoints() {
+            if (!currentUser) return;
+            try {
+                const { data, error } = await supabase
+                    .from('students')
+                    .select('points, last_login')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (!error && data) {
+                    let finalPoints = data.points || 0;
+                    const now = Date.now();
+                    const lastLogin = data.last_login ? new Date(data.last_login).getTime() : 0;
+                    const hoursPassed = (now - lastLogin) / (1000 * 60 * 60);
+
+                    if (hoursPassed >= 24) {
+                        finalPoints += 10;
+                        await supabase.from('students').update({
+                            points: finalPoints,
+                            last_login: new Date().toISOString()
+                        }).eq('id', currentUser.id);
+
+                        showToast('🎁 حصلت على 10 نقاط لدخولك اليومي!', 'success');
+                    }
+
+                    const pointsEl = document.getElementById('userPoints');
+                    const bannerPointsEl = document.getElementById('bannerPoints');
+
+                    if (pointsEl) pointsEl.textContent = finalPoints;
+                    if (bannerPointsEl) bannerPointsEl.textContent = finalPoints;
+
+                    currentUser.points = finalPoints;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل النقاط:', error);
+            }
+        }
+
+        async function loadAdminData() {
+            try {
+                const [
+                    studentsRes,
+                    messagesRes,
+                    ideasRes,
+                    resourcesRes,
+                    announcementsRes,
+                    adminsRes
+                ] = await Promise.all([
+                    supabase.from('students').select('*', { count: 'exact', head: true }),
+                    supabase.from('messages').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+                    supabase.from('ideas').select('*', { count: 'exact', head: true }),
+                    supabase.from('resources').select('*', { count: 'exact', head: true }).eq('status', 'pending'),
+                    supabase.from('announcements').select('*', { count: 'exact', head: true }),
+                    supabase.from('students').select('*', { count: 'exact', head: true }).eq('role', 'admin')
+                ]);
+
+                document.getElementById('adminTotalStudents').textContent = studentsRes.count || 0;
+                document.getElementById('adminNewMessages').textContent = messagesRes.count || 0;
+                document.getElementById('adminIdeas').textContent = ideasRes.count || 0;
+                document.getElementById('adminPendingResources').textContent = resourcesRes.count || 0;
+                document.getElementById('adminAnnouncements').textContent = announcementsRes.count || 0;
+                document.getElementById('adminAdmins').textContent = adminsRes.count || 0;
+
+            } catch (error) {
+                console.error('خطأ في تحميل بيانات المشرف:', error);
+            }
+        }
+
+             const DEFAULT_AVATARS = {
+            female: 'avatar-girl.png',
+            male: 'avatar-boy.png'
+        };
+
+        function normalizeGender(g) {
+            const v = String(g || '').trim().toLowerCase();
+            if (v === 'female' || v === 'أنثى') return 'female';
+            if (v === 'male' || v === 'ذكر') return 'male';
+            return null;
+        }
+
+        function getDefaultAvatarUrl(g) {
+            return DEFAULT_AVATARS[normalizeGender(g)] || null;
+        }
+
+        function loadUserInfo() {
+            if (!currentUser) return;
+            const safeName = escapeHtml(currentUser.name);
+
+            const g = normalizeGender(currentUser.gender);
+            const welcomeText = g === 'female' ? 'أهلاً بكِ يا بطلة'
+                              : g === 'male'   ? 'أهلاً بك يا بطل'
+                              : null;
+
+            document.getElementById('welcomeName').innerHTML = welcomeText
+                ? `${welcomeText}، ${safeName}`
+                : `<span data-i18n="welcome">أهلاً بك</span>، ${safeName}`;
+
+            const roleLabels = {
+                'student': 'تلميذ',
+                'admin': 'مشرف',
+                'developer': 'مطور'
+            };
+
+            const roleLabel = roleLabels[currentUser.role] || 'تلميذ';
+            const classInfo = currentUser.class ? ` | القسم: ${currentUser.class}` : '';
+            document.getElementById('userInfo').textContent = `${roleLabel}${classInfo}`;
+        }
+
+        // ═══════════════════════════════════════════
+        // ✅ تحميل وعرض الصورة الشخصية - محسّن
+        // ═══════════════════════════════════════════
+        async function loadAvatar() {
+            if (!currentUser) return;
+            const headerAvatar = document.getElementById('headerAvatar');
+            if (!headerAvatar) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('students')
+                    .select('avatar_url, gender')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (error) throw error;
+
+                if (data?.avatar_url) {
+                    headerAvatar.innerHTML = `
+                        <img src="${data.avatar_url}"
+                             style="width:100%;height:100%;border-radius:50%;object-fit:cover;"
+                             alt="${escapeHtml(currentUser.name)}"
+                             onerror="this.parentElement.innerHTML='<i class=\\"fas fa-user-graduate\\"></i>'">
+                    `;
+                    currentUser.avatar_url = data.avatar_url;
+                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                } else {
+                    const defaultUrl = getDefaultAvatarUrl(data?.gender || currentUser.gender);
+                    if (defaultUrl) {
+                        headerAvatar.innerHTML = `
+                            <img src="${defaultUrl}"
+                                 style="width:100%;height:100%;border-radius:50%;object-fit:cover;"
+                                 alt="${escapeHtml(currentUser.name)}"
+                                 onerror="this.parentElement.innerHTML='<i class=&quot;fas fa-user-graduate&quot;></i>'">
+                        `;
+                    } else {
+                        headerAvatar.innerHTML = '<i class="fas fa-user-graduate"></i>';
+                    }
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل الصورة:', error);
+                headerAvatar.innerHTML = '<i class="fas fa-user-graduate"></i>';
+            }
+        }
+
+        async function loadServiceBadges() {
+            if (!currentUser) return;
+            try {
+                const { count: adminMessages } = await supabase
+                    .from('messages')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('student_id', currentUser.id)
+                    .eq('channel', 'admin')
+                    .eq('status', 'replied');
+
+                const msgBadge = document.getElementById('messagesServiceBadge');
+                if (msgBadge && adminMessages > 0) {
+                    msgBadge.textContent = adminMessages > 99 ? '99+' : adminMessages;
+                    msgBadge.style.display = 'flex';
+                }
+
+                const threeDaysAgo = new Date();
+                threeDaysAgo.setDate(threeDaysAgo.getDate() - 3);
+
+                const { count: recentAnnouncements } = await supabase
+                    .from('announcements')
+                    .select('*', { count: 'exact', head: true })
+                    .gte('created_at', threeDaysAgo.toISOString());
+
+                const annBadge = document.getElementById('announcementsServiceBadge');
+                if (annBadge && recentAnnouncements > 0) {
+                    annBadge.textContent = recentAnnouncements > 9 ? '9+' : recentAnnouncements;
+                    annBadge.style.display = 'flex';
+                }
+            } catch (error) {}
+        }
+
+        function updateDateTime() {
+            const el = document.getElementById('dateTime');
+            if (!el) return;
+            const now = new Date();
+            el.innerHTML = `<i class="fas fa-calendar-alt"></i> ${now.toLocaleString('fr-FR', { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' })}`;
+        }
+
+        window.openModal = function(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        };
+
+        window.closeModal = function(id) {
+            const modal = document.getElementById(id);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        };
+
+        window.openStatModal = async function(type) {
+            if (currentUser.role !== 'student') {
+                showToast('ℹ️ هذه الميزة للتلاميذ فقط', 'info');
+                return;
+            }
+
+            const title = document.getElementById('statModalTitle');
+            const body = document.getElementById('statModalBody');
+            let content = '';
+
+            if (type === 'homeworks') {
+                title.innerHTML = '<i class="fas fa-tasks"></i> تفاصيل الواجبات';
+                if (homeworksData.length === 0) {
+                    content = '<div class="empty-message"><i class="fas fa-check-circle"></i><p>لا توجد واجبات حالياً!</p></div>';
+                } else {
+                    content = homeworksData.map(h => `
+                        <div style="background:rgba(255, 255, 255, 0.05);padding:0.7rem;border-radius:12px;margin-bottom:0.5rem;">
+                            <strong>📖 ${escapeHtml(h.subject)}</strong>
+                            <br><span style="color:rgba(255, 255, 255, 0.72);font-size:0.85rem;">${escapeHtml(h.task)}</span>
+                            <br><span style="color:#ff6b6b;font-size:0.75rem;">⏰ ${escapeHtml(h.deadline)}</span>
+                        </div>
+                    `).join('');
+                }
+            } else if (type === 'messages') {
+                title.innerHTML = '<i class="fas fa-envelope"></i> تفاصيل الرسائل';
+                await loadMessagesForModal();
+                window.openModal('statModal');
+                return;
+            } else if (type === 'progress') {
+                const rate = document.getElementById('completionRate')?.textContent || '0%';
+                title.innerHTML = '<i class="fas fa-check-circle"></i> نسبة الإنجاز';
+                content = `
+                    <div style="text-align:center;padding:1rem;">
+                        <div style="font-size:3rem;color:#ffd700;">${escapeHtml(rate)}</div>
+                        <p style="color:rgba(255, 255, 255, 0.72);">✅ ${homeworksData.length} واجب</p>
+                    </div>
+                `;
+            } else if (type === 'points') {
+                const points = currentUser?.points || 0;
+                title.innerHTML = '<i class="fas fa-star"></i> نقاط التميز';
+                content = `
+                    <div style="text-align:center;padding:1rem;">
+                        <div style="font-size:3rem;color:#ffd700;">⭐ ${escapeHtml(String(points))}</div>
+                    </div>
+                `;
+            }
+            body.innerHTML = content;
+            window.openModal('statModal');
+        };
+
+        async function loadMessagesForModal() {
+            try {
+                const { data, error } = await supabase
+                    .from('messages')
+                    .select('*')
+                    .eq('student_id', currentUser.id)
+                    .eq('channel', 'admin')
+                    .order('created_at', { ascending: false });
+
+                const body = document.getElementById('statModalBody');
+                if (!body) return;
+
+                if (error || !data || data.length === 0) {
+                    body.innerHTML = '<div class="empty-message"><i class="fas fa-inbox"></i><p>لا توجد رسائل</p></div>';
+                    return;
+                }
+
+                body.innerHTML = data.map(msg => `
+                    <div style="background:rgba(255, 255, 255, 0.05);padding:0.9rem;border-radius:12px;margin-bottom:0.6rem;">
+                        <div style="font-weight:600;color:#ffd700;font-size:0.85rem;">${msg.status === 'replied' ? '📌 الإدارة' : '👤 أنت'}</div>
+                        <div style="color:#ffffff;font-size:0.9rem;margin:0.3rem 0;">${escapeHtml(msg.message)}</div>
+                        ${msg.reply ? `
+                            <div style="margin-top:6px;padding:8px 12px;background:rgba(255,215,0,0.1);border-radius:8px;border-right:3px solid #ffd700;">
+                                <div style="color:#ffd700;font-weight:600;font-size:0.75rem;">✏️ الرد:</div>
+                                <div style="color:#ffffff;font-size:0.85rem;">${escapeHtml(msg.reply)}</div>
+                            </div>
+                        ` : ''}
+                        <div style="color:rgba(255, 255, 255, 0.58);font-size:0.65rem;margin-top:4px;">${new Date(msg.created_at).toLocaleString('ar-EG')}</div>
+                    </div>
+                `).join('');
+            } catch (error) {}
+        }
+
+        window.openProfileModal = async function() {
+            const modal = document.getElementById('profileModal');
+            if (!modal || !currentUser) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('students')
+                    .select('avatar_url, name, email, class, role, points, gender')
+                    .eq('id', currentUser.id)
+                    .single();
+
+                if (error) throw error;
+
+                const avatarImg = document.getElementById('profileAvatarImg');
+                const profileDefaultUrl = getDefaultAvatarUrl(data?.gender || currentUser.gender);
+                if (data?.avatar_url) {
+                    avatarImg.src = data.avatar_url;
+                    avatarImg.style.display = 'block';
+                } else if (profileDefaultUrl) {
+                    avatarImg.src = profileDefaultUrl;
+                    avatarImg.style.display = 'block';
+                } else {
+                    avatarImg.src = '';
+                    avatarImg.style.display = 'none';
+                }
+
+                document.getElementById('profileDisplayName').textContent = data.name || 'مستخدم';
+
+                const roleBadge = document.getElementById('profileRoleBadge');
+                if (data.role === 'developer') {
+                    roleBadge.className = 'profile-role-badge developer';
+                    roleBadge.innerHTML = '<i class="fas fa-code"></i><span>مطور</span>';
+                } else if (data.role === 'admin') {
+                    roleBadge.className = 'profile-role-badge admin';
+                    roleBadge.innerHTML = '<i class="fas fa-crown"></i><span>مشرف</span>';
+                } else {
+                    roleBadge.className = 'profile-role-badge student';
+                    const studentLabel = normalizeGender(data.gender || currentUser.gender) === 'female' ? 'تلميذة' : 'تلميذ';
+                    roleBadge.innerHTML = `<i class="fas fa-user-graduate"></i><span>${studentLabel}</span>`;
+                }
+
+                document.getElementById('profileName').textContent = data.name || '—';
+                document.getElementById('profileEmail').textContent = data.email || '—';
+                document.getElementById('profileClass').textContent = data.class || '—';
+                document.getElementById('profilePoints').textContent = data.points || 0;
+            } catch (error) {
+                console.error('خطأ في فتح الملف الشخصي:', error);
+            }
+
+            window.openModal('profileModal');
+        };
+
+        window.togglePasswordVisibility = function(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            const icon = btn.querySelector('i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fas fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fas fa-eye';
+            }
+        };
+
+        // ═══════════════════════════════════════════
+        // ✅ رفع الصورة الشخصية - نسخة محسّنة
+        // ═══════════════════════════════════════════
+
+        document.getElementById('profileAvatarLarge')?.addEventListener('click', () => {
+            if (isAvatarUploading) return;
+            document.getElementById('avatarUpload')?.click();
+        });
+
+        document.getElementById('avatarUpload')?.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file || !currentUser) return;
+
+            if (isAvatarUploading) {
+                showToast('⏳ جاري الرفع...', 'info');
+                return;
+            }
+
+            if (!file.type.startsWith('image/')) {
+                showToast('⚠️ الرجاء اختيار صورة صالحة', 'error');
+                e.target.value = '';
+                return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+                showToast('⚠️ حجم الصورة كبير جداً (الحد الأقصى 2MB)', 'error');
+                e.target.value = '';
+                return;
+            }
+
+            isAvatarUploading = true;
+
+            const avatarContainer = document.getElementById('profileAvatarLarge');
+            const profileImg = document.getElementById('profileAvatarImg');
+            const headerAvatar = document.getElementById('headerAvatar');
+            const oldAvatarSrc = profileImg?.src || '';
+
+            // معاينة فورية
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                if (profileImg) {
+                    profileImg.src = ev.target.result;
+                    profileImg.style.display = 'block';
+                }
+                if (headerAvatar) {
+                    headerAvatar.innerHTML = `<img src="${ev.target.result}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="Avatar">`;
+                }
+            };
+            reader.readAsDataURL(file);
+
+            if (avatarContainer) {
+                avatarContainer.style.opacity = '0.6';
+                avatarContainer.style.pointerEvents = 'none';
+            }
+
+            try {
+                const fileExt = file.name.split('.').pop().toLowerCase();
+                const fileName = `${Date.now()}.${fileExt}`;
+                const filePath = `${currentUser.id}/${fileName}`;
+
+                // حذف الصور القديمة
+                try {
+                    const { data: oldFiles } = await supabase.storage
+                        .from('profile-pictures')
+                        .list(currentUser.id, { limit: 100 });
+
+                    if (oldFiles && oldFiles.length > 0) {
+                        const filesToDelete = oldFiles.map(f => `${currentUser.id}/${f.name}`);
+                        await supabase.storage.from('profile-pictures').remove(filesToDelete);
+                    }
+                } catch (cleanupError) {
+                    console.warn('⚠️ لم يتم حذف الصور القديمة:', cleanupError);
+                }
+
+                const { error: uploadError } = await supabase.storage
+                    .from('profile-pictures')
+                    .upload(filePath, file, {
+                        cacheControl: '3600',
+                        upsert: true,
+                        contentType: file.type
+                    });
+
+                if (uploadError) throw uploadError;
+
+                const { data: urlData } = supabase.storage
+                    .from('profile-pictures')
+                    .getPublicUrl(filePath);
+
+                const avatarUrl = urlData.publicUrl;
+
+                const { error: updateError } = await supabase
+                    .from('students')
+                    .update({ avatar_url: avatarUrl })
+                    .eq('id', currentUser.id);
+
+                if (updateError) throw updateError;
+
+                currentUser.avatar_url = avatarUrl;
+                localStorage.setItem('currentUser', JSON.stringify(currentUser));
+
+                if (profileImg) profileImg.src = avatarUrl;
+                if (headerAvatar) {
+                    headerAvatar.innerHTML = `<img src="${avatarUrl}" style="width:100%;height:100%;border-radius:50%;object-fit:cover;" alt="Avatar">`;
+                }
+
+                showToast('✅ تم تحديث الصورة الشخصية بنجاح!', 'success');
+
+            } catch (error) {
+                console.error('❌ خطأ في رفع الصورة:', error);
+                showToast('❌ فشل رفع الصورة: ' + error.message, 'error');
+
+                if (profileImg) {
+                    profileImg.src = oldAvatarSrc;
+                    profileImg.style.display = oldAvatarSrc ? 'block' : 'none';
+                }
+                await loadAvatar();
+            } finally {
+                isAvatarUploading = false;
+                if (avatarContainer) {
+                    avatarContainer.style.opacity = '1';
+                    avatarContainer.style.pointerEvents = 'auto';
+                }
+                e.target.value = '';
+            }
+        });
+
+        document.getElementById('updatePasswordBtn')?.addEventListener('click', async () => {
+            const newPassword = document.getElementById('newPassword').value;
+            if (!newPassword) { showToast('⚠️ أدخل كلمة المرور', 'error'); return; }
+            if (newPassword.length < 8) { showToast('⚠️ 8 أحرف على الأقل', 'error'); return; }
+
+            try {
+                const { error } = await supabase
+                    .from('students')
+                    .update({ password: newPassword })
+                    .eq('id', currentUser.id);
+
+                if (error) throw error;
+
+                showToast('✅ تم تغيير كلمة المرور!', 'success');
+                document.getElementById('newPassword').value = '';
+                window.closeModal('profileModal');
+            } catch (error) {
+                showToast('❌ خطأ: ' + error.message, 'error');
+            }
+        });
+
+        document.getElementById('logoutBtn')?.addEventListener('click', () => {
+            if (confirm('هل أنت متأكد من تسجيل الخروج؟')) {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('session_token');
+                window.location.href = 'index.html';
+            }
+        });
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // ═══════════════════════════════════════════
+        // 🔔 الإشعارات (كلاس active فقط - بدون أي style مباشر)
+        // ═══════════════════════════════════════════
+        const notifMobileQuery = window.matchMedia('(max-width: 768px)');
+        let notifHome = null; // المكان الأصلي للقائمة داخل الهيدر
+
+        // نقل القائمة إلى body على الهاتف (لتجنب تأثير العناصر الأب)، وإعادتها على الحاسوب
+        function placeNotificationsDropdown() {
+            const dropdown = document.getElementById('notificationsDropdown');
+            if (!dropdown) return;
+            if (!notifHome) notifHome = dropdown.parentElement;
+
+            const shouldBeOnBody = notifMobileQuery.matches && dropdown.classList.contains('active');
+            if (shouldBeOnBody) {
+                if (dropdown.parentElement !== document.body) document.body.appendChild(dropdown);
+            } else if (notifHome && dropdown.parentElement !== notifHome) {
+                notifHome.appendChild(dropdown);
+            }
+        }
+
+        notifMobileQuery.addEventListener('change', placeNotificationsDropdown);
+
+        window.toggleNotifications = function(event) {
+            if (event) event.stopPropagation();
+            const dropdown = document.getElementById('notificationsDropdown');
+            const trigger = document.getElementById('notificationsTrigger');
+            if (!dropdown || !trigger) return;
+
+            const isActive = dropdown.classList.contains('active');
+
+            if (isActive) {
+                dropdown.classList.remove('active');
+                placeNotificationsDropdown();
+            } else {
+                // إزالة أي ستايلات سابقة لتجنب التداخل
+                dropdown.style.position = '';
+                dropdown.style.top = '';
+                dropdown.style.left = '';
+                dropdown.style.transform = '';
+
+                dropdown.classList.add('active');
+                placeNotificationsDropdown();
+                if (currentUser) {
+                    loadNotifications(currentUser.id).then(() => renderNotifications());
+                }
+            }
+        };
+
+        window.markAllNotificationsRead = async function() {
+            await markAllAsRead();
+            showToast('✅ تم تعليم الكل كمقروء', 'success');
+        };
+
+        window.clearAllNotifications = async function() {
+            await clearAllNotifications();
+            showToast('🗑️ تم حذف الكل', 'success');
+        };
+
+        function closeNotifications() {
+            const dropdown = document.getElementById('notificationsDropdown');
+            if (dropdown) {
+                dropdown.classList.remove('active');
+                placeNotificationsDropdown();
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('notificationsDropdown');
+            const trigger = document.getElementById('notificationsTrigger');
+            if (dropdown && trigger && !dropdown.contains(e.target) && !trigger.contains(e.target)) {
+                closeNotifications();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeNotifications();
+        });
+
+        // ═══════════════════════════════════════════
+        // 📬 إدارة الرسائل والردود (للمشرف والمطور)
+        // ═══════════════════════════════════════════
+        let adminContacts = [];
+        let adminMessagesByStudent = {};
+        let activeAdminStudentId = null;
+        let adminSearchQuery = '';
+
+        function adminGetInitials(name) {
+            if (!name) return '؟';
+            const parts = name.trim().split(/\s+/);
+            if (parts.length >= 2) return parts[0][0] + parts[1][0];
+            return name.substring(0, 2).toUpperCase();
+        }
+
+        function adminFormatTimeAgo(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+            if (diff < 60) return 'الآن';
+            if (diff < 3600) return `${Math.floor(diff / 60)} د`;
+            if (diff < 86400) return `${Math.floor(diff / 3600)} س`;
+            if (diff < 604800) return `${Math.floor(diff / 86400)} ي`;
+            return date.toLocaleDateString('ar-EG', { day: 'numeric', month: 'numeric' });
+        }
+
+        function adminFormatTime(dateStr) {
+            if (!dateStr) return '';
+            return new Date(dateStr).toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function adminFormatFullDate(dateStr) {
+            if (!dateStr) return '';
+            const date = new Date(dateStr);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+            if (date.toDateString() === today.toDateString()) return 'اليوم';
+            if (date.toDateString() === yesterday.toDateString()) return 'أمس';
+            return date.toLocaleDateString('ar-EG', { day: 'numeric', month: 'long', year: 'numeric' });
+        }
+
+        async function loadAdminMessages() {
+            const list = document.getElementById('adminMsgList');
+            if (!list) return;
+
+            try {
+                const { data, error } = await supabase
+                    .from('messages')
+                    .select('*')
+                    .in('channel', ['admin', 'developer'])
+                    .eq('sender_role', 'student')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                const allMsgs = data || [];
+                adminMessagesByStudent = {};
+
+                allMsgs.forEach(msg => {
+                    const sid = msg.student_id || 'unknown';
+                    if (!adminMessagesByStudent[sid]) adminMessagesByStudent[sid] = [];
+                    adminMessagesByStudent[sid].push(msg);
+                });
+
+                adminContacts = Object.keys(adminMessagesByStudent).map(sid => {
+                    const msgs = adminMessagesByStudent[sid];
+                    const sortedMsgs = [...msgs].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                    const lastMsg = sortedMsgs[0];
+                    const unreadCount = msgs.filter(m => m.status === 'pending').length;
+
+                    return {
+                        student_id: sid,
+                        student_name: lastMsg.student_name || 'مجهول',
+                        student_class: lastMsg.student_class || '',
+                        last_message: lastMsg.message || '',
+                        last_time: lastMsg.created_at,
+                        total_messages: msgs.length,
+                        unread_count: unreadCount
+                    };
+                });
+
+                adminContacts.sort((a, b) => new Date(b.last_time) - new Date(a.last_time));
+
+                const countEl = document.getElementById('adminMsgCount');
+                if (countEl) countEl.textContent = `${adminContacts.length} محادثة`;
+
+                renderAdminMsgList();
+
+                if (activeAdminStudentId && adminMessagesByStudent[activeAdminStudentId]) {
+                    renderAdminChatBody(activeAdminStudentId);
+                }
+            } catch (error) {
+                console.error('خطأ في تحميل إدارة الرسائل:', error);
+                list.innerHTML = `<div class="admin-chat-empty"><p>خطأ في التحميل</p></div>`;
+            }
+        }
+
+        function renderAdminMsgList() {
+            const list = document.getElementById('adminMsgList');
+            if (!list) return;
+
+            let filtered = adminContacts;
+            if (adminSearchQuery.trim()) {
+                const q = adminSearchQuery.trim().toLowerCase();
+                filtered = adminContacts.filter(c =>
+                    (c.student_name || '').toLowerCase().includes(q) ||
+                    (c.student_class || '').toLowerCase().includes(q)
+                );
+            }
+
+            if (filtered.length === 0) {
+                list.innerHTML = `
+                    <div style="padding: 2rem 1rem; text-align: center; color:rgba(255, 255, 255, 0.58);">
+                        <i class="fas fa-inbox" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                        <p style="font-size: 0.75rem;">لا توجد رسائل</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = filtered.map(contact => {
+                const isActive = activeAdminStudentId === contact.student_id;
+                const hasUnread = contact.unread_count > 0;
+                const initial = adminGetInitials(contact.student_name);
+                const preview = contact.last_message.substring(0, 40) + (contact.last_message.length > 40 ? '...' : '');
+
+                return `
+                    <div class="admin-msg-item ${isActive ? 'active' : ''}" onclick="window.openAdminContact('${contact.student_id}')">
+                        <div class="admin-msg-avatar">${initial}</div>
+                        <div class="admin-msg-info">
+                            <div class="admin-msg-top">
+                                <span class="admin-msg-name">${escapeHtml(contact.student_name)}</span>
+                                <span class="admin-msg-time">${adminFormatTimeAgo(contact.last_time)}</span>
+                            </div>
+                            <div class="admin-msg-bottom">
+                                <span class="admin-msg-preview">${escapeHtml(preview)}</span>
+                                ${hasUnread ? `<span class="admin-msg-badge">${contact.unread_count}</span>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.filterAdminMessages = function(query) {
+            adminSearchQuery = query;
+            renderAdminMsgList();
+        };
+
+        window.openAdminContact = function(studentId) {
+            if (!adminMessagesByStudent[studentId]) return;
+
+            activeAdminStudentId = studentId;
+            const msgs = adminMessagesByStudent[studentId];
+            const firstMsg = msgs[0];
+
+            document.getElementById('adminChatEmpty').style.display = 'none';
+            document.getElementById('adminChatHeader').style.display = 'flex';
+            document.getElementById('adminChatBody').style.display = 'flex';
+            document.getElementById('adminReplyBox').style.display = 'flex';
+
+            document.getElementById('adminChatAvatar').textContent = adminGetInitials(firstMsg.student_name);
+            document.getElementById('adminChatName').innerHTML = `${escapeHtml(firstMsg.student_name)} <i class="fas fa-check-circle" style="color:#5b9cf5;"></i>`;
+            document.getElementById('adminChatStatus').textContent = `القسم: ${firstMsg.student_class || 'غير محدد'} | ${msgs.length} رسالة`;
+
+            renderAdminChatBody(studentId);
+            renderAdminMsgList();
+
+            // على الهاتف: أظهر نافذة الدردشة وأخفِ القائمة
+            if (window.innerWidth <= 1200) {
+                document.getElementById('adminMessengerWrapper')?.classList.add('chat-open');
+            }
+
+            const input = document.getElementById('adminReplyInput');
+            input.value = '';
+            input.placeholder = 'اكتب ردك هنا...';
+            document.getElementById('adminSendBtn').disabled = true;
+
+            setTimeout(() => {
+                const body = document.getElementById('adminChatBody');
+                if (body) body.scrollTop = body.scrollHeight;
+            }, 100);
+        };
+
+        // الرجوع من نافذة الدردشة إلى قائمة المحادثات (الهاتف)
+        window.backToAdminList = function() {
+            document.getElementById('adminMessengerWrapper')?.classList.remove('chat-open');
+            renderAdminMsgList();
+        };
+
+        function renderAdminChatBody(studentId) {
+            const body = document.getElementById('adminChatBody');
+            if (!body) return;
+
+            const msgs = adminMessagesByStudent[studentId] || [];
+            if (msgs.length === 0) {
+                body.innerHTML = '<div style="text-align:center;padding:2rem;color:rgba(255, 255, 255, 0.58);">لا توجد رسائل</div>';
+                return;
+            }
+
+            const sortedMsgs = [...msgs].sort((a, b) => new Date(a.created_at) - new Date(b.created_at));
+
+            let html = '';
+            let lastDate = null;
+
+            sortedMsgs.forEach(msg => {
+                const msgDate = new Date(msg.created_at).toDateString();
+                if (msgDate !== lastDate) {
+                    html += `<div style="text-align:center;margin:1rem 0 0.5rem;color:rgba(255, 255, 255, 0.58);font-size:0.7rem;font-weight:600;"><span style="background:rgba(0,0,0,0.3);padding:3px 12px;border-radius:12px;">${adminFormatFullDate(msg.created_at)}</span></div>`;
+                    lastDate = msgDate;
+                }
+
+                html += `
+                    <div class="admin-bubble student">
+                        <div class="admin-bubble-avatar">${adminGetInitials(msg.student_name)}</div>
+                        <div class="admin-bubble-content">
+                            <div class="admin-bubble-name">${escapeHtml(msg.student_name || 'مجهول')}</div>
+                            <div class="admin-bubble-text">${escapeHtml(msg.message).replace(/\n/g, '<br>')}</div>
+                            <div class="admin-bubble-time">${adminFormatTime(msg.created_at)}</div>
+                        </div>
+                    </div>
+                `;
+
+                if (msg.reply) {
+                    html += `
+                        <div class="admin-bubble admin">
+                            <div class="admin-bubble-avatar">إ</div>
+                            <div class="admin-bubble-content">
+                                <div class="admin-bubble-name">أنت (الإدارة)</div>
+                                <div class="admin-bubble-text">${escapeHtml(msg.reply).replace(/\n/g, '<br>')}</div>
+                                <div class="admin-bubble-time">${adminFormatTime(msg.reply_date || msg.created_at)}</div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            body.innerHTML = html;
+        }
+
+        window.sendAdminReply = async function() {
+            if (!activeAdminStudentId) return;
+
+            const input = document.getElementById('adminReplyInput');
+            const reply = input.value.trim();
+
+            if (!reply) return;
+
+            const msgs = adminMessagesByStudent[activeAdminStudentId] || [];
+            const pendingMsg = msgs
+                .filter(m => m.status === 'pending')
+                .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+
+            if (!pendingMsg) {
+                showToast('⚠️ لا توجد رسالة في انتظار الرد', 'error');
+                return;
+            }
+
+            const sendBtn = document.getElementById('adminSendBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const { error } = await supabase
+                    .from('messages')
+                    .update({
+                        reply: reply,
+                        status: 'replied',
+                        reply_date: new Date().toISOString()
+                    })
+                    .eq('id', pendingMsg.id);
+
+                if (error) throw error;
+
+                input.value = '';
+                input.style.height = 'auto';
+                showToast('✅ تم إرسال الرد!', 'success');
+                await loadAdminMessages();
+            } catch (error) {
+                showToast('❌ خطأ: ' + error.message, 'error');
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            }
+        };
+
+        document.getElementById('adminReplyInput')?.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            document.getElementById('adminSendBtn').disabled = !this.value.trim().length;
+        });
+
+        document.getElementById('adminReplyInput')?.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                window.sendAdminReply();
+            }
+        });
+
+        // ═══════════════════════════════════════════
+        // Init
+        // ═══════════════════════════════════════════
+        async function init() {
+            console.log('🚀 بدء تهيئة لوحة التحكم...');
+            const sessionValid = await checkSession();
+            if (!sessionValid) return;
+
+            console.log('👤 المستخدم:', currentUser.name, '| الدور:', currentUser.role);
+
+            loadUserInfo();
+            await loadAvatar();
+            showCorrectDashboard();
+            updateDateTime();
+            await loadServiceBadges();
+
+            if (currentUser) {
+                await initNotifications(currentUser.id);
+            }
+
+            dateTimeIntervalId = setInterval(updateDateTime, 60000);
+
+            console.log('✅ Dashboard loaded!');
+        }
+
+        window.showToast = showToast;
+
+        init();
+    </script>
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="enhancements.css">
+
+    <style id="fixed-dark-dashboard-theme">
+:root{color-scheme:dark;--accent-gold:#f5c842;--glass-bg:rgba(255,255,255,.05);--glass-bg-hover:rgba(255,255,255,.075);--glass-border:rgba(255,255,255,.1);--glass-blur:blur(18px);--glass-shadow:0 10px 30px rgba(0,0,0,.22);--glass-shadow-hover:0 12px 32px rgba(0,0,0,.3),0 0 18px rgba(245,200,66,.1);--radius-lg:18px;--transition-base:.3s ease;--text-secondary:rgba(255,255,255,.65);--text-muted:rgba(255,255,255,.6)}
+html,body{min-height:100%;background:#0a0820!important;color:#fff!important}
+body{background-color:#0a0820!important;background-image:radial-gradient(circle at 12% 8%,rgba(91,82,153,.18),transparent 32%),radial-gradient(circle at 88% 88%,rgba(245,200,66,.07),transparent 28%)!important}
+.section-card,.stat-card-dash,.stats-grid>*,.services-section,.service-card,.admin-stat-card,.admin-action-btn,.admin-messenger-section,.profile-modal-content,.modal-box,.modal-content{background-color:rgba(255,255,255,.05)!important;border-color:rgba(255,255,255,.1)!important;-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+.services-title,.section-title,.admin-dashboard-title,.rewards-text h3,h1,h2{text-shadow:0 2px 16px rgba(245,200,66,.12)}
+.btn-rewards{box-shadow:0 4px 15px rgba(245,200,66,.3)!important}
+.btn-rewards:hover{box-shadow:0 8px 25px rgba(245,200,66,.42)!important}
+.stat-card-dash,.admin-stat-card{transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease}
+.stat-card-dash:hover,.admin-stat-card:hover{transform:translateY(-3px);border-color:var(--accent-gold)!important;box-shadow:0 10px 28px rgba(0,0,0,.25),0 0 16px rgba(245,200,66,.12)!important}
+input,select,textarea{color:#fff}input::placeholder,textarea::placeholder{color:rgba(255,255,255,.5)}
+    </style>
+
+
+
+
+
+
+<style id="telegram-admin-messenger-overrides">
+/* مركز التواصل: واجهة واحدة مستقلة للمحادثات فقط */
+#adminMessengerSection.admin-messenger-section {
+    width: 100%;
+    margin: 1.25rem 0 1.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(91,156,245,.28) !important;
+    border-radius: 22px;
+    background: #11152d !important;
+    box-shadow: 0 16px 42px rgba(0,0,0,.28);
+    isolation: isolate;
+}
+#adminMessengerSection .admin-messenger-header {
+    min-height: 76px;
+    padding:  .9rem 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: linear-gradient(115deg,#202849,#19213d);
+    border-bottom: 1px solid rgba(91,156,245,.22);
+}
+#adminMessengerSection .admin-messenger-header h3 {
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+    margin: 0;
+    color: #fff;
+    font: 800 1.12rem 'Cairo',sans-serif;
+}
+#adminMessengerSection .admin-messenger-header h3 > i {
+    color: #70a8ff;
+    font-size: 1.35rem;
+}
+#adminMessengerSection #adminMsgCount {
+    margin-inline-start: .25rem !important;
+    margin-inline-end: auto !important;
+    padding: .28rem .75rem !important;
+    color: #8db9ff !important;
+    background: rgba(91,156,245,.17) !important;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+#adminMessengerSection .btn-fullscreen {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    border-radius: 13px;
+    color: #dce8ff;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+}
+#adminMessengerSection .btn-fullscreen:hover {
+    color: #fff;
+    background: rgba(91,156,245,.22);
+    border-color: #5b9cf5;
+}
+#adminMessengerSection .admin-messenger-wrapper {
+    height: 590px;
+    min-height: 480px;
+    display: flex;
+    overflow: hidden;
+    background: #11152d;
+}
+#adminMessengerSection .admin-messenger-list {
+    width: min(36%, 370px);
+    min-width: 270px;
+    background: #171c38;
+    border-left: 1px solid rgba(255,255,255,.08);
+}
+#adminMessengerSection .admin-messenger-search {
+    padding: 1rem;
+    background: #171c38;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+#adminMessengerSection .admin-messenger-search input {
+    min-height: 44px;
+    padding: .7rem 1rem;
+    border-radius: 14px;
+    color: #fff;
+    background: #222945;
+    border: 1px solid rgba(255,255,255,.09);
+}
+#adminMessengerSection .admin-msg-item {
+    padding: .85rem .8rem;
+    margin: .2rem .25rem;
+    border-radius: 14px;
+    border-bottom: 1px solid rgba(255,255,255,.035);
+}
+#adminMessengerSection .admin-msg-item.active,
+#adminMessengerSection .admin-msg-item:hover {
+    background: rgba(91,156,245,.16);
+    border-color: rgba(91,156,245,.28);
+}
+#adminMessengerSection .admin-msg-avatar,
+#adminMessengerSection .admin-chat-avatar {
+    background: linear-gradient(145deg,#70a8ff,#477fd7);
+    box-shadow: 0 5px 16px rgba(65,125,220,.2);
+}
+#adminMessengerSection .admin-messenger-chat {
+    min-width: 0;
+    background-color: #11162f;
+    background-image: radial-gradient(rgba(132,157,212,.075) .8px,transparent .8px);
+    background-size: 20px 20px;
+}
+#adminMessengerSection .admin-chat-header {
+    min-height: 72px;
+    padding: .8rem 1.1rem;
+    background: #1a203d;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+#adminMessengerSection .admin-chat-body {
+    padding: 1.2rem clamp(.8rem,2vw,1.6rem);
+    gap: .9rem;
+}
+#adminMessengerSection .admin-bubble { max-width: min(76%,620px); }
+#adminMessengerSection .admin-bubble.student .admin-bubble-text {
+    color: #f4f7ff;
+    background: #273453;
+    border: 1px solid rgba(126,164,230,.18);
+    border-radius: 17px 5px 17px 17px;
+}
+#adminMessengerSection .admin-bubble.admin .admin-bubble-text {
+    color: #fff;
+    background: linear-gradient(140deg,#397fc9,#2866ac);
+    border: 1px solid rgba(126,184,255,.2);
+    border-radius: 5px 17px 17px 17px;
+    font-weight: 500;
+}
+#adminMessengerSection .admin-bubble.admin .admin-bubble-name { color: #9fc6ff; }
+#adminMessengerSection .admin-reply-box {
+    padding: .8rem 1rem;
+    background: #191f3b;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+#adminMessengerSection .admin-reply-input {
+    min-height: 46px;
+    padding: .75rem 1rem;
+    border-radius: 16px;
+    color: #fff;
+    background: #242b49;
+    border: 1px solid rgba(255,255,255,.1);
+}
+#adminMessengerSection .admin-reply-input:focus {
+    border-color: rgba(91,156,245,.65);
+    background: #283150;
+}
+#adminMessengerSection .admin-send-btn {
+    width: 46px;
+    height: 46px;
+    color: #fff;
+    background: linear-gradient(145deg,#70a8ff,#397bd1);
+    box-shadow: 0 5px 15px rgba(57,123,209,.25);
+}
+#adminMessengerSection .admin-chat-empty i { color: #70a8ff; }
+#adminMessengerSection.fullscreen {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 999999 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-height: 100dvh !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #11152d !important;
+}
+#adminMessengerSection.fullscreen .admin-messenger-wrapper {
+    height: calc(100dvh - 76px) !important;
+    min-height: 0 !important;
+}
+@media (max-width: 768px) {
+    #adminMessengerSection.admin-messenger-section {
+        margin: 1rem 0 1.25rem;
+        border-radius: 18px;
+    }
+    #adminMessengerSection .admin-messenger-header {
+        min-height: 68px;
+        padding: .7rem .85rem;
+        flex-wrap: nowrap;
+    }
+    #adminMessengerSection .admin-messenger-header h3 {
+        font-size: .95rem;
+        gap: .45rem;
+        white-space: nowrap;
+    }
+    #adminMessengerSection #adminMsgCount { font-size: .65rem !important; }
+    #adminMessengerSection .btn-fullscreen { width: 38px; height: 38px; flex-basis: 38px; }
+    #adminMessengerSection .admin-messenger-wrapper {
+        height: min(72dvh,680px);
+        min-height: 470px;
+    }
+    #adminMessengerSection .admin-messenger-list,
+    #adminMessengerSection .admin-messenger-chat {
+        min-width: 0;
+    }
+    #adminMessengerSection .admin-msg-item { padding: .8rem .7rem; }
+    #adminMessengerSection .admin-msg-avatar { width: 44px; height: 44px; }
+    #adminMessengerSection .admin-chat-body { padding: .85rem .7rem; }
+    #adminMessengerSection .admin-bubble { max-width: 88%; }
+    #adminMessengerSection .admin-reply-box {
+        padding: .65rem .7rem;
+        padding-bottom: calc(.65rem + env(safe-area-inset-bottom,0px));
+    }
+    #adminMessengerSection.fullscreen .admin-messenger-wrapper {
+        height: calc(100dvh - 68px) !important;
+    }
+}
+@media (max-width: 380px) {
+    #adminMessengerSection .admin-messenger-header h3 { font-size: .83rem; }
+    #adminMessengerSection #adminMsgCount { padding: .2rem .45rem !important; }
+}
+
+/* إصلاح عرض إدارة الرسائل على الهواتف والأجهزة اللوحية */
+@media (max-width: 1024px) {
+  #adminMessengerSection .admin-messenger-wrapper {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    height: min(76dvh, 760px) !important;
+    min-height: 440px !important;
+    overflow: hidden !important;
+  }
+  #adminMessengerSection .admin-messenger-list,
+  #adminMessengerSection .admin-messenger-chat {
+    position: absolute !important;
+    inset: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 100% !important;
+    max-height: none !important;
+    box-sizing: border-box !important;
+    transition: transform .28s ease, visibility .28s ease !important;
+  }
+  #adminMessengerSection .admin-messenger-list {
+    display: flex !important;
+    flex-direction: column !important;
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    z-index: 2 !important;
+    border: 0 !important;
+  }
+  #adminMessengerSection .admin-messenger-items {
+    flex: 1 1 auto !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+  }
+  #adminMessengerSection .admin-messenger-chat {
+    display: flex !important;
+    flex-direction: column !important;
+    transform: translateX(-100%) !important;
+    visibility: hidden !important;
+    z-index: 1 !important;
+  }
+  #adminMessengerSection .admin-messenger-wrapper.chat-open .admin-messenger-list {
+    transform: translateX(100%) !important;
+    visibility: hidden !important;
+  }
+  #adminMessengerSection .admin-messenger-wrapper.chat-open .admin-messenger-chat {
+    transform: translateX(0) !important;
+    visibility: visible !important;
+    z-index: 3 !important;
+  }
+  #adminMessengerSection .admin-back-btn { display: flex !important; }
+  #adminMessengerSection .admin-messenger-search { flex: 0 0 auto !important; }
+  #adminMessengerSection .admin-msg-item { width: auto !important; }
+  #adminMessengerSection.fullscreen .admin-messenger-wrapper {
+    height: calc(100dvh - 68px) !important;
+    min-height: 0 !important;
+  }
+}
+@media (max-width: 480px) {
+  #adminMessengerSection .admin-messenger-wrapper { height: 72dvh !important; min-height: 420px !important; }
+  #adminMessengerSection .admin-messenger-search { padding: .7rem !important; }
+  #adminMessengerSection .admin-msg-item { padding: .75rem .65rem !important; margin: .15rem .2rem !important; }
+  #adminMessengerSection .admin-msg-avatar { width: 46px !important; height: 46px !important; flex: 0 0 46px !important; }
+  #adminMessengerSection .admin-messenger-header h3 { min-width: 0 !important; }
+  #adminMessengerSection .admin-chat-name { font-size: 1rem !important; }
+}
+
+</style>
+
+
+<style id="student-messenger-embed-styles">
+#studentMessengerSection.student-messenger-section {
+    display: block;
+    width: 100%;
+    margin: 1.25rem 0 1.5rem;
+    overflow: hidden;
+    border: 1px solid rgba(91,156,245,.26);
+    border-radius: 20px;
+    background: #11152d;
+    box-shadow: 0 14px 38px rgba(0,0,0,.24);
+    position: relative;
+    isolation: isolate;
+}
+#studentMessengerSection .student-messenger-heading {
+    min-height: 76px;
+    padding: .85rem 1.15rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: linear-gradient(115deg,#202849,#19213d);
+    border-bottom: 1px solid rgba(91,156,245,.2);
+}
+#studentMessengerSection .student-messenger-title {
+    display:flex; align-items:center; gap:12px; min-width:0;
+}
+#studentMessengerSection .student-messenger-title > i {
+    color:#70a8ff; font-size:1.45rem;
+}
+#studentMessengerSection .student-messenger-title h2 {
+    margin:0; color:#fff; font:800 1.05rem 'Cairo',sans-serif;
+}
+#studentMessengerSection .student-messenger-title p {
+    margin:2px 0 0; color:#a5abc2; font-size:.72rem;
+}
+#studentMessengerSection .student-messenger-fullscreen {
+    width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center;
+    color:#dce8ff; background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.12); border-radius:12px; cursor:pointer;
+}
+#studentMessengerSection .student-messenger-fullscreen:hover {
+    background:rgba(91,156,245,.2); border-color:#5b9cf5;
+}
+#studentMessengerSection .student-messenger-frame {
+    display:block; width:100%; height:480px; border:0; background:#0a0820;
+}
+#studentMessengerSection.student-messenger-fullscreen {
+    position:fixed !important; inset:0 !important; z-index:999999 !important;
+    width:100vw !important; height:100dvh !important; margin:0 !important;
+    border:0 !important; border-radius:0 !important;
+}
+#studentMessengerSection.student-messenger-fullscreen .student-messenger-frame {
+    height:calc(100dvh - 76px) !important;
+}
+@media(max-width:768px) {
+    #studentMessengerSection.student-messenger-section { margin:1rem 0 1.2rem; border-radius:16px; }
+    #studentMessengerSection .student-messenger-heading { min-height:66px; padding:.65rem .8rem; }
+    #studentMessengerSection .student-messenger-title h2 { font-size:.94rem; }
+    #studentMessengerSection .student-messenger-title p { font-size:.66rem; }
+    #studentMessengerSection .student-messenger-fullscreen { width:38px; height:38px; flex-basis:38px; }
+    #studentMessengerSection .student-messenger-frame { height: min(72dvh,680px); min-height:500px; }
+    #studentMessengerSection.student-messenger-fullscreen .student-messenger-frame { height:calc(100dvh - 66px) !important; min-height:0; }
+}
+</style>
+
+<script>
+(function () {
+    const section = document.getElementById('studentMessengerSection');
+    const button = document.getElementById('studentMessengerFullscreen');
+    if (!section || !button) return;
+    button.addEventListener('click', function () {
+        const active = section.classList.toggle('student-messenger-fullscreen');
+        const icon = button.querySelector('i');
+        if (icon) icon.className = active ? 'fas fa-compress' : 'fas fa-expand';
+        button.title = active ? 'إغلاق ملء الشاشة' : 'ملء الشاشة';
+    });
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && section.classList.contains('student-messenger-fullscreen')) {
+            section.classList.remove('student-messenger-fullscreen');
+            const icon = button.querySelector('i');
+            if (icon) icon.className = 'fas fa-expand';
+            button.title = 'ملء الشاشة';
+        }
+    });
+})();
+</script>
+</body>
+</html>

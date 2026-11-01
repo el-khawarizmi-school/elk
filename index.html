@@ -1,0 +1,2861 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0820">
+<meta name="description" content="الموقع الرسمي لثانوية الخوارزمي التأهيلية، منصة تعليمية للتميز الأكاديمي والرقمنة والابتكار.">
+<title>ثانوية الخوارزمي التأهيلية | AL-KHAWARIZMI HIGH SCHOOL</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style>
+:root {
+    --bg: #0a0820;
+    --gold: #f5c842;
+    --gold-light: #ffe68a;
+    --purple: #9b6dff;
+    --blue: #4f8cff;
+    --pink: #ff5da2;
+    --text: #fff;
+    --muted: #c0bdd5;
+    --subtle: #88849f;
+    --surface: rgba(255,255,255,.045);
+    --border: rgba(255,255,255,.09);
+    --success: #48d6a2;
+    --transition: .3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    scrollbar-color: #41336d var(--bg);
+    scrollbar-width: thin;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Cairo', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+body.no-scroll {
+    overflow: hidden;
+}
+
+button, a {
+    font: inherit;
+    -webkit-tap-highlight-color: transparent;
+}
+
+button {
+    color: inherit;
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button:focus-visible,
+a:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 4px;
+}
+
+/* ==========================
+   الخلفية المتحركة
+========================== */
+
+.background-effects {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -2;
+    background:
+        radial-gradient(
+            ellipse at 50% 0%,
+            rgba(67,43,126,.18),
+            transparent 55%
+        ),
+        var(--bg);
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: .24;
+    will-change: transform;
+    animation: floatOrb 18s ease-in-out infinite alternate;
+}
+
+.orb-purple {
+    width: 390px;
+    height: 390px;
+    background: #723cff;
+    top: 3%;
+    right: -150px;
+}
+
+.orb-pink {
+    width: 330px;
+    height: 330px;
+    background: #ff3e91;
+    top: 40%;
+    left: -150px;
+    animation-delay: -6s;
+}
+
+.orb-gold {
+    width: 300px;
+    height: 300px;
+    background: #dba622;
+    bottom: -130px;
+    right: 35%;
+    opacity: .12;
+    animation-delay: -10s;
+}
+
+.orb-blue {
+    width: 280px;
+    height: 280px;
+    background: #365dff;
+    top: 65%;
+    right: 65%;
+    opacity: .13;
+    animation-delay: -4s;
+}
+
+@keyframes floatOrb {
+    from {
+        transform: translate3d(0,0,0) scale(1);
+    }
+    to {
+        transform: translate3d(45px,-55px,0) scale(1.12);
+    }
+}
+
+/* ==========================
+   الهيكل العام
+========================== */
+
+.page-shell {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    width: 100%;
+    padding: 24px 6%;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: clamp(12px,3vw,32px);
+    position: relative;
+    z-index: 5;
+}
+
+.header-side {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-width: 0;
+}
+
+.header-side:last-child {
+    justify-content: flex-end;
+}
+
+.icon-button {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,.045);
+    color: #fff;
+    font-size: 19px;
+    transition:
+        background var(--transition),
+        border-color var(--transition),
+        transform var(--transition);
+}
+
+.icon-button:hover {
+    background: rgba(255,255,255,.1);
+    border-color: rgba(245,200,66,.35);
+    transform: translateY(-2px);
+}
+
+.header-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    text-align: center;
+    min-width: 0;
+}
+
+.brand-copy h2 {
+    font-size: 1.15rem;
+    font-weight: 900;
+    line-height: 1.7;
+    white-space: nowrap;
+}
+
+.brand-copy p {
+    font-family: Arial, sans-serif;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--subtle);
+    direction: ltr;
+    white-space: nowrap;
+}
+
+.brand-logo {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg,#398bff,#7949ed 75%);
+    box-shadow: 0 8px 28px rgba(94,91,255,.25);
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+/* ==========================
+   القسم الرئيسي Hero
+========================== */
+
+.main {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 62px 24px 50px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: heroReveal .9s ease both;
+}
+
+@keyframes heroReveal {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 20px;
+    margin-bottom: 30px;
+    border-radius: 50px;
+    background: rgba(245,200,66,.1);
+    border: 1px solid rgba(245,200,66,.3);
+    box-shadow: 0 0 20px rgba(245,200,66,.12);
+    color: var(--gold);
+    font-size: .88rem;
+    font-weight: 700;
+}
+
+.badge i {
+    font-size: 15px;
+}
+
+.hero h1 {
+    font-size: clamp(2.6rem,6.2vw,5.4rem);
+    font-weight: 900;
+    line-height: 1.35;
+    letter-spacing: -1.5px;
+    margin-bottom: .2rem;
+    text-shadow:
+        0 10px 30px rgba(0,0,0,.5),
+        0 2px 10px rgba(245,200,66,.2);
+}
+
+.title-first,
+.title-second {
+    display: block;
+}
+
+.title-first {
+    color: #fff;
+}
+
+.title-second {
+    background: linear-gradient(
+        100deg,
+        #a879ff 10%,
+        #6e8bff 55%,
+        #5bd5ff 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+}
+
+.english-title {
+    margin: .8rem 0 2.5rem;
+    font-family: Arial, 'Noto Sans Tifinagh', 'Segoe UI Historic', sans-serif;
+    font-size: .9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--subtle);
+    direction: ltr;
+    line-height: 1.8;
+}
+
+.hero-description {
+    width: 100%;
+    max-width: 760px;
+    color: var(--muted);
+    font-size: 1.05rem;
+    font-weight: 500;
+    line-height: 2.2;
+    margin-bottom: 32px;
+}
+
+/* مميزات المنصة */
+
+/* الأزرار الرئيسية */
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    flex-wrap: wrap;
+    gap: 18px;
+    width: 100%;
+}
+
+.btn {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    gap: .8rem;
+    min-width: 300px;
+    padding: 1.1rem 2.5rem;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    text-align: center;
+    transition:
+        transform var(--transition),
+        box-shadow var(--transition),
+        background var(--transition),
+        border-color var(--transition);
+}
+
+.btn i {
+    font-size: 18px;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+}
+
+.btn-primary {
+    color: #171126;
+    background: linear-gradient(115deg,#f5c842,#ffe38b);
+    box-shadow: 0 10px 35px rgba(245,200,66,.15);
+}
+
+.btn-primary:hover {
+    box-shadow: 0 14px 40px rgba(245,200,66,.27);
+}
+
+.btn-secondary {
+    color: #fff;
+    background: rgba(255,255,255,.035);
+    border-color: rgba(255,255,255,.16);
+}
+
+.btn-secondary:hover {
+    background: rgba(255,255,255,.075);
+    border-color: rgba(155,109,255,.6);
+}
+
+/* ==========================
+   مساحة فارغة وسهم الاستمرار
+========================== */
+
+.scroll-cue {
+    width: 100%;
+    min-height: clamp(120px, 19vh, 210px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 20px;
+}
+
+.scroll-cue-link {
+    width: 46px;
+    height: 46px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(245,200,66,.28);
+    border-radius: 50%;
+    color: var(--gold);
+    background: rgba(255,255,255,.025);
+    text-decoration: none;
+    animation: scrollCueBounce 1.8s ease-in-out infinite;
+    transition: background var(--transition), border-color var(--transition);
+}
+
+.scroll-cue-link:hover {
+    background: rgba(245,200,66,.09);
+    border-color: rgba(245,200,66,.65);
+}
+
+@keyframes scrollCueBounce {
+    0%, 100% { transform: translateY(-4px); }
+    50% { transform: translateY(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .scroll-cue-link { animation: none; }
+}
+
+/* ==========================
+   قسم ماذا نقدم لكم؟
+========================== */
+
+.offers-section {
+    --offers-gold: var(--gold);
+    width: 100%;
+    padding: clamp(56px,7vw,92px) 0 26px;
+    scroll-margin-top: 24px;
+}
+
+.offers-container {
+    width: min(1200px,100%);
+    margin-inline: auto;
+}
+
+.offers-header {
+    text-align: center;
+    margin: 0 auto 44px;
+    padding-inline: 8px;
+}
+
+.offers-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 13px;
+    padding: 6px 15px;
+    border: 1px solid rgba(245,200,66,.22);
+    border-radius: 999px;
+    background: rgba(245,200,66,.07);
+    color: var(--gold);
+    font-size: .84rem;
+    font-weight: 700;
+}
+
+.offers-header h2 {
+    color: #fff;
+    font-size: clamp(1.9rem,4vw,2.65rem);
+    font-weight: 800;
+    line-height: 1.5;
+}
+
+.offers-title-line {
+    display: block;
+    width: 58px;
+    height: 4px;
+    margin: 12px auto 16px;
+    border-radius: 9px;
+    background: linear-gradient(135deg,#f5c842,#fb923c);
+    box-shadow: 0 0 20px rgba(245,200,66,.22);
+}
+
+.offers-header p {
+    color: var(--muted);
+    font-size: .96rem;
+    line-height: 1.9;
+}
+
+/* شبكة الخدمات */
+
+.offers-grid {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+/* بطاقة الخدمة */
+
+.offer-card {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+    min-height: 295px;
+    padding: 1.8rem;
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: 20px;
+    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(16px);
+    overflow: hidden;
+    transition:
+        transform .3s ease,
+        border-color .3s ease,
+        background .3s ease,
+        box-shadow .3s ease;
+}
+
+.offer-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    background: radial-gradient(
+        circle at 90% 0%,
+        rgba(245,200,66,.08),
+        transparent 52%
+    );
+    transition: opacity .3s ease;
+    pointer-events: none;
+}
+
+.offer-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(245,200,66,.55);
+    background: rgba(255,255,255,.045);
+    box-shadow:
+        0 16px 38px rgba(0,0,0,.18),
+        0 0 24px rgba(245,200,66,.045);
+}
+
+.offer-card:hover::before {
+    opacity: 1;
+}
+
+/* أيقونة الخدمة */
+
+.offer-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    flex-shrink: 0;
+    margin-bottom: 20px;
+    border: 1px solid rgba(245,200,66,.13);
+    border-radius: 18px;
+    background: rgba(245,200,66,.1);
+    color: var(--gold);
+    font-size: 1.45rem;
+    transition:
+        transform .3s ease,
+        background .3s ease;
+}
+
+.offer-card:hover .offer-icon {
+    transform: translateY(-2px);
+    background: rgba(245,200,66,.16);
+}
+
+.offer-card h3 {
+    margin: 0 0 10px;
+    color: #fff;
+    font-size: 1.13rem;
+    font-weight: 800;
+    line-height: 1.8;
+}
+
+.offer-card p {
+    margin: 0 0 22px;
+    color: var(--muted);
+    font-size: .9rem;
+    line-height: 2;
+    flex-grow: 1;
+}
+
+/* تفاصيل الخدمة القابلة للطي */
+.offer-details {
+    width: 100%;
+    flex: 0 0 auto;
+    flex-grow: 0;
+    max-height: 0;
+    margin: 0;
+    padding: 0 14px;
+    overflow: hidden;
+    opacity: 0;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    background: rgba(10,8,32,.58);
+    color: var(--muted);
+    font-size: .86rem;
+    line-height: 1.95;
+    overflow-wrap: anywhere;
+    transition: max-height .35s ease, opacity .25s ease, margin .3s ease, padding .3s ease, border-color .3s ease;
+}
+.offer-card.is-expanded .offer-details {
+    max-height: 260px;
+    margin: 0 0 18px;
+    padding: 13px 14px;
+    opacity: 1;
+    border-color: rgba(245,200,66,.18);
+}
+.offer-link {
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+.offer-link[aria-expanded="true"] i {
+    transform: rotate(-90deg);
+}
+@media(max-width:576px) {
+    .offer-card.is-expanded .offer-details {
+        max-height: 360px;
+    }
+}
+@media(prefers-reduced-motion:reduce) {
+    .offer-details { transition: none; }
+}
+
+/* زر اكتشف المزيد */
+
+.offer-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: auto;
+    padding: 4px 0;
+    color: var(--gold);
+    font-size: .88rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: gap .25s ease, color .25s ease;
+}
+
+.offer-link:hover {
+    gap: 14px;
+    color: #ffe58a;
+}
+
+.offer-link i {
+    font-size: .78rem;
+    transition: transform .25s ease;
+}
+
+.offer-link:hover i {
+    transform: translateX(-3px);
+}
+
+.offer-link:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 5px;
+    border-radius: 4px;
+}
+
+/* ==========================
+   الفوتر
+========================== */
+
+.footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 25px 20px;
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,.055);
+    color: var(--subtle);
+    font-size: .78rem;
+    text-align: center;
+}
+
+.footer-separator {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+}
+
+.footer-share {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 5px 10px;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--gold);
+    font-size: .78rem;
+    transition: background var(--transition);
+}
+
+.footer-share:hover {
+    background: rgba(245,200,66,.08);
+}
+
+/* ==========================
+   القائمة الجانبية
+========================== */
+
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: rgba(4,3,15,.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition), visibility var(--transition);
+}
+
+.overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.side-menu {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 30;
+    width: min(390px,90vw);
+    height: 100%;
+    height: 100dvh;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    background: rgba(15,12,39,.94);
+    border-left: 1px solid rgba(255,255,255,.1);
+    box-shadow: -20px 0 70px rgba(0,0,0,.3);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    transform: translateX(105%);
+    visibility: hidden;
+    transition: transform .35s ease, visibility .35s ease;
+}
+
+.side-menu.open {
+    transform: translateX(0);
+    visibility: visible;
+}
+
+.menu-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding-bottom: 22px;
+    border-bottom: 1px solid var(--border);
+}
+
+.menu-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.menu-brand .brand-logo {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    font-size: 20px;
+}
+
+.menu-brand h3 {
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.menu-brand p {
+    font-family: Arial, sans-serif;
+    direction: ltr;
+    font-size: .58rem;
+    color: var(--subtle);
+    margin-top: 3px;
+    letter-spacing: 1px;
+}
+
+.menu-section {
+    margin-top: 25px;
+}
+
+.menu-section-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 13px;
+    color: var(--subtle);
+    font-size: .8rem;
+    font-weight: 700;
+}
+
+.menu-section-title i {
+    color: var(--gold);
+}
+
+.menu-link {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 14px 15px;
+    margin-bottom: 9px;
+    border: 1px solid transparent;
+    border-radius: 13px;
+    background: rgba(255,255,255,.035);
+    color: #e9e6f7;
+    font-size: .9rem;
+    font-weight: 600;
+    text-align: right;
+    transition:
+        background var(--transition),
+        border-color var(--transition),
+        color var(--transition);
+}
+
+.menu-link > i:first-child {
+    width: 22px;
+    color: var(--gold);
+    text-align: center;
+}
+
+.menu-link:hover {
+    background: rgba(255,255,255,.07);
+    border-color: rgba(245,200,66,.15);
+    color: #fff;
+}
+
+.menu-link .link-arrow {
+    margin-right: auto;
+    color: var(--subtle);
+    font-size: 12px;
+}
+
+.language-options {
+    display: grid;
+    grid-template-columns: repeat(3,minmax(0,1fr));
+    gap: 8px;
+}
+
+.language-btn {
+    padding: 11px 5px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255,255,255,.03);
+    color: var(--muted);
+    font-size: .8rem;
+    font-weight: 700;
+    transition: var(--transition);
+}
+
+.language-btn.active {
+    background: rgba(245,200,66,.12);
+    color: var(--gold);
+    border-color: rgba(245,200,66,.4);
+}
+
+.menu-bottom {
+    margin-top: auto;
+    padding-top: 22px;
+}
+
+.menu-version {
+    margin-top: 12px;
+    text-align: center;
+    color: var(--subtle);
+    font-size: .7rem;
+}
+
+/* ==========================
+   النوافذ المنبثقة
+========================== */
+
+.modal-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+    background: rgba(4,3,15,.76);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition), visibility var(--transition);
+}
+
+.modal-wrap.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    width: 100%;
+    max-width: 500px;
+    max-height: min(85dvh,760px);
+    overflow-y: auto;
+    padding: 30px;
+    border-radius: 24px;
+    background: rgba(19,15,47,.96);
+    border: 1px solid rgba(255,255,255,.11);
+    box-shadow: 0 25px 100px rgba(0,0,0,.4);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    transform: translateY(15px) scale(.98);
+    transition: transform var(--transition);
+}
+
+.modal-wrap.active .modal {
+    transform: translateY(0) scale(1);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 24px;
+}
+
+.modal-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modal-icon {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 14px;
+    background: rgba(245,200,66,.11);
+    color: var(--gold);
+    font-size: 19px;
+}
+
+.modal-heading h2 {
+    font-size: 1.1rem;
+    font-weight: 900;
+}
+
+.modal-heading p {
+    margin-top: 3px;
+    color: var(--subtle);
+    font-size: .75rem;
+}
+
+.modal-close {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(255,255,255,.04);
+    color: var(--muted);
+    transition: var(--transition);
+}
+
+.modal-close:hover {
+    color: #fff;
+    background: rgba(255,255,255,.1);
+}
+
+.modal-body {
+    color: var(--muted);
+    font-size: .91rem;
+    line-height: 2.1;
+}
+
+.modal-body p + p {
+    margin-top: 12px;
+}
+
+.modal-highlight {
+    padding: 16px;
+    margin-top: 18px;
+    border: 1px solid rgba(245,200,66,.15);
+    border-radius: 15px;
+    background: rgba(245,200,66,.055);
+}
+
+.modal-highlight strong {
+    display: block;
+    color: var(--gold);
+    margin-bottom: 5px;
+}
+
+.developer-card {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: rgba(255,255,255,.035);
+}
+
+.developer-icon {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    background: linear-gradient(135deg,#398bff,#7949ed);
+    color: white;
+    font-size: 18px;
+}
+
+.developer-card h3 {
+    color: #fff;
+    font-size: .9rem;
+}
+
+.developer-card p {
+    color: var(--subtle);
+    font-size: .76rem;
+    margin-top: 3px;
+}
+
+/* خيارات المشاركة */
+
+.share-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.share-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 15px;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: rgba(255,255,255,.035);
+    color: #fff;
+    text-align: right;
+    transition: var(--transition);
+}
+
+.share-btn:hover {
+    background: rgba(255,255,255,.075);
+    transform: translateY(-2px);
+}
+
+.share-btn > .share-icon {
+    width: 43px;
+    height: 43px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 13px;
+    font-size: 20px;
+}
+
+.share-label {
+    flex: 1;
+    min-width: 0;
+}
+
+.share-btn strong {
+    display: block;
+    font-size: .9rem;
+}
+
+.share-btn small {
+    display: block;
+    margin-top: 3px;
+    color: var(--subtle);
+    font-size: .75rem;
+}
+
+.share-whatsapp .share-icon {
+    background: rgba(37,211,102,.12);
+    color: #25d366;
+}
+
+.share-telegram .share-icon {
+    background: rgba(41,160,242,.12);
+    color: #29a0f2;
+}
+
+.share-facebook .share-icon {
+    background: rgba(24,119,242,.14);
+    color: #1877f2;
+}
+
+.share-instagram .share-icon {
+    background: rgba(225,48,108,.13);
+    color: #e1306c;
+}
+
+.share-copy .share-icon {
+    background: rgba(245,200,66,.12);
+    color: var(--gold);
+}
+
+/* إشعارات الموقع */
+
+.toast {
+    position: fixed;
+    bottom: 25px;
+    left: 50%;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: calc(100% - 30px);
+    padding: 13px 20px;
+    border: 1px solid rgba(72,214,162,.25);
+    border-radius: 14px;
+    background: rgba(17,30,36,.96);
+    color: #e8fff6;
+    font-size: .85rem;
+    font-weight: 700;
+    box-shadow: 0 12px 40px rgba(0,0,0,.3);
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%,15px);
+    transition:
+        opacity var(--transition),
+        transform var(--transition),
+        visibility var(--transition);
+}
+
+.toast i {
+    color: var(--success);
+}
+
+.toast.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%,0);
+}
+
+/* دعم الفرنسية والإنجليزية */
+
+html[lang="en"],
+html[lang="fr"] {
+    direction: ltr;
+}
+
+html[lang="en"] .side-menu,
+html[lang="fr"] .side-menu {
+    right: auto;
+    left: 0;
+    border-left: none;
+    border-right: 1px solid rgba(255,255,255,.1);
+    transform: translateX(-105%);
+}
+
+html[lang="en"] .side-menu.open,
+html[lang="fr"] .side-menu.open {
+    transform: translateX(0);
+}
+
+html[lang="en"] .menu-link,
+html[lang="fr"] .menu-link,
+html[lang="en"] .share-btn,
+html[lang="fr"] .share-btn {
+    text-align: left;
+}
+
+html[lang="en"] .menu-link .link-arrow,
+html[lang="fr"] .menu-link .link-arrow {
+    margin-right: 0;
+    margin-left: auto;
+}
+
+html[lang="en"] .info-card,
+html[lang="fr"] .info-card,
+html[lang="en"] .modal-body,
+html[lang="fr"] .modal-body {
+    text-align: left;
+}
+
+html[lang="en"] .english-title,
+html[lang="fr"] .english-title {
+    letter-spacing: 2px;
+}
+
+/* ==========================
+   تحسينات الأجهزة اللوحية
+========================== */
+
+@media(max-width:992px) {
+    .offers-grid {
+        grid-template-columns: repeat(2,minmax(0,1fr));
+        gap: 1.2rem;
+    }
+
+    .offer-card {
+        min-height: 270px;
+        padding: 1.6rem;
+    }
+}
+
+/* ==========================
+   تحسينات الهواتف
+========================== */
+
+@media(max-width:768px) {
+    .header {
+        padding: 17px 20px;
+        grid-template-columns: 48px minmax(0,1fr) 48px;
+        gap: clamp(10px,3vw,22px);
+    }
+
+    .header-side,
+    .header-side:last-child {
+        justify-content: center;
+    }
+
+    .icon-button,
+    .brand-logo {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+    }
+
+    .header-brand {
+        gap: clamp(8px,2.5vw,14px);
+        min-width: 0;
+    }
+
+    .brand-copy h2 {
+        font-size: clamp(.78rem,2.7vw,1rem);
+        white-space: normal;
+        line-height: 1.45;
+    }
+
+    .brand-copy p {
+        font-size: clamp(.42rem,1.5vw,.58rem);
+        letter-spacing: clamp(.3px,.4vw,1px);
+        white-space: normal;
+        line-height: 1.5;
+    }
+
+    .brand-logo {
+        font-size: 20px;
+    }
+
+    .main {
+        padding: 48px 22px 40px;
+    }
+
+    .badge {
+        font-size: .8rem;
+        max-width: 100%;
+        padding: 9px 14px;
+        gap: 8px;
+        line-height: 1.7;
+        margin-bottom: 24px;
+    }
+
+    .hero h1 {
+        font-size: clamp(2rem,7.4vw,3.5rem);
+        line-height: 1.55;
+        letter-spacing: -.6px;
+        margin-bottom: .2rem;
+    }
+
+    .title-first,
+    .title-second {
+        line-height: 1.5;
+    }
+
+    .english-title {
+        font-size: .78rem;
+        letter-spacing: 3px;
+        margin: .7rem 0 1.8rem;
+    }
+
+    .hero-description {
+        font-size: .94rem;
+        line-height: 2.05;
+        margin-bottom: 26px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        width: 100%;
+    }
+
+    .btn {
+        width: 100%;
+        min-width: 0;
+        max-width: 440px;
+        padding: 1rem 1.25rem;
+        border-radius: 16px;
+        font-size: 1rem;
+    }
+
+    .footer {
+        gap: 8px;
+        padding: 20px 15px;
+    }
+
+    .side-menu {
+        width: min(390px,92vw);
+        padding: 22px 20px;
+    }
+
+    .menu-header {
+        gap: 12px;
+        padding-bottom: 20px;
+    }
+
+    .menu-section {
+        margin-top: 23px;
+    }
+
+    .menu-section-title {
+        margin-bottom: 12px;
+    }
+
+    .menu-link {
+        padding: 14px 13px;
+        margin-bottom: 9px;
+        min-height: 50px;
+    }
+
+    .language-options {
+        gap: 7px;
+    }
+
+    .language-btn {
+        padding: 11px 4px;
+    }
+
+    .menu-bottom {
+        padding-top: 20px;
+    }
+
+    .modal-wrap {
+        padding: 15px;
+    }
+
+    .modal {
+        padding: 24px 20px;
+        border-radius: 21px;
+    }
+}
+
+@media(max-width:576px) {
+    .offers-section {
+        padding: 48px 0 16px;
+    }
+
+    .offers-header {
+        margin-bottom: 28px;
+    }
+
+    .offers-header h2 {
+        font-size: 1.8rem;
+    }
+
+    .offers-header p {
+        font-size: .88rem;
+    }
+
+    .offers-grid {
+        grid-template-columns: minmax(0,1fr);
+        gap: 1rem;
+    }
+
+    .offer-card {
+        min-height: 0;
+        padding: 1.45rem;
+        border-radius: 18px;
+    }
+
+    .offer-icon {
+        width: 54px;
+        height: 54px;
+        margin-bottom: 15px;
+        border-radius: 16px;
+        font-size: 1.3rem;
+    }
+
+    .offer-card h3 {
+        font-size: 1.08rem;
+    }
+
+    .offer-card p {
+        font-size: .88rem;
+        margin-bottom: 18px;
+    }
+}
+
+@media(max-width:420px) {
+    .header {
+        padding: 14px 12px;
+        grid-template-columns: 42px minmax(0,1fr) 42px;
+        gap: 8px;
+    }
+
+    .icon-button,
+    .brand-logo {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        font-size: 17px;
+    }
+
+    .header-brand {
+        gap: 7px;
+    }
+
+    .brand-logo {
+        font-size: 18px;
+    }
+
+    .brand-copy h2 {
+        font-size: clamp(.72rem,3.1vw,.86rem);
+    }
+
+    .brand-copy p {
+        font-size: clamp(.36rem,1.45vw,.45rem);
+        letter-spacing: .25px;
+    }
+
+    .main {
+        padding: 42px 17px 32px;
+    }
+
+    .badge {
+        font-size: .76rem;
+        padding: 8px 11px;
+        gap: 6px;
+        margin-bottom: 21px;
+    }
+
+    .hero h1 {
+        font-size: clamp(2rem,8.3vw,2.8rem);
+        line-height: 1.6;
+        letter-spacing: -.4px;
+    }
+
+    .english-title {
+        font-size: .68rem;
+        letter-spacing: 2px;
+        margin: .65rem 0 1.5rem;
+    }
+
+    .hero-description {
+        font-size: .88rem;
+        line-height: 2;
+        margin-bottom: 23px;
+    }
+
+    .btn {
+        font-size: .94rem;
+        padding: 1rem;
+        border-radius: 16px;
+    }
+
+    .side-menu {
+        padding: 18px 16px;
+    }
+
+    .menu-brand .brand-logo {
+        width: 42px;
+        height: 42px;
+    }
+
+    .menu-brand h3 {
+        font-size: .9rem;
+    }
+
+    .menu-brand p {
+        font-size: .5rem;
+        letter-spacing: .5px;
+    }
+
+    .modal {
+        padding: 21px 16px;
+    }
+
+    .modal-heading h2 {
+        font-size: 1rem;
+    }
+
+    .modal-body {
+        font-size: .85rem;
+    }
+
+    .orb-purple {
+        width: 260px;
+        height: 260px;
+        filter: blur(80px);
+    }
+
+    .orb-pink {
+        width: 230px;
+        height: 230px;
+        filter: blur(80px);
+    }
+
+    .orb-gold {
+        width: 220px;
+        height: 220px;
+        filter: blur(80px);
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+
+    .offer-card,
+    .offer-card::before,
+    .offer-icon,
+    .offer-link,
+    .offer-link i {
+        transition: none;
+    }
+
+    .offer-card:hover {
+        transform: none;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- الخلفية -->
+<div class="background-effects" aria-hidden="true">
+    <div class="orb orb-purple"></div>
+    <div class="orb orb-pink"></div>
+    <div class="orb orb-gold"></div>
+    <div class="orb orb-blue"></div>
+</div>
+
+<div class="page-shell">
+
+    <!-- رأس الصفحة -->
+    <header class="header">
+
+        <div class="header-side">
+            <button class="icon-button"
+                    id="menuToggle"
+                    type="button"
+                    aria-label="فتح القائمة"
+                    aria-controls="sideMenu"
+                    aria-expanded="false">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+
+        <a class="header-brand" href="index.html" aria-label="الصفحة الرئيسية">
+            <div class="brand-copy">
+                <h2 data-i18n="schoolName">ثانوية الخوارزمي</h2>
+                <p>AL-KHAWARIZMI HIGH SCHOOL</p>
+            </div>
+            <div class="brand-logo" aria-hidden="true">
+                <i class="fa-solid fa-square-root-variable"></i>
+            </div>
+        </a>
+
+
+
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main">
+
+        <section class="hero" aria-labelledby="heroTitle">
+
+            <div class="badge">
+                <i class="fa-solid fa-graduation-cap"></i>
+                <span data-i18n="badge">منصة خاصة بتلاميذ ثانوية الخوارزمي</span>
+            </div>
+
+            <h1 id="heroTitle">
+                <span class="title-first" data-i18n="titleFirst">ثانوية الخوارزمي</span>
+                <span class="title-second" data-i18n="titleSecond">التأهيلية</span>
+            </h1>
+
+            <p class="english-title" data-i18n="englishTitle">
+                ⵜⴰⵙⴷⴰⵡⵉⵜ ⵏ ⵍⵅⵡⴰⵔⵉⵣⵎⵉ
+            </p>
+
+            <p class="hero-description" data-i18n="description">
+                منصة تعليمية متكاملة تهدف إلى تعزيز التميز الأكاديمي،
+                الرقمنة، والابتكار لدى تلاميذنا لإعداد جيل قادر على
+                مواكبة تحديات المستقبل.
+            </p>
+
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="login.html">
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    <span data-i18n="login">تسجيل الدخول</span>
+                </a>
+
+                <a class="btn btn-secondary" href="resources.html">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span data-i18n="resources">استكشف الموارد التعليمية</span>
+                </a>
+            </div>
+
+        </section>
+
+        <!-- مساحة انتقالية فارغة مع سهم للاستمرار إلى الأسفل -->
+        <div class="scroll-cue" aria-label="تابع التصفح إلى الأسفل">
+            <a href="#what-we-offer" class="scroll-cue-link" aria-label="الانتقال إلى القسم التالي">
+                <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </a>
+        </div>
+
+        <!-- ==========================
+             قسم ماذا نقدم لكم؟
+        =========================== -->
+
+        <section class="offers-section"
+                 id="what-we-offer"
+                 aria-labelledby="offersTitle">
+
+            <div class="offers-container">
+
+                <header class="offers-header">
+
+                    <h2 id="offersTitle" data-i18n="offersTitle">
+                        ماذا نقدم لكم؟
+                    </h2>
+
+                    <span class="offers-title-line" aria-hidden="true"></span>
+
+                    <p data-i18n="offersSubtitle">
+                        خدمات متكاملة لتسهيل التواصل والتعلم
+                    </p>
+
+                </header>
+
+                <div class="offers-grid">
+
+                    <!-- 1. التواصل المباشر -->
+                    <article class="offer-card">
+                        <div class="offer-icon">
+                            <i class="fa-solid fa-comments" aria-hidden="true"></i>
+                        </div>
+
+                        <h3 data-i18n="offer1Title">تواصل مباشر</h3>
+
+                        <p data-i18n="offer1Description">
+                            تواصل فوري مع الأساتذة والإدارة عبر رسائل ذكية.
+                        </p>
+
+                        <p class="offer-details" id="offerDetails1" data-i18n="offer1Details">('offer1Details', 'تتيح خدمة التواصل المباشر إرسال الاستفسارات والرسائل إلى الأساتذة والإدارة من خلال المنصة، بما يساعد على تنظيم التواصل والوصول إلى المعلومة في مكان واحد. يتطلب استخدام الخدمات المتاحة تسجيل الدخول.')</p>
+
+                        <button class="offer-link offer-toggle" type="button" aria-expanded="false" aria-controls="offerDetails1">
+                            <span data-i18n="discoverMore">اكتشف المزيد</span>
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                    </article>
+
+                    <!-- 2. متابعة التحصيل -->
+                    <article class="offer-card">
+                        <div class="offer-icon">
+                            <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                        </div>
+
+                        <h3 data-i18n="offer2Title">متابعة التحصيل</h3>
+
+                        <p data-i18n="offer2Description">
+                            نظام متطور لمتابعة النقاط والتقييمات الشهرية
+                            والاطلاع على المستوى الدراسي.
+                        </p>
+
+                        <p class="offer-details" id="offerDetails2" data-i18n="offer2Details">('offer2Details', 'تساعدك هذه الخدمة على الاطلاع على النقط والتقييمات وتتبع تطور مستواك الدراسي عندما تكون البيانات متاحة في حسابك. يمكنك الرجوع إلى النتائج لمراجعة تقدمك وتحديد الجوانب التي تحتاج إلى مزيد من العمل.')</p>
+
+                        <button class="offer-link offer-toggle" type="button" aria-expanded="false" aria-controls="offerDetails2">
+                            <span data-i18n="discoverMore">اكتشف المزيد</span>
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                    </article>
+
+                    <!-- 3. الموارد التعليمية -->
+                    <article class="offer-card">
+                        <div class="offer-icon">
+                            <i class="fa-solid fa-book-open" aria-hidden="true"></i>
+                        </div>
+
+                        <h3 data-i18n="offer3Title">الموارد التعليمية</h3>
+
+                        <p data-i18n="offer3Description">
+                            دروس وملخصات وامتحانات وتمارين مصنفة حسب المستوى والشعبة.
+                        </p>
+
+                        <p class="offer-details" id="offerDetails3" data-i18n="offer3Details">('offer3Details', 'توفر الموارد التعليمية مكانًا منظمًا للوصول إلى الدروس والملخصات والتمارين والامتحانات حسب المستوى والشعبة. استخدم هذه المواد للمراجعة والاستعداد للفروض والامتحانات، ثم ارجع إلى المنصة للحصول على الموارد المتاحة.')</p>
+
+                        <button class="offer-link offer-toggle" type="button" aria-expanded="false" aria-controls="offerDetails3">
+                            <span data-i18n="discoverMore">اكتشف المزيد</span>
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                    </article>
+
+                    <!-- 4. المكتبة الرقمية -->
+                    <article class="offer-card">
+                        <div class="offer-icon">
+                            <i class="fa-solid fa-book" aria-hidden="true"></i>
+                        </div>
+
+                        <h3 data-i18n="offer4Title">المكتبة الرقمية</h3>
+
+                        <p data-i18n="offer4Description">
+                            اكتشف الكتب والروايات التعليمية وشاركها مع زملائك بسهولة.
+                        </p>
+
+                        <p class="offer-details" id="offerDetails4" data-i18n="offer4Details">('offer4Details', 'تجمع المكتبة الرقمية الكتب والقراءات والمواد المفيدة للتعلم في فضاء واحد. يمكنك استكشاف المحتوى المتاح والاستفادة منه في توسيع معارفك ودعم دراستك، وفق الموارد المنشورة على المنصة.')</p>
+
+                        <button class="offer-link offer-toggle" type="button" aria-expanded="false" aria-controls="offerDetails4">
+                            <span data-i18n="discoverMore">اكتشف المزيد</span>
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                    </article>
+
+                    <!-- 5. مجتمع التلاميذ -->
+                    <article class="offer-card">
+                        <div class="offer-icon">
+                            <i class="fa-solid fa-users" aria-hidden="true"></i>
+                        </div>
+
+                        <h3 data-i18n="offer5Title">مجتمع التلاميذ</h3>
+
+                        <p data-i18n="offer5Description">
+                            تبادل الموارد والمعرفة مع زملائك في مختلف المستويات الدراسية.
+                        </p>
+
+                        <p class="offer-details" id="offerDetails5" data-i18n="offer5Details">('offer5Details', 'يهدف مجتمع التلاميذ إلى تسهيل تبادل المعرفة والموارد الدراسية بين التلاميذ، وتشجيع التعاون والمراجعة الجماعية باحترام قواعد الاستخدام والتواصل داخل المؤسسة.')</p>
+
+                        <button class="offer-link offer-toggle" type="button" aria-expanded="false" aria-controls="offerDetails5">
+                            <span data-i18n="discoverMore">اكتشف المزيد</span>
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                    </article>
+
+                    <!-- 6. الجدول الذكي -->
+                    <article class="offer-card">
+                        <div class="offer-icon">
+                            <i class="fa-solid fa-calendar-alt" aria-hidden="true"></i>
+                        </div>
+
+                        <h3 data-i18n="offer6Title">جدول ذكي</h3>
+
+                        <p data-i18n="offer6Description">
+                            جدول حصص تفاعلي يساعدك على تنظيم وقتك والاستفادة من التذكيرات.
+                        </p>
+
+                        <p class="offer-details" id="offerDetails6" data-i18n="offer6Details">('offer6Details', 'يساعدك الجدول الذكي على تنظيم حصصك الدراسية ومتابعة مواعيدك اليومية. راجع الجدول بانتظام وخطط لوقت المراجعة والواجبات، واستفد من التذكيرات إذا كانت متاحة ضمن حسابك.')</p>
+
+                        <button class="offer-link offer-toggle" type="button" aria-expanded="false" aria-controls="offerDetails6">
+                            <span data-i18n="discoverMore">اكتشف المزيد</span>
+                            <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+                        </button>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- الفوتر -->
+        <footer class="footer">
+            <span data-i18n="footerText">ثانوية الخوارزمي التأهيلية</span>
+            <span class="footer-separator" aria-hidden="true"></span>
+            <span>© 2026</span>
+            <span class="footer-separator" aria-hidden="true"></span>
+            <span>المطور والمبرمج: آدم حليم</span>
+            <span class="footer-separator" aria-hidden="true"></span>
+            <span>إصدار الموقع: 1.0.1</span>
+        </footer>
+
+    </main>
+</div>
+
+<!-- خلفية القائمة الجانبية -->
+<div class="overlay" id="menuOverlay" aria-hidden="true"></div>
+
+<!-- القائمة الجانبية -->
+<aside class="side-menu"
+       id="sideMenu"
+       aria-label="القائمة الرئيسية"
+       aria-hidden="true"
+       inert>
+
+    <div class="menu-header">
+
+        <div class="menu-brand">
+            <div class="brand-logo">
+                <i class="fa-solid fa-square-root-variable"></i>
+            </div>
+
+            <div>
+                <h3 data-i18n="schoolName">ثانوية الخوارزمي</h3>
+                <p>AL-KHAWARIZMI HIGH SCHOOL</p>
+            </div>
+        </div>
+
+        <button class="icon-button"
+                id="menuClose"
+                type="button"
+                aria-label="إغلاق القائمة">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+    </div>
+
+    <div class="menu-section">
+
+        <div class="menu-section-title">
+            <i class="fa-solid fa-language"></i>
+            <span data-i18n="languageTitle">لغة الموقع</span>
+        </div>
+
+        <div class="language-options">
+            <button class="language-btn active"
+                    type="button"
+                    data-lang="ar"
+                    aria-pressed="true">العربية</button>
+
+            <button class="language-btn"
+                    type="button"
+                    data-lang="fr"
+                    aria-pressed="false">Français</button>
+
+            <button class="language-btn"
+                    type="button"
+                    data-lang="en"
+                    aria-pressed="false">English</button>
+        </div>
+
+    </div>
+
+    <div class="menu-section">
+
+        <div class="menu-section-title">
+            <i class="fa-solid fa-compass"></i>
+            <span data-i18n="navigationTitle">التنقل</span>
+        </div>
+
+        <a class="menu-link" href="index.html">
+            <i class="fa-solid fa-house"></i>
+            <span data-i18n="home">الصفحة الرئيسية</span>
+            <i class="fa-solid fa-chevron-left link-arrow"></i>
+        </a>
+
+        <a class="menu-link" href="login.html">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            <span data-i18n="login">تسجيل الدخول</span>
+            <i class="fa-solid fa-chevron-left link-arrow"></i>
+        </a>
+
+        <a class="menu-link" href="resources.html">
+            <i class="fa-solid fa-book-open"></i>
+            <span data-i18n="resources">استكشف الموارد التعليمية</span>
+            <i class="fa-solid fa-chevron-left link-arrow"></i>
+        </a>
+
+        <a class="menu-link"
+           href="https://massarservice.men.gov.ma/"
+           target="_blank"
+           rel="noopener noreferrer">
+            <i class="fa-solid fa-graduation-cap"></i>
+            <span data-i18n="massar">منصة مسار الرسمية</span>
+            <i class="fa-solid fa-arrow-up-right-from-square link-arrow"></i>
+        </a>
+
+    </div>
+
+    <div class="menu-section">
+
+        <div class="menu-section-title">
+            <i class="fa-solid fa-circle-info"></i>
+            <span data-i18n="moreTitle">المزيد</span>
+        </div>
+
+        <button class="menu-link" id="aboutOpenButton" type="button">
+            <i class="fa-solid fa-circle-info"></i>
+            <span data-i18n="about">معلومات عن المنصة</span>
+            <i class="fa-solid fa-chevron-left link-arrow"></i>
+        </button>
+
+
+    </div>
+
+    <div class="menu-section">
+
+        <div class="menu-section-title">
+            <i class="fa-solid fa-gear"></i>
+            <span data-i18n="settingsTitle">الإعدادات</span>
+        </div>
+
+        <button class="menu-link" id="shareOpenButton" type="button">
+            <i class="fa-solid fa-share-nodes"></i>
+            <span data-i18n="share">مشاركة الموقع</span>
+            <i class="fa-solid fa-chevron-left link-arrow"></i>
+        </button>
+
+    </div>
+
+    <div class="menu-bottom">
+        <p class="menu-version" data-i18n="version">
+            منصة ثانوية الخوارزمي التعليمية
+        </p>
+    </div>
+
+</aside>
+
+<!-- نافذة معلومات المنصة -->
+<div class="modal-wrap"
+     id="aboutModal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="aboutModalTitle"
+     aria-hidden="true"
+     inert>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div class="modal-heading">
+                <div class="modal-icon">
+                    <i class="fa-solid fa-circle-info"></i>
+                </div>
+
+                <div>
+                    <h2 id="aboutModalTitle" data-i18n="aboutTitle">
+                        معلومات عن المنصة
+                    </h2>
+                    <p data-i18n="aboutSubtitle">
+                        نافذتك نحو التعلم الرقمي
+                    </p>
+                </div>
+            </div>
+
+            <button class="modal-close"
+                    type="button"
+                    data-close-modal="aboutModal"
+                    aria-label="إغلاق">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <p data-i18n="aboutParagraph1">
+                مرحباً بكم في المنصة الرقمية لثانوية الخوارزمي التأهيلية،
+                فضاء تعليمي يهدف إلى تسهيل الوصول إلى الموارد والمعلومات
+                وتقديم تجربة رقمية منظمة للتلاميذ.
+            </p>
+
+            <p data-i18n="aboutParagraph2">
+                نطمح إلى دعم التعلم، وتشجيع الابتكار،
+                والمساهمة في تطوير التواصل الرقمي داخل المؤسسة.
+            </p>
+
+            <div class="modal-highlight">
+                <strong data-i18n="aboutHighlightTitle">رؤيتنا</strong>
+                <span data-i18n="aboutHighlightText">
+                    تعليم أكثر تطوراً، وفضاء رقمي يساعد على الاكتشاف
+                    والإبداع وتحقيق التميز.
+                </span>
+            </div>
+
+            <div class="developer-card">
+                <div class="developer-icon">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <div>
+                    <h3 data-i18n="developerTitle">تطوير المنصة</h3>
+                    <p data-i18n="developerName">Adam Halym</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- نافذة مشاركة الموقع -->
+<div class="modal-wrap"
+     id="shareModal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="shareModalTitle"
+     aria-hidden="true"
+     inert>
+
+    <div class="modal">
+
+        <div class="modal-header">
+
+            <div class="modal-heading">
+                <div class="modal-icon">
+                    <i class="fa-solid fa-share-nodes"></i>
+                </div>
+
+                <div>
+                    <h2 id="shareModalTitle" data-i18n="shareTitle">
+                        مشاركة الموقع
+                    </h2>
+                    <p data-i18n="shareSubtitle">
+                        شارك المنصة مع الآخرين
+                    </p>
+                </div>
+            </div>
+
+            <button class="modal-close"
+                    type="button"
+                    data-close-modal="shareModal"
+                    aria-label="إغلاق">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+        </div>
+
+        <div class="modal-body">
+
+            <div class="share-options">
+
+                <button class="share-btn share-whatsapp"
+                        id="whatsappShare"
+                        type="button">
+
+                    <span class="share-icon">
+                        <i class="fa-brands fa-whatsapp"></i>
+                    </span>
+
+                    <span class="share-label">
+                        <strong data-i18n="whatsappTitle">واتساب</strong>
+                        <small data-i18n="whatsappDescription">
+                            مشاركة الرابط مع أصدقائك
+                        </small>
+                    </span>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+
+                <button class="share-btn share-telegram"
+                        id="telegramShare"
+                        type="button">
+
+                    <span class="share-icon">
+                        <i class="fa-brands fa-telegram"></i>
+                    </span>
+
+                    <span class="share-label">
+                        <strong data-i18n="telegramTitle">تيليجرام</strong>
+                        <small data-i18n="telegramDescription">
+                            إرسال الرابط عبر تيليجرام
+                        </small>
+                    </span>
+
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+
+                <button class="share-btn share-facebook"
+                        id="facebookShare"
+                        type="button">
+                    <span class="share-icon">
+                        <i class="fa-brands fa-facebook-f"></i>
+                    </span>
+                    <span class="share-label">
+                        <strong data-i18n="facebookTitle">فيسبوك</strong>
+                        <small data-i18n="facebookDescription">مشاركة رابط الموقع على فيسبوك</small>
+                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+
+                <button class="share-btn share-instagram"
+                        id="instagramShare"
+                        type="button">
+                    <span class="share-icon">
+                        <i class="fa-brands fa-instagram"></i>
+                    </span>
+                    <span class="share-label">
+                        <strong data-i18n="instagramTitle">إنستغرام</strong>
+                        <small data-i18n="instagramDescription">انسخ الرابط ثم شاركه عبر إنستغرام</small>
+                    </span>
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </button>
+
+                <button class="share-btn share-copy"
+                        id="copyLinkButton"
+                        type="button">
+
+                    <span class="share-icon">
+                        <i class="fa-solid fa-link"></i>
+                    </span>
+
+                    <span class="share-label">
+                        <strong data-i18n="copyTitle">نسخ رابط الموقع</strong>
+                        <small data-i18n="copyDescription">
+                            نسخ الرابط إلى الحافظة
+                        </small>
+                    </span>
+
+                    <i class="fa-regular fa-copy"></i>
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+    <i class="fa-solid fa-circle-check"></i>
+    <span id="toastMessage">تم بنجاح</span>
+</div>
+
+<script>
+(() => {
+    'use strict';
+
+    const $ = selector => document.querySelector(selector);
+    const $$ = selector => Array.from(document.querySelectorAll(selector));
+
+    const root = document.documentElement;
+    const body = document.body;
+
+    const menuToggle = $('#menuToggle');
+    const menuClose = $('#menuClose');
+    const sideMenu = $('#sideMenu');
+    const menuOverlay = $('#menuOverlay');
+    const aboutModal = $('#aboutModal');
+    const shareModal = $('#shareModal');
+
+    let activeModal = null;
+    let previousFocus = null;
+    let toastTimer = null;
+
+
+    /* ==========================
+       الترجمات
+    ========================== */
+
+    const translations = {
+        ar: {
+            pageTitle: 'ثانوية الخوارزمي التأهيلية | AL-KHAWARIZMI HIGH SCHOOL',
+            schoolName: 'ثانوية الخوارزمي',
+            badge: 'منصة خاصة بتلاميذ ثانوية الخوارزمي',
+            titleFirst: 'ثانوية الخوارزمي',
+            titleSecond: 'التأهيلية',
+            englishTitle: 'ⵜⴰⵙⴷⴰⵡⵉⵜ ⵏ ⵍⵅⵡⴰⵔⵉⵣⵎⵉ',
+            description: 'منصة تعليمية متكاملة تهدف إلى تعزيز التميز الأكاديمي، الرقمنة، والابتكار لدى تلاميذنا لإعداد جيل قادر على مواكبة تحديات المستقبل.',
+            login: 'تسجيل الدخول',
+            resources: 'استكشف الموارد التعليمية',
+            card1Title: 'موارد تعليمية',
+            card1Description: 'محتوى تعليمي يساعد التلاميذ على تطوير معارفهم.',
+            card2Title: 'فضاء رقمي',
+            card2Description: 'خدمات رقمية تسهّل الوصول إلى المعلومات.',
+            card3Title: 'نحو المستقبل',
+            card3Description: 'تشجيع التعلم المستمر وتنمية مهارات الابتكار.',
+            offersTitle: 'ماذا نقدم لكم؟',
+            offersSubtitle: 'خدمات متكاملة لتسهيل التواصل والتعلم',
+            discoverMore: 'اكتشف المزيد',
+            showLess: 'عرض أقل',
+            offer1Title: 'تواصل مباشر',
+            offer1Description: 'تواصل فوري مع الأساتذة والإدارة عبر رسائل ذكية.',
+            offer2Title: 'متابعة التحصيل',
+            offer2Description: 'نظام متطور لمتابعة النقاط والتقييمات الشهرية والاطلاع على المستوى الدراسي.',
+            offer3Title: 'الموارد التعليمية',
+            offer3Description: 'دروس وملخصات وامتحانات وتمارين مصنفة حسب المستوى والشعبة.',
+            offer4Title: 'المكتبة الرقمية',
+            offer4Description: 'اكتشف الكتب والروايات التعليمية وشاركها مع زملائك بسهولة.',
+            offer5Title: 'مجتمع التلاميذ',
+            offer5Description: 'تبادل الموارد والمعرفة مع زملائك في مختلف المستويات الدراسية.',
+            offer6Title: 'جدول ذكي',
+            offer6Description: 'جدول حصص تفاعلي يساعدك على تنظيم وقتك والاستفادة من التذكيرات.',
+            offer1Details: ('offer1Details', 'تتيح خدمة التواصل المباشر إرسال الاستفسارات والرسائل إلى الأساتذة والإدارة من خلال المنصة، بما يساعد على تنظيم التواصل والوصول إلى المعلومة في مكان واحد. يتطلب استخدام الخدمات المتاحة تسجيل الدخول.'),
+            offer2Details: ('offer2Details', 'تساعدك هذه الخدمة على الاطلاع على النقط والتقييمات وتتبع تطور مستواك الدراسي عندما تكون البيانات متاحة في حسابك. يمكنك الرجوع إلى النتائج لمراجعة تقدمك وتحديد الجوانب التي تحتاج إلى مزيد من العمل.'),
+            offer3Details: ('offer3Details', 'توفر الموارد التعليمية مكانًا منظمًا للوصول إلى الدروس والملخصات والتمارين والامتحانات حسب المستوى والشعبة. استخدم هذه المواد للمراجعة والاستعداد للفروض والامتحانات، ثم ارجع إلى المنصة للحصول على الموارد المتاحة.'),
+            offer4Details: ('offer4Details', 'تجمع المكتبة الرقمية الكتب والقراءات والمواد المفيدة للتعلم في فضاء واحد. يمكنك استكشاف المحتوى المتاح والاستفادة منه في توسيع معارفك ودعم دراستك، وفق الموارد المنشورة على المنصة.'),
+            offer5Details: ('offer5Details', 'يهدف مجتمع التلاميذ إلى تسهيل تبادل المعرفة والموارد الدراسية بين التلاميذ، وتشجيع التعاون والمراجعة الجماعية باحترام قواعد الاستخدام والتواصل داخل المؤسسة.'),
+            offer6Details: ('offer6Details', 'يساعدك الجدول الذكي على تنظيم حصصك الدراسية ومتابعة مواعيدك اليومية. راجع الجدول بانتظام وخطط لوقت المراجعة والواجبات، واستفد من التذكيرات إذا كانت متاحة ضمن حسابك.'),
+            footerText: 'ثانوية الخوارزمي التأهيلية',
+            share: 'مشاركة الموقع',
+            settingsTitle: 'الإعدادات',
+            languageTitle: 'لغة الموقع',
+            navigationTitle: 'التنقل',
+            home: 'الصفحة الرئيسية',
+            massar: 'منصة مسار الرسمية',
+            moreTitle: 'المزيد',
+            about: 'معلومات عن المنصة',
+            version: 'منصة ثانوية الخوارزمي التعليمية',
+            aboutTitle: 'معلومات عن المنصة',
+            aboutSubtitle: 'نافذتك نحو التعلم الرقمي',
+            aboutParagraph1: 'مرحباً بكم في المنصة الرقمية لثانوية الخوارزمي التأهيلية، فضاء تعليمي يهدف إلى تسهيل الوصول إلى الموارد والمعلومات وتقديم تجربة رقمية منظمة للتلاميذ.',
+            aboutParagraph2: 'نطمح إلى دعم التعلم، وتشجيع الابتكار، والمساهمة في تطوير التواصل الرقمي داخل المؤسسة.',
+            aboutHighlightTitle: 'رؤيتنا',
+            aboutHighlightText: 'تعليم أكثر تطوراً، وفضاء رقمي يساعد على الاكتشاف والإبداع وتحقيق التميز.',
+            developerTitle: 'تطوير المنصة',
+            developerName: 'Adam Halym',
+            shareTitle: 'مشاركة الموقع',
+            shareSubtitle: 'شارك المنصة مع الآخرين',
+            facebookTitle: 'فيسبوك',
+            facebookDescription: 'مشاركة رابط الموقع على فيسبوك',
+            instagramTitle: 'إنستغرام',
+            instagramDescription: 'انسخ الرابط ثم شاركه عبر إنستغرام',
+            instagramCopied: 'تم نسخ الرابط. الصقه في إنستغرام لمشاركته.',
+            whatsappTitle: 'واتساب',
+            whatsappDescription: 'مشاركة الرابط مع أصدقائك',
+            telegramTitle: 'تيليجرام',
+            telegramDescription: 'إرسال الرابط عبر تيليجرام',
+            copyTitle: 'نسخ رابط الموقع',
+            copyDescription: 'نسخ الرابط إلى الحافظة',
+            copySuccess: 'تم نسخ رابط الموقع بنجاح',
+            copyError: 'تعذر نسخ الرابط. يرجى نسخه يدوياً',
+            shareUnavailable: 'تعذر تحديد رابط الموقع. افتح الصفحة من عنوانها المنشور.'
+        },
+
+        fr: {
+            pageTitle: 'Lycée Al-Khawarizmi | Site officiel',
+            schoolName: 'Lycée Al-Khawarizmi',
+            badge: 'منصة خاصة بتلاميذ ثانوية الخوارزمي',
+            titleFirst: 'Lycée Al-Khawarizmi',
+            titleSecond: 'Qualifiant',
+            englishTitle: 'ⵜⴰⵙⴷⴰⵡⵉⵜ ⵏ ⵍⵅⵡⴰⵔⵉⵣⵎⵉ',
+            description: 'Une plateforme éducative intégrée visant à renforcer l’excellence académique, la transformation numérique et l’innovation afin de préparer les élèves aux défis de demain.',
+            login: 'Se connecter',
+            resources: 'Explorer les ressources',
+            card1Title: 'Ressources éducatives',
+            card1Description: 'Des contenus pour développer les connaissances des élèves.',
+            card2Title: 'Espace numérique',
+            card2Description: 'Des services numériques pour accéder facilement aux informations.',
+            card3Title: 'Vers l’avenir',
+            card3Description: 'Encourager l’apprentissage continu et l’innovation.',
+            offersTitle: 'Que vous proposons-nous ?',
+            offersSubtitle: 'Des services intégrés pour faciliter la communication et l’apprentissage',
+            discoverMore: 'Découvrir',
+            showLess: 'Réduire',
+            offer1Title: 'Communication directe',
+            offer1Description: 'Échangez rapidement avec les enseignants et l’administration grâce à la messagerie.',
+            offer2Title: 'Suivi des résultats',
+            offer2Description: 'Suivez vos notes, vos évaluations mensuelles et votre progression scolaire.',
+            offer3Title: 'Ressources pédagogiques',
+            offer3Description: 'Cours, résumés, examens et exercices classés par niveau et filière.',
+            offer4Title: 'Bibliothèque numérique',
+            offer4Description: 'Découvrez des livres et des lectures éducatives et partagez-les facilement.',
+            offer5Title: 'Communauté des élèves',
+            offer5Description: 'Échangez des ressources et des connaissances avec des élèves de différents niveaux.',
+            offer6Title: 'Emploi du temps intelligent',
+            offer6Description: 'Un emploi du temps interactif pour organiser votre journée et profiter des rappels.',
+            offer1Details: 'Cette fonctionnalité facilite l’envoi de questions et de messages aux enseignants et à l’administration depuis la plateforme. Elle aide à centraliser les échanges. La connexion peut être nécessaire pour accéder aux services.',
+            offer2Details: 'Consultez vos notes et évaluations et suivez votre progression lorsque ces données sont disponibles dans votre compte. Utilisez-les pour repérer les matières à réviser davantage.',
+            offer3Details: 'Accédez aux cours, résumés, exercices et examens organisés par niveau et filière afin de réviser et de préparer vos évaluations.',
+            offer4Details: 'La bibliothèque numérique rassemble des livres et des lectures utiles pour approfondir vos connaissances et soutenir votre apprentissage selon les ressources publiées.',
+            offer5Details: 'Un espace conçu pour favoriser le partage de connaissances et de ressources entre élèves, ainsi que la révision collaborative dans le respect des règles de la plateforme.',
+            offer6Details: 'Organisez vos cours et vos activités quotidiennes grâce à un emploi du temps facile à consulter. Planifiez aussi vos révisions et utilisez les rappels s’ils sont disponibles.',
+            footerText: 'Lycée Al-Khawarizmi',
+            share: 'Partager le site',
+            settingsTitle: 'Paramètres',
+            languageTitle: 'Langue du site',
+            navigationTitle: 'Navigation',
+            home: 'Accueil',
+            massar: 'Plateforme officielle Massar',
+            moreTitle: 'Plus',
+            about: 'À propos de la plateforme',
+            version: 'Plateforme éducative Al-Khawarizmi',
+            aboutTitle: 'À propos de la plateforme',
+            aboutSubtitle: 'Votre espace d’apprentissage numérique',
+            aboutParagraph1: 'Bienvenue sur la plateforme numérique du lycée Al-Khawarizmi. Cet espace facilite l’accès aux ressources et aux informations et propose une expérience numérique organisée aux élèves.',
+            aboutParagraph2: 'Nous souhaitons soutenir l’apprentissage, encourager l’innovation et développer la communication numérique au sein de l’établissement.',
+            aboutHighlightTitle: 'Notre vision',
+            aboutHighlightText: 'Un enseignement évolué et un espace numérique qui favorise la découverte, la créativité et l’excellence.',
+            developerTitle: 'Développement de la plateforme',
+            developerName: 'Adam Halym',
+            shareTitle: 'Partager le site',
+            shareSubtitle: 'Partagez la plateforme avec d’autres personnes',
+            facebookTitle: 'Facebook',
+            facebookDescription: 'Partager le lien sur Facebook',
+            instagramTitle: 'Instagram',
+            instagramDescription: 'Copiez le lien puis partagez-le sur Instagram',
+            instagramCopied: 'Lien copié. Collez-le sur Instagram pour le partager.',
+            whatsappTitle: 'WhatsApp',
+            whatsappDescription: 'Partager le lien avec vos amis',
+            telegramTitle: 'Telegram',
+            telegramDescription: 'Envoyer le lien via Telegram',
+            copyTitle: 'Copier le lien',
+            copyDescription: 'Copier le lien dans le presse-papiers',
+            copySuccess: 'Le lien du site a été copié',
+            copyError: 'Impossible de copier le lien. Veuillez le copier manuellement.',
+            shareUnavailable: 'Impossible de déterminer l’adresse du site. Ouvrez la page depuis son adresse publiée.'
+        },
+
+        en: {
+            pageTitle: 'Al-Khawarizmi High School | Official Website',
+            schoolName: 'Al-Khawarizmi High School',
+            badge: 'منصة خاصة بتلاميذ ثانوية الخوارزمي',
+            titleFirst: 'Al-Khawarizmi',
+            titleSecond: 'High School',
+            englishTitle: 'ⵜⴰⵙⴷⴰⵡⵉⵜ ⵏ ⵍⵅⵡⴰⵔⵉⵣⵎⵉ',
+            description: 'An integrated educational platform designed to promote academic excellence, digital learning, and innovation, preparing our students to meet the challenges of the future.',
+            login: 'Log In',
+            resources: 'Explore Learning Resources',
+            card1Title: 'Learning Resources',
+            card1Description: 'Educational content to help students expand their knowledge.',
+            card2Title: 'Digital Space',
+            card2Description: 'Digital services that make information easier to access.',
+            card3Title: 'Towards the Future',
+            card3Description: 'Encouraging lifelong learning and innovation skills.',
+            offersTitle: 'What We Offer',
+            offersSubtitle: 'Integrated services to make communication and learning easier',
+            discoverMore: 'Discover More',
+            showLess: 'Show less',
+            offer1Title: 'Direct Communication',
+            offer1Description: 'Connect with teachers and school administration through smart messaging.',
+            offer2Title: 'Academic Progress',
+            offer2Description: 'Track grades, monthly assessments, and your academic progress.',
+            offer3Title: 'Learning Resources',
+            offer3Description: 'Lessons, summaries, exams, and exercises organized by level and stream.',
+            offer4Title: 'Digital Library',
+            offer4Description: 'Discover educational books and stories and easily share them with classmates.',
+            offer5Title: 'Student Community',
+            offer5Description: 'Exchange resources and knowledge with classmates across different levels.',
+            offer6Title: 'Smart Timetable',
+            offer6Description: 'An interactive class schedule to help organize your time and use reminders.',
+            offer1Details: 'Send questions and messages to teachers and school administration through the platform, helping keep communication organized in one place. Sign-in may be required to access available services.',
+            offer2Details: 'Review grades and assessments and track your academic progress when the information is available in your account. Use the results to identify subjects that need more practice.',
+            offer3Details: 'Find lessons, summaries, exercises, and exams organized by grade and stream to support revision and preparation for assessments.',
+            offer4Details: 'The digital library brings together books and educational reading materials to broaden your knowledge and support your studies, depending on the resources published.',
+            offer5Details: 'A space intended to encourage students to exchange knowledge and learning resources and support collaborative study while respecting platform rules.',
+            offer6Details: 'Keep track of classes and daily activities with an easy-to-check timetable. Plan study time and use reminders if they are available.',
+            footerText: 'Al-Khawarizmi High School',
+            share: 'Share Website',
+            settingsTitle: 'Settings',
+            languageTitle: 'Website Language',
+            navigationTitle: 'Navigation',
+            home: 'Home',
+            massar: 'Official Massar Platform',
+            moreTitle: 'More',
+            about: 'About the Platform',
+            version: 'Al-Khawarizmi Educational Platform',
+            aboutTitle: 'About the Platform',
+            aboutSubtitle: 'Your gateway to digital learning',
+            aboutParagraph1: 'Welcome to the digital platform of Al-Khawarizmi High School. This educational space simplifies access to learning resources and information while providing students with an organized digital experience.',
+            aboutParagraph2: 'We aim to support learning, encourage innovation, and develop digital communication within the school.',
+            aboutHighlightTitle: 'Our Vision',
+            aboutHighlightText: 'A more advanced learning experience and a digital space that encourages discovery, creativity, and excellence.',
+            developerTitle: 'Platform Development',
+            developerName: 'Adam Halym',
+            shareTitle: 'Share Website',
+            shareSubtitle: 'Share the platform with others',
+            facebookTitle: 'Facebook',
+            facebookDescription: 'Share the website link on Facebook',
+            instagramTitle: 'Instagram',
+            instagramDescription: 'Copy the link, then share it on Instagram',
+            instagramCopied: 'Link copied. Paste it into Instagram to share.',
+            whatsappTitle: 'WhatsApp',
+            whatsappDescription: 'Share the link with your friends',
+            telegramTitle: 'Telegram',
+            telegramDescription: 'Send the link through Telegram',
+            copyTitle: 'Copy Website Link',
+            copyDescription: 'Copy the link to your clipboard',
+            copySuccess: 'Website link copied successfully',
+            copyError: 'Unable to copy the link. Please copy it manually.',
+            shareUnavailable: 'Unable to determine the website address. Open this page from its published URL.'
+        }
+    };
+
+    let currentLanguage = 'ar';
+
+    const getText = key =>
+        translations[currentLanguage][key] ||
+        translations.ar[key] ||
+        key;
+
+    /* ==========================
+       تغيير اللغة
+    ========================== */
+
+    function setLanguage(lang) {
+        if (!translations[lang]) return;
+
+        currentLanguage = lang;
+        root.lang = lang;
+        root.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+        $$('[data-i18n]').forEach(element => {
+            const key = element.dataset.i18n;
+            const translated = translations[lang][key];
+
+            if (translated !== undefined) {
+                element.textContent = translated;
+            }
+        });
+
+        $$('.offer-toggle').forEach(button => {
+            const key = button.getAttribute('aria-expanded') === 'true'
+                ? 'showLess'
+                : 'discoverMore';
+            const label = button.querySelector('[data-i18n="discoverMore"]');
+            if (label) label.textContent = getText(key);
+        });
+
+        document.title = getText('pageTitle');
+
+        menuToggle.setAttribute(
+            'aria-label',
+            lang === 'ar' ? 'فتح القائمة' :
+            lang === 'fr' ? 'Ouvrir le menu' :
+            'Open menu'
+        );
+
+        menuClose.setAttribute(
+            'aria-label',
+            lang === 'ar' ? 'إغلاق القائمة' :
+            lang === 'fr' ? 'Fermer le menu' :
+            'Close menu'
+        );
+
+        $$('.language-btn').forEach(button => {
+            const active = button.dataset.lang === lang;
+
+            button.classList.toggle('active', active);
+            button.setAttribute('aria-pressed', String(active));
+        });
+
+        try {
+            localStorage.setItem('khawarizmi-language', lang);
+        } catch (error) {}
+
+        closeMenu(false);
+    }
+
+    $$('.language-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            setLanguage(button.dataset.lang);
+        });
+    });
+
+    /* ==========================
+       القائمة الجانبية
+    ========================== */
+
+    function openMenu() {
+        if (activeModal) {
+            closeModal(activeModal, false);
+        }
+
+        previousFocus = document.activeElement;
+
+        sideMenu.classList.add('open');
+        menuOverlay.classList.add('active');
+        body.classList.add('no-scroll');
+
+        sideMenu.removeAttribute('inert');
+        sideMenu.setAttribute('aria-hidden', 'false');
+        menuToggle.setAttribute('aria-expanded', 'true');
+
+        menuClose.focus();
+    }
+
+    function closeMenu(restore = true) {
+        sideMenu.classList.remove('open');
+        menuOverlay.classList.remove('active');
+
+        sideMenu.setAttribute('inert', '');
+        sideMenu.setAttribute('aria-hidden', 'true');
+
+        menuToggle.setAttribute('aria-expanded', 'false');
+
+        if (!activeModal) {
+            body.classList.remove('no-scroll');
+        }
+
+        if (restore && previousFocus && previousFocus.isConnected) {
+            previousFocus.focus();
+        }
+    }
+
+    menuToggle.addEventListener('click', () => {
+        sideMenu.classList.contains('open')
+            ? closeMenu()
+            : openMenu();
+    });
+
+    menuClose.addEventListener('click', () => closeMenu());
+    menuOverlay.addEventListener('click', () => closeMenu());
+
+    /* ==========================
+       النوافذ المنبثقة
+    ========================== */
+
+    function openModal(modal) {
+        closeMenu(false);
+
+        if (activeModal && activeModal !== modal) {
+            closeModal(activeModal, false);
+        }
+
+        previousFocus = document.activeElement;
+        activeModal = modal;
+
+        modal.classList.add('active');
+        modal.removeAttribute('inert');
+        modal.setAttribute('aria-hidden', 'false');
+
+        body.classList.add('no-scroll');
+
+        const closeButton = $('[data-close-modal]', modal);
+
+        if (closeButton) {
+            closeButton.focus();
+        }
+    }
+
+    function closeModal(modal, restore = true) {
+        if (!modal) return;
+
+        modal.classList.remove('active');
+        modal.setAttribute('inert', '');
+        modal.setAttribute('aria-hidden', 'true');
+
+        if (activeModal === modal) {
+            activeModal = null;
+        }
+
+        if (!activeModal && !sideMenu.classList.contains('open')) {
+            body.classList.remove('no-scroll');
+        }
+
+        if (restore && previousFocus && previousFocus.isConnected) {
+            previousFocus.focus();
+        }
+    }
+
+    $('#aboutOpenButton').addEventListener('click', () => {
+        openModal(aboutModal);
+    });
+
+    $('#shareOpenButton').addEventListener('click', () => {
+        closeMenu(false);
+        menuToggle.focus();
+        openModal(shareModal);
+    });
+
+
+    $$('[data-close-modal]').forEach(button => {
+        button.addEventListener('click', () => {
+            const modal = document.getElementById(
+                button.dataset.closeModal
+            );
+
+            closeModal(modal);
+        });
+    });
+
+    [aboutModal, shareModal].forEach(modal => {
+        modal.addEventListener('click', event => {
+            if (event.target === modal) {
+                closeModal(modal);
+            }
+        });
+    });
+
+    /* إغلاق النوافذ بزر Escape */
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+            if (activeModal) {
+                closeModal(activeModal);
+            } else if (sideMenu.classList.contains('open')) {
+                closeMenu();
+            }
+        }
+
+        /* حصر التنقل بلوحة المفاتيح داخل النافذة */
+        if (event.key === 'Tab' && activeModal) {
+            const focusable = $$(
+                'button:not([disabled]),a[href],[tabindex]:not([tabindex="-1"])',
+                activeModal
+            ).filter(element => element.offsetParent !== null);
+
+            if (!focusable.length) {
+                event.preventDefault();
+                return;
+            }
+
+            if (
+                event.shiftKey &&
+                document.activeElement === focusable[0]
+            ) {
+                event.preventDefault();
+                focusable[focusable.length - 1].focus();
+            } else if (
+                !event.shiftKey &&
+                document.activeElement === focusable[focusable.length - 1]
+            ) {
+                event.preventDefault();
+                focusable[0].focus();
+            }
+        }
+    });
+
+    /* ==========================
+       الإشعارات
+    ========================== */
+
+    function showToast(message, success = true) {
+        const toast = $('#toast');
+        const toastMessage = $('#toastMessage');
+        const icon = $('i', toast);
+
+        toastMessage.textContent = message;
+
+        icon.className = success
+            ? 'fa-solid fa-circle-check'
+            : 'fa-solid fa-circle-exclamation';
+
+        icon.style.color = success
+            ? 'var(--success)'
+            : '#ff8585';
+
+        toast.classList.add('show');
+
+        clearTimeout(toastTimer);
+
+        toastTimer = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    /* ==========================
+       مشاركة الموقع
+    ========================== */
+
+    function getShareUrl() {
+        const url = window.location.href;
+
+        if (
+            !url ||
+            url === 'about:blank' ||
+            url.startsWith('file:')
+        ) {
+            return null;
+        }
+
+        return url;
+    }
+
+    function getShareText() {
+        if (currentLanguage === 'ar') {
+            return 'اكتشفوا منصة ثانوية الخوارزمي التأهيلية';
+        }
+
+        if (currentLanguage === 'fr') {
+            return 'Découvrez la plateforme du lycée Al-Khawarizmi';
+        }
+
+        return 'Discover the Al-Khawarizmi High School platform';
+    }
+
+    async function copyText(text) {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+            return;
+        }
+
+        const textarea = document.createElement('textarea');
+
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+
+        Object.assign(textarea.style, {
+            position: 'fixed',
+            opacity: '0',
+            pointerEvents: 'none',
+            top: '0',
+            left: '0'
+        });
+
+        body.appendChild(textarea);
+
+        textarea.focus();
+        textarea.select();
+        textarea.setSelectionRange(0, textarea.value.length);
+
+        let success = false;
+
+        try {
+            success = document.execCommand('copy');
+        } catch (error) {}
+
+        textarea.remove();
+
+        if (!success) {
+            throw new Error('Copy failed');
+        }
+    }
+
+    $('#copyLinkButton').addEventListener('click', async () => {
+        const url = getShareUrl();
+
+        if (!url) {
+            showToast(getText('shareUnavailable'), false);
+            return;
+        }
+
+        try {
+            await copyText(url);
+            showToast(getText('copySuccess'));
+        } catch (error) {
+            showToast(getText('copyError'), false);
+        }
+    });
+
+    function shareTo(platform) {
+        const url = getShareUrl();
+
+        if (!url) {
+            showToast(getText('shareUnavailable'), false);
+            return;
+        }
+
+        const encodedUrl = encodeURIComponent(url);
+        const encodedText = encodeURIComponent(getShareText());
+
+        let target;
+        if (platform === 'whatsapp') {
+            target = 'https://api.whatsapp.com/send?text=' + encodedText + '%20' + encodedUrl;
+        } else if (platform === 'telegram') {
+            target = 'https://t.me/share/url?url=' + encodedUrl + '&text=' + encodedText;
+        } else if (platform === 'facebook') {
+            target = 'https://www.facebook.com/sharer/sharer.php?u=' + encodedUrl;
+        } else {
+            return;
+        }
+
+        const opened = window.open(target, '_blank', 'noopener,noreferrer');
+        if (!opened) window.location.href = target;
+    }
+
+    $('#whatsappShare').addEventListener('click', () => shareTo('whatsapp'));
+    $('#telegramShare').addEventListener('click', () => shareTo('telegram'));
+    $('#facebookShare').addEventListener('click', () => shareTo('facebook'));
+
+    $('#instagramShare').addEventListener('click', async () => {
+        const url = getShareUrl();
+        if (!url) {
+            showToast(getText('shareUnavailable'), false);
+            return;
+        }
+
+        try {
+            await copyText(url);
+            showToast(getText('instagramCopied'));
+            const opened = window.open('https://www.instagram.com/', '_blank', 'noopener,noreferrer');
+            if (!opened) window.location.href = 'https://www.instagram.com/';
+        } catch (error) {
+            showToast(getText('copyError'), false);
+        }
+    });
+
+    /* فتح وإغلاق تفاصيل الخدمات */
+    $$('.offer-toggle').forEach(button => {
+        button.addEventListener('click', () => {
+            const card = button.closest('.offer-card');
+            const details = card.querySelector('.offer-details');
+            const expanded = button.getAttribute('aria-expanded') === 'true';
+
+            button.setAttribute('aria-expanded', String(!expanded));
+            card.classList.toggle('is-expanded', !expanded);
+            details.setAttribute('aria-hidden', String(expanded));
+
+            const label = button.querySelector('[data-i18n="discoverMore"]');
+            if (label) {
+                label.textContent = expanded
+                    ? getText('discoverMore')
+                    : getText('showLess');
+            }
+        });
+    });
+
+    /* استعادة اللغة المحفوظة */
+    try {
+        const savedLanguage = localStorage.getItem('khawarizmi-language');
+
+        if (savedLanguage && translations[savedLanguage]) {
+            setLanguage(savedLanguage);
+        }
+    } catch (error) {}
+
+})();
+</script>
+
+</body>
+</html>
