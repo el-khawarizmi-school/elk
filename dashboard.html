@@ -1832,6 +1832,109 @@
     margin: .12rem .2rem !important;
   }
 }
+        /* ===== تصميم الباقة الرقمية ===== */
+        .digital-pack-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.2rem;
+            padding: 0.5rem;
+        }
+        .digital-pack-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        .digital-pack-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--card-gradient, linear-gradient(90deg, transparent, #f5c842, transparent));
+            opacity: 0.7;
+        }
+        .digital-pack-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--card-color, rgba(245, 200, 66, 0.4));
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 30px var(--card-glow, rgba(245, 200, 66, 0.15));
+        }
+        .digital-pack-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            color: #fff;
+            margin-bottom: 1rem;
+            background: var(--icon-bg, linear-gradient(135deg, #f5c842, #fb923c));
+            box-shadow: 0 8px 20px var(--icon-shadow, rgba(245, 200, 66, 0.3));
+            transition: transform 0.3s ease;
+        }
+        .digital-pack-card:hover .digital-pack-icon {
+            transform: scale(1.15) rotate(5deg);
+        }
+        .digital-pack-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 0.4rem;
+        }
+        .digital-pack-desc {
+            font-size: 0.78rem;
+            color: rgba(255, 255, 255, 0.65);
+            line-height: 1.6;
+            margin-bottom: 0.8rem;
+            flex: 1;
+        }
+        .digital-pack-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--card-color, #f5c842);
+            margin-top: auto;
+        }
+        .digital-pack-link i {
+            transition: transform 0.3s ease;
+        }
+        .digital-pack-card:hover .digital-pack-link i {
+            transform: translateX(-3px);
+        }
+        @media (max-width: 600px) {
+            .digital-pack-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ===== اهتزاز عند الكود الخاطئ ===== */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
+        }
+
+        /* تحسين حقول الكود على الهاتف */
+        @media (max-width: 480px) {
+            .code-digit {
+                width: 48px !important;
+                height: 58px !important;
+                font-size: 1.5rem !important;
+            }
+        }
 </style>
 
 </head>
@@ -2179,6 +2282,14 @@
                     <h3 class="service-title" data-i18n="adminPanel">لوحة المشرف</h3>
                     <p class="service-desc" data-i18n="serviceAdminDesc">إدارة التلاميذ، الموارد، والإعلانات</p>
                 </a>
+
+                <!-- ✅ زر الباقة الرقمية الجديد -->
+                <a href="#" class="service-card" data-service="digital-pack" id="digitalPackServiceCard" onclick="window.openDigitalPackGate(event)">
+                    <div class="service-badge new" style="background: linear-gradient(135deg, #a78bfa, #f472b6); color: #1a1a2e;">جديد</div>
+                    <div class="service-icon" style="background: linear-gradient(135deg, #a78bfa, #f472b6);"><i class="fas fa-box-open"></i></div>
+                    <h3 class="service-title">الباقة الرقمية</h3>
+                    <p class="service-desc">مجموعة مختارة من الكتب، الدورات، وقوالب السيرة الذاتية</p>
+                </a>
             </div>
         </div>
 
@@ -2282,6 +2393,71 @@
                     <i class="fas fa-sign-out-alt"></i>
                     <span>تسجيل الخروج</span>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ نافذة إدخال الكود السري (محمية) -->
+    <div class="modal-overlay" id="digitalPackGateModal">
+        <div class="modal-box" style="max-width: 450px; text-align: center;">
+            <div class="modal-header">
+                <h3><i class="fas fa-lock"></i> الباقة الرقمية</h3>
+                <span class="modal-close" onclick="window.closeModal('digitalPackGateModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div style="font-size: 3.5rem; color: #a78bfa; margin-bottom: 1rem;">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h4 style="color: #fff; font-size: 1.1rem; margin-bottom: 0.5rem;">هذه الباقة محمية</h4>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.5rem; line-height: 1.8;">
+                    للحصول على الكود، يرجى التواصل مع الإدارة أو المبرمج.<br>
+                    أدخل الكود المكون من 4 أرقام للمتابعة.
+                </p>
+
+                <div id="lockoutTimer" style="display: none; background: rgba(255, 107, 107, 0.15); border: 1px solid rgba(255, 107, 107, 0.4); border-radius: 12px; padding: 0.8rem; margin-bottom: 1.2rem;">
+                    <div style="color: #ff6b6b; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem;">
+                        <i class="fas fa-ban"></i> تم قفل المحاولات مؤقتاً
+                    </div>
+                    <div style="color: #fff; font-size: 1.5rem; font-weight: 800; font-variant-numeric: tabular-nums;" id="lockoutTime">60</div>
+                    <div style="color: var(--text-muted); font-size: 0.7rem;">ثانية متبقية</div>
+                </div>
+
+                <div id="codeDigitsContainer" style="display: flex; justify-content: center; gap: 0.6rem; margin-bottom: 1rem;" dir="ltr">
+                    <input type="tel" maxlength="1" class="code-digit" data-index="0" inputmode="numeric" pattern="[0-9]" style="width: 55px; height: 65px; text-align: center; font-size: 1.8rem; font-weight: 800; background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.15); border-radius: 14px; color: #fff; outline: none; transition: all 0.3s ease;" autocomplete="off">
+                    <input type="tel" maxlength="1" class="code-digit" data-index="1" inputmode="numeric" pattern="[0-9]" style="width: 55px; height: 65px; text-align: center; font-size: 1.8rem; font-weight: 800; background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.15); border-radius: 14px; color: #fff; outline: none; transition: all 0.3s ease;" autocomplete="off">
+                    <input type="tel" maxlength="1" class="code-digit" data-index="2" inputmode="numeric" pattern="[0-9]" style="width: 55px; height: 65px; text-align: center; font-size: 1.8rem; font-weight: 800; background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.15); border-radius: 14px; color: #fff; outline: none; transition: all 0.3s ease;" autocomplete="off">
+                    <input type="tel" maxlength="1" class="code-digit" data-index="3" inputmode="numeric" pattern="[0-9]" style="width: 55px; height: 65px; text-align: center; font-size: 1.8rem; font-weight: 800; background: rgba(255,255,255,0.06); border: 2px solid rgba(255,255,255,0.15); border-radius: 14px; color: #fff; outline: none; transition: all 0.3s ease;" autocomplete="off">
+                </div>
+
+                <div id="codeGateMessage" style="min-height: 24px; font-size: 0.85rem; font-weight: 600; margin-bottom: 1rem;"></div>
+
+                <div id="attemptsLeft" style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem;">
+                    المحاولات المتبقية: <span id="attemptsCount" style="color: #f5c842; font-weight: 800;">3</span>
+                </div>
+
+                <button type="button" id="verifyCodeBtn" onclick="window.verifyDigitalPackCode()" style="width: 100%; padding: 0.9rem; border: none; border-radius: 14px; background: linear-gradient(135deg, #a78bfa, #f472b6); color: #1a1a2e; font-family: 'Cairo', sans-serif; font-weight: 800; font-size: 1rem; cursor: pointer; transition: all 0.3s ease;">
+                    <i class="fas fa-unlock"></i> فتح الباقة
+                </button>
+
+                <p style="color: var(--text-disabled); font-size: 0.7rem; margin-top: 1rem;">
+                    <i class="fas fa-info-circle"></i> الكود متاح فقط لتلاميذ ثانوية الخوارزمي
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ✅ Modal الباقة الرقمية (تفتح بعد إدخال الكود الصحيح) -->
+    <div class="modal-overlay" id="digitalPackModal">
+        <div class="modal-box" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-box-open"></i> الباقة الرقمية</h3>
+                <span class="modal-close" onclick="window.closeModal('digitalPackModal')">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center; color: var(--text-muted); margin-bottom: 1.5rem;">
+                    اختر المجلد الذي يناسبك، وستُفتح لك نافذة Google Drive مباشرة.
+                </p>
+                <div class="digital-pack-grid" id="digitalPackGrid"></div>
             </div>
         </div>
     </div>
@@ -3606,6 +3782,264 @@
 
         window.showToast = showToast;
 
+        // ============================================
+        // ✅ الباقة الرقمية - مع حماية متقدمة
+        // ============================================
+
+        const DIGITAL_PACK_SECRET_CODE = '0717';
+        const MAX_ATTEMPTS = 3;
+        const LOCKOUT_DURATION = 60 * 1000;
+        const STORAGE_KEY_ATTEMPTS = 'dp_attempts';
+        const STORAGE_KEY_LOCKOUT = 'dp_lockout_until';
+
+        let lockoutInterval = null;
+
+        const digitalPackFolders = [
+            { title: 'الكتب الإلكترونية', desc: 'مجموعة من الكتب والروايات التعليمية بصيغة PDF.', url: 'https://drive.google.com/drive/folders/1Dmjc1TtMrpEcvD6O8kwDz7ZkbtNl0mOC?usp=drive_link', icon: 'fa-book', color: 'linear-gradient(135deg, #5b9cf5, #4a8ae0)', glow: 'rgba(91, 156, 245, 0.3)' },
+            { title: 'قوالب السيرة الذاتية', desc: 'قوالب CV احترافية جاهزة للتعديل والاستخدام.', url: 'https://drive.google.com/drive/folders/1Dmjc1TtMrpEcvD6O8kwDz7ZkbtNl0mOC?usp=drive_link', icon: 'fa-file-signature', color: 'linear-gradient(135deg, #4ade80, #2dd4bf)', glow: 'rgba(74, 222, 128, 0.3)' },
+            { title: 'الإدارة والقانون', desc: 'موارد وكتب في مجال الإدارة والقانون.', url: 'https://drive.google.com/drive/folders/1Dmjc1TtMrpEcvD6O8kwDz7ZkbtNl0mOC?usp=drive_link', icon: 'fa-balance-scale', color: 'linear-gradient(135deg, #f5c842, #fb923c)', glow: 'rgba(245, 200, 66, 0.3)' },
+            { title: 'الدورات التدريبية', desc: 'أكثر من 50 دورة في التصميم، التسويق، والبرمجة.', url: 'https://drive.google.com/drive/folders/1UUza1iOTFCuoKzj9DY00CtKvffXAAF9e?usp=drive_link', icon: 'fa-graduation-cap', color: 'linear-gradient(135deg, #a78bfa, #f472b6)', glow: 'rgba(167, 139, 250, 0.3)' },
+            { title: 'الأمن السيبراني', desc: 'كتب ودورات في مجال الأمن السيبراني وحماية المعلومات.', url: 'https://drive.google.com/drive/folders/1mUnq7Qzb97_7cvzJvTBAk_cK4Moyt3fl?usp=drive_link', icon: 'fa-shield-alt', color: 'linear-gradient(135deg, #f87171, #fb923c)', glow: 'rgba(248, 113, 113, 0.3)' },
+            { title: 'أصول التصميم', desc: 'أيقونات، وجوه تعبيرية، ومؤثرات صوتية للمشاريع.', url: 'https://drive.google.com/drive/folders/1B-WXYZ0gkRxiE8PXquaTS1Kr1qJSC3eS?usp=drive_link', icon: 'fa-palette', color: 'linear-gradient(135deg, #2dd4bf, #14b8a6)', glow: 'rgba(45, 212, 191, 0.3)' }
+        ];
+
+        function getLockoutRemaining() {
+            try {
+                const until = parseInt(localStorage.getItem(STORAGE_KEY_LOCKOUT) || '0', 10);
+                if (!until) return 0;
+                const remaining = until - Date.now();
+                return remaining > 0 ? remaining : 0;
+            } catch (e) { return 0; }
+        }
+
+        function getAttemptsCount() {
+            try {
+                return parseInt(localStorage.getItem(STORAGE_KEY_ATTEMPTS) || '0', 10) || 0;
+            } catch (e) { return 0; }
+        }
+
+        function incrementAttempts() {
+            const current = getAttemptsCount() + 1;
+            try { localStorage.setItem(STORAGE_KEY_ATTEMPTS, String(current)); } catch (e) {}
+            return current;
+        }
+
+        function resetAttempts() {
+            try {
+                localStorage.removeItem(STORAGE_KEY_ATTEMPTS);
+                localStorage.removeItem(STORAGE_KEY_LOCKOUT);
+            } catch (e) {}
+        }
+
+        function lockoutUser() {
+            try {
+                localStorage.setItem(STORAGE_KEY_LOCKOUT, String(Date.now() + LOCKOUT_DURATION));
+                localStorage.setItem(STORAGE_KEY_ATTEMPTS, String(MAX_ATTEMPTS));
+            } catch (e) {}
+        }
+
+        function showLockoutUI(remainingMs) {
+            const timerEl = document.getElementById('lockoutTimer');
+            const timeEl = document.getElementById('lockoutTime');
+            const digits = document.querySelectorAll('.code-digit');
+            const verifyBtn = document.getElementById('verifyCodeBtn');
+            const attemptsEl = document.getElementById('attemptsLeft');
+
+            if (timerEl) timerEl.style.display = 'block';
+            if (attemptsEl) attemptsEl.style.display = 'none';
+
+            digits.forEach(d => { d.disabled = true; d.style.opacity = '0.4'; });
+            if (verifyBtn) { verifyBtn.disabled = true; verifyBtn.style.opacity = '0.5'; verifyBtn.style.cursor = 'not-allowed'; }
+
+            if (lockoutInterval) clearInterval(lockoutInterval);
+            lockoutInterval = setInterval(() => {
+                const remaining = getLockoutRemaining();
+                if (remaining <= 0) {
+                    clearInterval(lockoutInterval);
+                    lockoutInterval = null;
+                    hideLockoutUI();
+                } else {
+                    if (timeEl) timeEl.textContent = Math.ceil(remaining / 1000);
+                }
+            }, 250);
+
+            if (timeEl) timeEl.textContent = Math.ceil(remainingMs / 1000);
+        }
+
+        function hideLockoutUI() {
+            const timerEl = document.getElementById('lockoutTimer');
+            const digits = document.querySelectorAll('.code-digit');
+            const verifyBtn = document.getElementById('verifyCodeBtn');
+            const attemptsEl = document.getElementById('attemptsLeft');
+            const attemptsCount = document.getElementById('attemptsCount');
+
+            if (timerEl) timerEl.style.display = 'none';
+            if (attemptsEl) attemptsEl.style.display = 'block';
+
+            digits.forEach(d => {
+                d.disabled = false;
+                d.style.opacity = '1';
+                d.value = '';
+                d.style.borderColor = 'rgba(255,255,255,0.15)';
+                d.style.background = 'rgba(255,255,255,0.06)';
+            });
+            if (verifyBtn) { verifyBtn.disabled = false; verifyBtn.style.opacity = '1'; verifyBtn.style.cursor = 'pointer'; }
+
+            resetAttempts();
+            if (attemptsCount) attemptsCount.textContent = MAX_ATTEMPTS;
+
+            setTimeout(() => {
+                const first = document.querySelector('.code-digit[data-index="0"]');
+                if (first) first.focus();
+            }, 200);
+        }
+
+        function updateAttemptsUI() {
+            const remaining = MAX_ATTEMPTS - getAttemptsCount();
+            const countEl = document.getElementById('attemptsCount');
+            if (countEl) {
+                countEl.textContent = Math.max(0, remaining);
+                countEl.style.color = remaining <= 1 ? '#ff6b6b' : '#f5c842';
+            }
+        }
+
+        window.openDigitalPackGate = function(event) {
+            if (event) event.preventDefault();
+
+            document.querySelectorAll('.code-digit').forEach(input => {
+                input.value = '';
+                input.style.borderColor = 'rgba(255,255,255,0.15)';
+                input.style.background = 'rgba(255,255,255,0.06)';
+            });
+            const msg = document.getElementById('codeGateMessage');
+            if (msg) { msg.textContent = ''; msg.style.color = ''; }
+
+            window.openModal('digitalPackGateModal');
+
+            const remaining = getLockoutRemaining();
+            if (remaining > 0) {
+                showLockoutUI(remaining);
+            } else {
+                hideLockoutUI();
+                updateAttemptsUI();
+                setTimeout(() => {
+                    const first = document.querySelector('.code-digit[data-index="0"]');
+                    if (first) first.focus();
+                }, 300);
+            }
+        };
+
+        window.verifyDigitalPackCode = function() {
+            const lockRemaining = getLockoutRemaining();
+            if (lockRemaining > 0) { showLockoutUI(lockRemaining); return; }
+
+            const digits = document.querySelectorAll('.code-digit');
+            let enteredCode = '';
+            digits.forEach(input => enteredCode += input.value);
+
+            const msg = document.getElementById('codeGateMessage');
+
+            if (enteredCode.length !== 4) {
+                if (msg) { msg.textContent = '⚠️ أدخل الكود كاملاً (4 أرقام)'; msg.style.color = '#ff6b6b'; }
+                return;
+            }
+
+            if (enteredCode === DIGITAL_PACK_SECRET_CODE) {
+                if (msg) { msg.textContent = '✅ الكود صحيح! جاري فتح الباقة...'; msg.style.color = '#4ade80'; }
+
+                digits.forEach(input => {
+                    input.style.borderColor = '#4ade80';
+                    input.style.background = 'rgba(74, 222, 128, 0.15)';
+                });
+
+                resetAttempts();
+
+                setTimeout(() => {
+                    window.closeModal('digitalPackGateModal');
+                    renderDigitalPackCards();
+                    window.openModal('digitalPackModal');
+                }, 800);
+
+            } else {
+                const attempts = incrementAttempts();
+                const remaining = MAX_ATTEMPTS - attempts;
+
+                if (msg) {
+                    msg.textContent = `❌ الكود غير صحيح. المحاولات المتبقية: ${Math.max(0, remaining)}`;
+                    msg.style.color = '#ff6b6b';
+                }
+
+                digits.forEach(input => {
+                    input.style.borderColor = '#ff6b6b';
+                    input.style.background = 'rgba(255, 107, 107, 0.15)';
+                    input.value = '';
+                });
+
+                const container = document.getElementById('codeDigitsContainer');
+                if (container) {
+                    container.style.animation = 'shake 0.4s ease';
+                    setTimeout(() => { container.style.animation = ''; }, 400);
+                }
+
+                updateAttemptsUI();
+
+                if (attempts >= MAX_ATTEMPTS) {
+                    lockoutUser();
+                    setTimeout(() => { showLockoutUI(LOCKOUT_DURATION); }, 600);
+                } else {
+                    setTimeout(() => {
+                        const first = document.querySelector('.code-digit[data-index="0"]');
+                        if (first) first.focus();
+                    }, 100);
+                }
+            }
+        };
+
+        function renderDigitalPackCards() {
+            const grid = document.getElementById('digitalPackGrid');
+            if (!grid) return;
+
+            grid.innerHTML = digitalPackFolders.map(folder => `
+                <a href="${folder.url}" target="_blank" rel="noopener noreferrer" class="digital-pack-card"
+                   style="--icon-bg: ${folder.color}; --card-color: ${folder.color.split(',')[1].replace(')', '')}; --card-glow: ${folder.glow};">
+                    <div class="digital-pack-icon"><i class="fas ${folder.icon}"></i></div>
+                    <h4 class="digital-pack-title">${folder.title}</h4>
+                    <p class="digital-pack-desc">${folder.desc}</p>
+                    <span class="digital-pack-link"><i class="fas fa-external-link-alt"></i> فتح المجلد</span>
+                </a>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const digits = document.querySelectorAll('.code-digit');
+
+            digits.forEach((input, index) => {
+                input.addEventListener('input', function() {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                    if (this.value && index < digits.length - 1) {
+                        digits[index + 1].focus();
+                    }
+                    let allFilled = true;
+                    digits.forEach(d => { if (!d.value) allFilled = false; });
+                    if (allFilled) {
+                        setTimeout(() => window.verifyDigitalPackCode(), 200);
+                    }
+                });
+
+                input.addEventListener('keydown', function(e) {
+                    if (e.key === 'Backspace' && !this.value && index > 0) {
+                        digits[index - 1].focus();
+                    }
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        window.verifyDigitalPackCode();
+                    }
+                });
+
+                input.addEventListener('focus', function() { this.select(); });
+            });
+        });
+
         init();
     </script>
     <link rel="stylesheet" href="responsive.css">
@@ -4000,5 +4434,6 @@ input,select,textarea{color:#fff}input::placeholder,textarea::placeholder{color:
     });
 })();
 </script>
+<script type="module" src="language-init.js"></script>
 </body>
 </html>
